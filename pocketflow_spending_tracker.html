@@ -20,6 +20,13 @@
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Early Standalone Detection for iOS Home Screen PWAs -->
+    <script>
+        if (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches) {
+            document.documentElement.classList.add('is-standalone');
+        }
+    </script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -62,16 +69,34 @@
                 padding-bottom: 3rem;
             }
         }
-        /* Safe area support for iOS notches & Dynamic Island */
+        /* Safe area support for iOS notches, Dynamic Island, and Status Bar */
         header {
-            padding-top: max(1.25rem, calc(0.75rem + env(safe-area-inset-top)));
-            padding-left: max(0.875rem, calc(0.875rem + env(safe-area-inset-left)));
-            padding-right: max(0.875rem, calc(0.875rem + env(safe-area-inset-right)));
+            padding-top: max(1.25rem, calc(0.75rem + env(safe-area-inset-top, 0px))) !important;
+            padding-bottom: 0.875rem !important;
+            padding-left: max(0.875rem, calc(0.875rem + env(safe-area-inset-left, 0px)));
+            padding-right: max(0.875rem, calc(0.875rem + env(safe-area-inset-right, 0px)));
+        }
+        @media all and (display-mode: standalone) {
+            header {
+                padding-top: max(3.75rem, calc(2.25rem + env(safe-area-inset-top, 44px))) !important;
+                padding-bottom: 1rem !important;
+            }
+            #nativeInstallBtn, #homeScreenGuideBtn {
+                display: none !important;
+            }
+        }
+        .is-standalone header {
+            padding-top: max(3.75rem, calc(2.25rem + env(safe-area-inset-top, 44px))) !important;
+            padding-bottom: 1rem !important;
+        }
+        .is-standalone #nativeInstallBtn,
+        .is-standalone #homeScreenGuideBtn {
+            display: none !important;
         }
         .safe-bottom-pad {
-            padding-bottom: max(1.25rem, calc(0.75rem + env(safe-area-inset-bottom)));
-            padding-left: max(1rem, env(safe-area-inset-left));
-            padding-right: max(1rem, env(safe-area-inset-right));
+            padding-bottom: max(1.25rem, calc(0.75rem + env(safe-area-inset-bottom, 0px)));
+            padding-left: max(1rem, env(safe-area-inset-left, 0px));
+            padding-right: max(1rem, env(safe-area-inset-right, 0px));
         }
         /* Hide scrollbars for horizontal category pills */
         .no-scrollbar::-webkit-scrollbar {
@@ -108,17 +133,17 @@
     <div class="max-w-6xl mx-auto min-h-[100dvh] flex flex-col relative bg-slate-900/90 shadow-2xl sm:border-x border-slate-800/60">
 
         <!-- Top Web App Navigation Bar -->
-        <header class="px-3.5 sm:px-5 lg:px-8 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-20 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80">
-            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+        <header class="px-3.5 sm:px-5 lg:px-8 flex items-center justify-between sticky top-0 z-20 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80">
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-1">
                 <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
                     <i class="fa-solid fa-wallet text-slate-950 text-base sm:text-lg"></i>
                 </div>
                 <div class="min-w-0">
-                    <div class="flex items-center gap-1.5 sm:gap-2">
-                        <h1 class="font-bold text-base sm:text-lg lg:text-xl tracking-tight leading-none truncate">PocketFlow</h1>
-                        <span id="pwaStatusBadge" class="hidden min-[400px]:inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">Live PWA</span>
+                    <div class="flex items-center gap-1.5">
+                        <h1 class="font-bold text-base sm:text-lg lg:text-xl tracking-tight leading-none text-white whitespace-nowrap">PocketFlow</h1>
+                        <span id="pwaStatusBadge" class="hidden sm:inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">Live PWA</span>
                     </div>
-                    <p id="currentMonthDisplay" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium truncate">Monthly Tracker</p>
+                    <p id="currentMonthDisplay" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium whitespace-nowrap">Monthly Tracker</p>
                 </div>
             </div>
 
@@ -149,15 +174,15 @@
 
                 <!-- Currency Selector -->
                 <select id="currencySelect" aria-label="Currency" class="bg-slate-800 hover:bg-slate-700 text-[11px] sm:text-xs font-semibold text-emerald-400 rounded-xl px-2 sm:px-2.5 py-1.5 sm:py-2 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer">
-                    <option value="GH₵">GH₵ (GHS)</option>
-                    <option value="$">$ (USD)</option>
-                    <option value="€">€ (EUR)</option>
-                    <option value="£">£ (GBP)</option>
-                    <option value="₦">₦ (NGN)</option>
+                    <option value="GH₵">GH₵</option>
+                    <option value="$">$ USD</option>
+                    <option value="€">€ EUR</option>
+                    <option value="£">£ GBP</option>
+                    <option value="₦">₦ NGN</option>
                 </select>
 
                 <!-- Install to Home Screen Guide Button -->
-                <button onclick="openModal('installModal')" class="w-8 h-8 sm:w-auto sm:px-3 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs font-semibold" title="Add to Home Screen" aria-label="Add to Home Screen">
+                <button id="homeScreenGuideBtn" onclick="openModal('installModal')" class="w-8 h-8 sm:w-auto sm:px-3 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs font-semibold" title="Add to Home Screen" aria-label="Add to Home Screen">
                     <i class="fa-solid fa-mobile-screen-button text-emerald-400 text-xs sm:text-sm"></i>
                     <span class="hidden sm:inline">Install</span>
                 </button>
@@ -430,11 +455,15 @@
                         <span>For iPhone / iOS (Safari)</span>
                     </div>
                     <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
-                        <li>Open this page in <strong>Safari</strong>.</li>
-                        <li>Tap the <strong>Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket text-emerald-400 px-1"></i> at the bottom of the screen.</li>
+                        <li>Tap the button below to bundle your current expenses.</li>
+                        <li>Tap Safari's <strong>Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket text-emerald-400 px-1"></i>.</li>
                         <li>Scroll down and tap <strong>"Add to Home Screen"</strong> <i class="fa-regular fa-square-plus text-emerald-400 px-1"></i>.</li>
                         <li>Tap <strong>Add</strong> in the top-right corner.</li>
                     </ol>
+                    <button type="button" onclick="prepareDataForHomeScreen()" class="w-full mt-3 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-link"></i>
+                        <span>Prepare My Data for Home Screen</span>
+                    </button>
                 </div>
 
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4">
@@ -497,12 +526,12 @@
                 </button>
             </div>
 
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-4 flex items-center justify-between">
-                <div>
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-4 flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
                     <h4 class="font-bold text-xs text-white">Device Push Notifications</h4>
-                    <p class="text-[11px] text-slate-400 mt-0.5">Receive browser alerts for overspending</p>
+                    <p id="pushPermissionNote" class="text-[11px] text-slate-400 mt-0.5">Receive browser & system alerts for budget limits</p>
                 </div>
-                <button id="pushPermissionBtn" onclick="requestPushPermission()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition">
+                <button id="pushPermissionBtn" onclick="requestPushPermission()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition shrink-0">
                     Enable
                 </button>
             </div>
@@ -609,8 +638,13 @@
 
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
             if (isStandalone) {
+                document.documentElement.classList.add('is-standalone');
                 const badge = document.getElementById('pwaStatusBadge');
-                if (badge) badge.textContent = 'Standalone PWA';
+                if (badge) badge.textContent = 'Installed PWA';
+                const guideBtn = document.getElementById('homeScreenGuideBtn');
+                if (guideBtn) guideBtn.classList.add('hidden');
+                const nativeBtn = document.getElementById('nativeInstallBtn');
+                if (nativeBtn) nativeBtn.classList.add('hidden');
             }
         }
 
@@ -646,10 +680,13 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredInstallPrompt = e;
-            const btn = document.getElementById('nativeInstallBtn');
-            if (btn) {
-                btn.classList.remove('hidden');
-                btn.classList.add('flex');
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            if (!isStandalone) {
+                const btn = document.getElementById('nativeInstallBtn');
+                if (btn) {
+                    btn.classList.remove('hidden');
+                    btn.classList.add('flex');
+                }
             }
         });
 
@@ -667,12 +704,109 @@
             deferredInstallPrompt = null;
         }
 
+        // ==========================================
+        // MULTI-TIER DATA PERSISTENCE (IndexedDB + LocalStorage + SessionStorage)
+        // Guarantees user data is never wiped on update, refresh, or Safari storage pressure
+        // ==========================================
+        const IDB_NAME = 'PocketFlowDB';
+        const IDB_STORE = 'app_state';
+
+        function openIDB() {
+            return new Promise((resolve) => {
+                if (!('indexedDB' in window)) return resolve(null);
+                try {
+                    const req = indexedDB.open(IDB_NAME, 1);
+                    req.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains(IDB_STORE)) {
+                            db.createObjectStore(IDB_STORE);
+                        }
+                    };
+                    req.onsuccess = (e) => resolve(e.target.result);
+                    req.onerror = () => resolve(null);
+                } catch (e) {
+                    resolve(null);
+                }
+            });
+        }
+
+        async function saveStateToIDB(data) {
+            try {
+                const db = await openIDB();
+                if (!db) return;
+                const tx = db.transaction(IDB_STORE, 'readwrite');
+                tx.objectStore(IDB_STORE).put(data, 'current_state');
+            } catch (e) {
+                console.log('IDB save error:', e);
+            }
+        }
+
+        async function restoreStateFromIDB() {
+            try {
+                const db = await openIDB();
+                if (!db) return;
+                const tx = db.transaction(IDB_STORE, 'readonly');
+                const req = tx.objectStore(IDB_STORE).get('current_state');
+                req.onsuccess = (e) => {
+                    const idbData = e.target.result;
+                    if (idbData && Array.isArray(idbData.expenses) && idbData.expenses.length > 0) {
+                        const hasLocalData = localStorage.getItem(STORAGE_KEY);
+                        if (!hasLocalData) {
+                            state.expenses = idbData.expenses;
+                            if (idbData.budget) state.budget = Number(idbData.budget);
+                            if (idbData.currency) state.currency = idbData.currency;
+                            saveState();
+                            renderAll();
+                        }
+                    }
+                };
+            } catch (e) {
+                console.log('IDB restore error:', e);
+            }
+        }
+
         function loadState() {
             try {
-                const saved = localStorage.getItem(STORAGE_KEY);
+                // Check current and legacy keys so user data is never lost across updates
+                const candidateKeys = [
+                    STORAGE_KEY,
+                    'pocketflow_backup',
+                    'pocketflow_data_v2',
+                    'pocketflow_data_v1',
+                    'pocketflow_data',
+                    'pocketflow_expenses'
+                ];
+                let saved = null;
+                for (const key of candidateKeys) {
+                    const val = localStorage.getItem(key);
+                    if (val) {
+                        saved = val;
+                        break;
+                    }
+                }
+                if (!saved) {
+                    saved = sessionStorage.getItem(STORAGE_KEY);
+                }
+
                 if (saved) {
                     const parsed = JSON.parse(saved);
-                    state = { ...state, ...parsed };
+                    if (parsed && typeof parsed === 'object') {
+                        if (Array.isArray(parsed.expenses)) {
+                            state.expenses = parsed.expenses;
+                        }
+                        if (parsed.budget !== undefined && parsed.budget !== null) {
+                            state.budget = Number(parsed.budget);
+                        }
+                        if (parsed.currency) {
+                            state.currency = parsed.currency;
+                        }
+                        if (Array.isArray(parsed.notifications)) {
+                            state.notifications = parsed.notifications;
+                        }
+                        if (parsed.lastNotifiedTier !== undefined) {
+                            state.lastNotifiedTier = parsed.lastNotifiedTier;
+                        }
+                    }
                 }
             } catch (e) {
                 console.error('Could not load state from storage', e);
@@ -681,16 +815,77 @@
 
         function saveState() {
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                const payloadObj = {
                     currency: state.currency,
                     budget: state.budget,
                     expenses: state.expenses,
                     notifications: state.notifications,
-                    lastNotifiedTier: state.lastNotifiedTier || 0
-                }));
+                    lastNotifiedTier: state.lastNotifiedTier || 0,
+                    savedAt: new Date().toISOString()
+                };
+                const payload = JSON.stringify(payloadObj);
+                localStorage.setItem(STORAGE_KEY, payload);
+                localStorage.setItem('pocketflow_data', payload);
+                localStorage.setItem('pocketflow_backup', payload);
+                sessionStorage.setItem(STORAGE_KEY, payload);
+                saveStateToIDB(payloadObj);
             } catch (e) {
                 console.error('Could not save state to storage', e);
             }
+        }
+
+        function checkUrlDataImport() {
+            try {
+                if (window.location.hash && window.location.hash.startsWith('#data=')) {
+                    const raw = decodeURIComponent(window.location.hash.slice(6));
+                    const imported = JSON.parse(raw);
+                    if (imported && Array.isArray(imported.expenses)) {
+                        state.expenses = imported.expenses;
+                        if (imported.budget) state.budget = Number(imported.budget);
+                        if (imported.currency) state.currency = imported.currency;
+                        saveState();
+                        try {
+                            history.replaceState(null, '', window.location.pathname);
+                        } catch (e) {}
+                        showToast('Expenses successfully transferred to Home Screen!');
+                    }
+                }
+            } catch (e) {
+                console.log('URL data import skipped', e);
+            }
+        }
+
+        function prepareDataForHomeScreen() {
+            const payload = JSON.stringify({
+                currency: state.currency,
+                budget: state.budget,
+                expenses: state.expenses
+            });
+            const syncUrl = window.location.origin + window.location.pathname + '#data=' + encodeURIComponent(payload);
+            try {
+                history.replaceState(null, '', syncUrl);
+            } catch (e) {}
+            showToast('Ready! Now tap Safari Share -> "Add to Home Screen" to transfer your data');
+        }
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(err => {
+                    console.log('SW registration error:', err);
+                });
+            }
+        }
+
+        // Run immediate initialization
+        loadState();
+        checkUrlDataImport();
+        restoreStateFromIDB();
+        registerServiceWorker();
+        if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+            document.documentElement.classList.add('is-standalone');
+        }
+        if (navigator.storage && navigator.storage.persist) {
+            navigator.storage.persist().catch(() => {});
         }
 
         // ==========================================
@@ -1098,54 +1293,104 @@
 
         function checkPushPermissionUI() {
             const btn = document.getElementById('pushPermissionBtn');
+            const note = document.getElementById('pushPermissionNote');
             if (!btn) return;
-            if (!('Notification' in window)) {
-                btn.textContent = 'Not Supported';
-                btn.disabled = true;
+
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isIOS && !isStandalone) {
+                btn.textContent = 'Add to Home Screen';
+                btn.className = 'px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold transition';
+                if (note) note.textContent = 'Apple requires adding PocketFlow to Home Screen to enable alerts';
                 return;
             }
+
+            if (!('Notification' in window)) {
+                btn.textContent = 'Not Supported';
+                btn.className = 'px-3 py-1.5 rounded-xl bg-slate-800 text-slate-500 text-xs font-bold';
+                btn.disabled = true;
+                if (note) note.textContent = 'Notifications not supported on this browser';
+                return;
+            }
+
             if (Notification.permission === 'granted') {
-                btn.textContent = 'Enabled';
+                btn.textContent = 'Enabled ✓';
                 btn.className = 'px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold';
+                if (note) note.textContent = 'Device push notifications are active';
             } else if (Notification.permission === 'denied') {
-                btn.textContent = 'Blocked';
+                btn.textContent = 'Blocked in Settings';
                 btn.className = 'px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold';
+                if (note) note.textContent = 'Notifications blocked in browser/system settings';
+            } else {
+                btn.textContent = 'Enable';
+                btn.className = 'px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition';
+                if (note) note.textContent = 'Receive browser & system alerts for budget limits';
             }
         }
 
         async function requestPushPermission() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isIOS && !isStandalone) {
+                showToast('On iPhone, notifications require adding to Home Screen first!');
+                closeModal('notificationsModal');
+                openModal('installModal');
+                return;
+            }
+
             if (!('Notification' in window)) {
                 showToast('Browser does not support notifications');
                 return;
             }
-            let perm;
-            try {
-                perm = await Notification.requestPermission();
-            } catch (e) {
-                perm = await new Promise(resolve => Notification.requestPermission(resolve));
-            }
-            checkPushPermissionUI();
-            if (perm === 'granted') {
-                showToast('Push notifications enabled successfully!');
+
+            let perm = Notification.permission;
+            if (perm !== 'granted') {
                 try {
-                    new Notification('PocketFlow Alerts Active', {
-                        body: 'You will now receive desktop and mobile alerts when approaching budget limits.'
-                    });
+                    perm = await Notification.requestPermission();
                 } catch (e) {
-                    console.log('Direct notification constructor not available:', e);
+                    perm = await new Promise(resolve => Notification.requestPermission(resolve));
                 }
-            } else {
-                showToast('Permission denied for notifications');
+            }
+
+            checkPushPermissionUI();
+
+            if (perm === 'granted') {
+                showToast('Push notifications enabled!');
+                await sendBrowserPush('PocketFlow Alerts Active 🔔', 'You will now receive alerts when approaching budget limits.');
+            } else if (perm === 'denied') {
+                showToast('Notifications blocked. Enable in iOS/Browser Settings.');
             }
         }
 
-        function sendBrowserPush(title, body) {
-            if ('Notification' in window && Notification.permission === 'granted') {
+        async function sendBrowserPush(title, body) {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+            // 1. Primary method: Service Worker registration (Mandatory for iOS 16.4+ standalone PWAs & modern Android)
+            if ('serviceWorker' in navigator) {
                 try {
-                    new Notification(title, { body });
+                    const reg = await navigator.serviceWorker.ready;
+                    if (reg && reg.showNotification) {
+                        await reg.showNotification(title, {
+                            body: body,
+                            icon: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%2310b981"/><path d="M28 35h44c3.3 0 6 2.7 6 6v26c0 3.3-2.7 6-6 6H28c-3.3 0-6-2.7-6-6V41c0-3.3 2.7-6 6-6z" fill="%23064e3b"/><circle cx="58" cy="54" r="5" fill="%2334d399"/></svg>',
+                            badge: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%2310b981"/></svg>',
+                            tag: 'pocketflow-alert',
+                            renotify: true
+                        });
+                        return;
+                    }
                 } catch (e) {
-                    console.error('Push notification error', e);
+                    console.log('SW notification error:', e);
                 }
+            }
+
+            // 2. Fallback: Standard window Notification constructor (Desktop / Browsers without SW)
+            try {
+                new Notification(title, { body });
+            } catch (e) {
+                console.log('Window notification fallback error:', e);
             }
         }
 
