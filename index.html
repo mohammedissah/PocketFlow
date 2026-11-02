@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PocketFlow - Spending Tracker</title>
+    <!-- PWA / Home Screen Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PocketFlow">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0f172a">
+    <link id="pwaManifestLink" rel="manifest">
+    <link id="appleTouchIconLink" rel="apple-touch-icon">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Hide scrollbars for horizontal category pills */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Smooth modal animations */
+        .modal-enter {
+            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        /* Standalone PWA safe area padding */
+        @media all and (display-mode: standalone) {
+            header {
+                padding-top: max(1.5rem, env(safe-area-inset-top));
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-28 lg:pb-12 selection:bg-emerald-500 selection:text-white">
+
+    <!-- Responsive Web App Shell -->
+    <div class="max-w-6xl mx-auto min-h-screen flex flex-col relative bg-slate-900/90 shadow-2xl border-x border-slate-800/60">
+
+        <!-- Top Web App Navigation Bar -->
+        <header class="px-5 lg:px-8 pt-5 pb-4 flex items-center justify-between sticky top-0 z-20 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-wallet text-slate-950 text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-bold text-lg lg:text-xl tracking-tight leading-none">PocketFlow</h1>
+                        <span id="pwaStatusBadge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Live PWA</span>
+                    </div>
+                    <p id="currentMonthDisplay" class="text-xs text-slate-400 mt-0.5 font-medium">Monthly Tracker</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Live Host Quick Link Badge / Copy URL -->
+                <button onclick="copyAppUrl()" class="hidden sm:flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-2 rounded-xl text-xs font-semibold transition" title="Copy live link">
+                    <i class="fa-solid fa-link text-emerald-400"></i>
+                    <span>Share URL</span>
+                </button>
+
+                <!-- Notifications Bell Center -->
+                <button onclick="openModal('notificationsModal')" class="relative bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl border border-slate-700 transition flex items-center gap-1.5 text-xs font-semibold" title="Notifications & Alerts">
+                    <i class="fa-solid fa-bell text-emerald-400"></i>
+                    <span id="notificationBadgeCount" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-bold items-center justify-center">0</span>
+                </button>
+
+                <!-- Desktop Quick Add Button -->
+                <button onclick="openModal('addExpenseModal')" class="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Expense</span>
+                </button>
+
+                <!-- Native One-Tap PWA Install Button -->
+                <button id="nativeInstallBtn" onclick="triggerNativeInstall()" class="hidden items-center gap-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-3 py-2 rounded-xl text-xs font-bold transition">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Install App</span>
+                </button>
+
+                <!-- Currency Selector -->
+                <select id="currencySelect" aria-label="Currency" class="bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-emerald-400 rounded-xl px-2.5 py-2 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer">
+                    <option value="GH₵">GH₵ (GHS)</option>
+                    <option value="$">$ (USD)</option>
+                    <option value="€">€ (EUR)</option>
+                    <option value="£">£ (GBP)</option>
+                    <option value="₦">₦ (NGN)</option>
+                </select>
+
+                <!-- Install to Home Screen Guide Button -->
+                <button onclick="openModal('installModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl border border-slate-700 transition relative flex items-center gap-1.5 text-xs font-semibold" title="Add to Home Screen">
+                    <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
+                    <span class="hidden sm:inline">Home Screen</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Responsive Grid Area -->
+        <main class="flex-1 px-5 lg:px-8 pt-6 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- LEFT COLUMN: Summary Card & Category Breakdown -->
+            <div class="lg:col-span-5 space-y-6">
+                <!-- Live Alert Banner -->
+                <div id="liveAlertBanner" class="hidden bg-rose-500/10 border border-rose-500/30 rounded-2xl p-4 flex items-start gap-3 text-rose-300 shadow-lg">
+                    <i class="fa-solid fa-triangle-exclamation text-base mt-0.5 shrink-0"></i>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-xs uppercase tracking-wider text-rose-200">Budget Warning</h4>
+                        <p id="liveAlertText" class="text-xs mt-1 leading-relaxed">You have crossed 80% of your monthly limit.</p>
+                    </div>
+                </div>
+
+                <!-- Hero Budget Summary Card -->
+                <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-800 via-slate-800/95 to-slate-900 p-5 lg:p-6 border border-slate-700/70 shadow-xl">
+                    <div class="absolute -right-10 -top-10 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                    
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Spent (This Month)</span>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span id="heroCurrency" class="text-2xl font-bold text-emerald-400">GH₵</span>
+                                <h2 id="totalSpentDisplay" class="text-4xl font-extrabold tracking-tight text-white">0.00</h2>
+                            </div>
+                        </div>
+                        <button onclick="openModal('budgetModal')" class="text-xs font-medium bg-slate-700/70 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl border border-slate-600/60 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-pen text-[10px] text-emerald-400"></i>
+                            <span>Budget</span>
+                        </button>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-medium">
+                            <span id="budgetPercentageText" class="text-slate-300">0% of budget used</span>
+                            <span class="text-slate-400">Limit: <strong id="budgetLimitDisplay" class="text-slate-200">GH₵ 2,500</strong></span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                            <div id="budgetProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats Row -->
+                    <div class="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-slate-700/60">
+                        <div class="bg-slate-900/60 rounded-2xl p-3 border border-slate-800/80">
+                            <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
+                                <i class="fa-solid fa-piggy-bank text-emerald-400"></i>
+                                <span>Remaining</span>
+                            </div>
+                            <p id="remainingBudgetDisplay" class="font-bold text-base text-slate-100">GH₵ 2,500.00</p>
+                        </div>
+                        <div class="bg-slate-900/60 rounded-2xl p-3 border border-slate-800/80">
+                            <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
+                                <i class="fa-solid fa-chart-line text-amber-400"></i>
+                                <span>Daily Avg</span>
+                            </div>
+                            <p id="dailyAvgDisplay" class="font-bold text-base text-slate-100">GH₵ 0.00</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Mobile Navigation Tabs -->
+                <div class="grid grid-cols-2 gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 lg:hidden">
+                    <button id="tabTransactions" onclick="switchTab('transactions')" class="py-2.5 text-xs font-bold rounded-xl bg-slate-800 text-emerald-400 shadow transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-list-ul"></i>
+                        <span>Expenses</span>
+                    </button>
+                    <button id="tabAnalytics" onclick="switchTab('analytics')" class="py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Breakdown</span>
+                    </button>
+                </div>
+
+                <!-- Analytics / Category Breakdown Section -->
+                <section id="viewAnalytics" class="hidden lg:block space-y-5">
+                    <div class="bg-slate-800/50 border border-slate-800 rounded-3xl p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-slate-200">Spending by Category</h3>
+                            <span id="transactionCountBadge" class="text-[11px] font-semibold text-slate-400 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">0 items</span>
+                        </div>
+                        
+                        <!-- Stacked Multi-Category Bar -->
+                        <div id="multiCategoryBar" class="w-full h-4 bg-slate-950 rounded-full overflow-hidden flex mb-6 border border-slate-800">
+                            <!-- Populated via JS -->
+                        </div>
+
+                        <!-- Category Breakdown List -->
+                        <div id="categoryBreakdownList" class="space-y-3.5">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Web App Backup, Restore & Reset Card -->
+                    <div class="bg-slate-800/30 border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Web App Data & Sync</h4>
+                                <p class="text-[11px] text-slate-400">Stored offline in your browser storage</p>
+                            </div>
+                            <button onclick="openModal('confirmClearModal')" class="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold transition">
+                                Reset All
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80">
+                            <button onclick="backupJSON()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 border border-slate-700 transition">
+                                <i class="fa-solid fa-cloud-arrow-down text-emerald-400"></i>
+                                <span>Backup JSON</span>
+                            </button>
+                            <label class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-cloud-arrow-up text-sky-400"></i>
+                                <span>Restore JSON</span>
+                                <input type="file" accept=".json" onchange="restoreJSON(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- RIGHT COLUMN: Transactions Feed & Search/Filter -->
+            <section id="viewTransactions" class="lg:col-span-7 space-y-4 lg:block">
+                <!-- Search & Quick Filter Bar -->
+                <div class="bg-slate-800/40 border border-slate-800 rounded-2xl p-3 space-y-3">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input type="text" id="searchInput" oninput="handleSearch(event)" placeholder="Search expenses by note or category..."
+                            class="w-full bg-slate-950/90 border border-slate-800 focus:border-emerald-500 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder-slate-500 focus:outline-none transition">
+                    </div>
+
+                    <!-- Category Filter Pills -->
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5" id="categoryFilterBar">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Transactions Header & Export -->
+                <div class="flex items-center justify-between px-1">
+                    <h3 class="text-sm font-bold text-slate-300">Transactions</h3>
+                    <div class="flex items-center gap-2">
+                        <button onclick="exportCSV()" class="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1.5 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 transition">
+                            <i class="fa-solid fa-file-csv text-xs"></i> Export CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Expense List Container -->
+                <div id="expenseList" class="space-y-3">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Floating Bottom Action Bar (Mobile & Tablet) -->
+        <div class="fixed bottom-0 left-0 right-0 z-30 pointer-events-none lg:hidden">
+            <div class="max-w-md mx-auto px-5 pb-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-3 pointer-events-auto">
+                <button onclick="openModal('addExpenseModal')" class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus text-base"></i>
+                    <span>Log New Expense</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL 1: ADD EXPENSE MODAL -->
+    <div id="addExpenseModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg font-bold text-white">Add Expense</h3>
+                <button onclick="closeModal('addExpenseModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="expenseForm" onsubmit="handleSaveExpense(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Amount</label>
+                    <div class="relative">
+                        <span id="modalCurrencySymbol" class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-emerald-400">GH₵</span>
+                        <input type="number" id="expenseAmount" step="0.01" min="0.01" required placeholder="0.00"
+                            class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl py-3.5 pl-16 pr-4 text-2xl font-extrabold text-white placeholder-slate-700 focus:outline-none transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Category</label>
+                    <div id="modalCategoryGrid" class="grid grid-cols-3 gap-2">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Description</label>
+                        <input type="text" id="expenseNote" required placeholder="e.g. Jollof & Chicken, Uber"
+                            class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Date</label>
+                        <input type="date" id="expenseDate" required
+                            class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl py-2.5 px-3.5 text-sm text-white focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition">
+                        Save Expense
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: EDIT BUDGET MODAL -->
+    <div id="budgetModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-white">Monthly Budget Target</h3>
+                <button onclick="closeModal('budgetModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-400 mb-4">Set a monthly spending limit to track your remaining balance and daily allowance.</p>
+            <form onsubmit="handleSaveBudget(event)" class="space-y-4">
+                <div class="relative">
+                    <span id="budgetModalCurrency" class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-emerald-400">GH₵</span>
+                    <input type="number" id="budgetInput" step="any" min="1" required
+                        class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl py-3.5 pl-16 pr-4 text-xl font-bold text-white focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition">
+                    Update Budget
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ADD TO HOME SCREEN GUIDE -->
+    <div id="installModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Add to Home Screen</h3>
+                </div>
+                <button onclick="closeModal('installModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                You can install <strong>PocketFlow</strong> as a standalone app on your phone so it opens full-screen and saves your expenses offline right on your device.
+            </p>
+
+            <div class="space-y-4 text-xs">
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4">
+                    <div class="flex items-center gap-2 font-bold text-emerald-400 mb-1.5">
+                        <i class="fa-brands fa-apple text-base"></i>
+                        <span>For iPhone / iOS (Safari)</span>
+                    </div>
+                    <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
+                        <li>Open this page in <strong>Safari</strong>.</li>
+                        <li>Tap the <strong>Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket text-emerald-400 px-1"></i> at the bottom of the screen.</li>
+                        <li>Scroll down and tap <strong>"Add to Home Screen"</strong> <i class="fa-regular fa-square-plus text-emerald-400 px-1"></i>.</li>
+                        <li>Tap <strong>Add</strong> in the top-right corner.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4">
+                    <div class="flex items-center gap-2 font-bold text-emerald-400 mb-1.5">
+                        <i class="fa-brands fa-android text-base"></i>
+                        <span>For Android (Chrome)</span>
+                    </div>
+                    <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
+                        <li>Open this app in <strong>Google Chrome</strong>.</li>
+                        <li>Tap the <strong>three dots menu</strong> <i class="fa-solid fa-ellipsis-vertical text-emerald-400 px-1"></i> in the top-right corner.</li>
+                        <li>Select <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>.</li>
+                        <li>Confirm by tapping <strong>Add</strong>.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-4">
+                    <h4 class="font-bold text-emerald-300 mb-1">Live Host Info</h4>
+                    <p class="text-slate-400 mb-3">Your live app link is active on your host. Open it in Safari or Chrome to add it instantly.</p>
+                    <button onclick="downloadSingleFileApp()" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <span>Download App File (.html)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CONFIRM CLEAR ALL -->
+    <div id="confirmClearModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center">
+            <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">Clear All Expenses?</h3>
+            <p class="text-xs text-slate-400 mb-5">This will permanently remove all logged transactions from your device.</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="closeModal('confirmClearModal')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">
+                    Cancel
+                </button>
+                <button onclick="clearAllExpenses()" class="py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-bold">
+                    Yes, Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: NOTIFICATIONS & ALERTS CENTER -->
+    <div id="notificationsModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Notifications & Alerts</h3>
+                </div>
+                <button onclick="closeModal('notificationsModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-4 flex items-center justify-between">
+                <div>
+                    <h4 class="font-bold text-xs text-white">Device Push Notifications</h4>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Receive browser alerts for overspending</p>
+                </div>
+                <button id="pushPermissionBtn" onclick="requestPushPermission()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition">
+                    Enable
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between mb-2 px-1">
+                <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Recent Alerts Feed</h4>
+                <button onclick="clearAllNotifications()" class="text-[11px] text-slate-400 hover:text-rose-400 transition font-medium">Clear All</button>
+            </div>
+
+            <div id="notificationsList" class="space-y-2.5 overflow-y-auto flex-1 pr-1">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-800 border border-emerald-500/40 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-300">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMessage">Saved!</span>
+    </div>
+
+    <script>
+        // ==========================================
+        // APP CONFIG & STATE DATA
+        // ==========================================
+        const STORAGE_KEY = 'pocketflow_data_v2';
+
+        function getLocalDateStr(date = new Date()) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        const CATEGORIES = [
+            { id: 'food', name: 'Food & Dining', icon: 'fa-utensils', color: 'bg-emerald-500', hex: '#10b981', bgSoft: 'bg-emerald-500/15', text: 'text-emerald-400' },
+            { id: 'transport', name: 'Transport & Uber', icon: 'fa-car', color: 'bg-teal-500', hex: '#14b8a6', bgSoft: 'bg-teal-500/15', text: 'text-teal-400' },
+            { id: 'bills', name: 'Bills & Data', icon: 'fa-bolt', color: 'bg-sky-500', hex: '#0ea5e9', bgSoft: 'bg-sky-500/15', text: 'text-sky-400' },
+            { id: 'shopping', name: 'Shopping & Groceries', icon: 'fa-bag-shopping', color: 'bg-indigo-500', hex: '#6366f1', bgSoft: 'bg-indigo-500/15', text: 'text-indigo-400' },
+            { id: 'fun', name: 'Leisure & Fun', icon: 'fa-film', color: 'bg-amber-500', hex: '#f59e0b', bgSoft: 'bg-amber-500/15', text: 'text-amber-400' },
+            { id: 'other', name: 'Other Expenses', icon: 'fa-receipt', color: 'bg-slate-500', hex: '#64748b', bgSoft: 'bg-slate-500/15', text: 'text-slate-400' }
+        ];
+
+        let state = {
+            currency: 'GH₵',
+            budget: 2500,
+            expenses: [
+                { id: 'exp-1', amount: 120, category: 'food', note: 'Waakye & Juice', date: getLocalDateStr() },
+                { id: 'exp-2', amount: 45, category: 'transport', note: 'Bolt ride', date: getLocalDateStr() },
+                { id: 'exp-3', amount: 200, category: 'bills', note: 'MTN 15GB Data Bundle', date: getLocalDateStr(new Date(Date.now() - 86400000)) }
+            ],
+            notifications: [
+                { id: 'notif-1', title: 'Welcome to PocketFlow', body: 'Start logging expenses to monitor your budget alerts.', time: 'Just now', type: 'info', read: false }
+            ],
+            lastNotifiedTier: 0,
+            selectedModalCategory: 'food',
+            selectedCategoryFilter: 'all',
+            searchQuery: ''
+        };
+
+        // ==========================================
+        // PWA & LOCAL STORAGE
+        // ==========================================
+        let deferredInstallPrompt = null;
+
+        function setupWebAppManifest() {
+            const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <defs>
+                    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#34d399"/>
+                        <stop offset="100%" stop-color="#0d9488"/>
+                    </linearGradient>
+                </defs>
+                <rect width="512" height="512" rx="120" fill="#0f172a"/>
+                <rect x="56" y="56" width="400" height="400" rx="96" fill="url(#g)"/>
+                <path d="M160 192h192c17.7 0 32 14.3 32 32v112c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32zm0-48h160c8.8 0 16 7.2 16 16s-7.2 16-16 16H160c-8.8 0-16-7.2-16-16s7.2-16 16-16zm168 128a24 24 0 1 0 0-48 24 24 0 0 0 0 48z" fill="#0f172a"/>
+            </svg>`;
+            const iconDataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgIcon);
+
+            const appleIcon = document.getElementById('appleTouchIconLink');
+            if (appleIcon) appleIcon.href = iconDataUrl;
+
+            const manifest = {
+                name: 'PocketFlow Spending Tracker',
+                short_name: 'PocketFlow',
+                description: 'Track your daily expenses, monthly budget, and spending breakdown.',
+                start_url: '.',
+                display: 'standalone',
+                background_color: '#0f172a',
+                theme_color: '#0f172a',
+                icons: [
+                    {
+                        src: iconDataUrl,
+                        sizes: '512x512',
+                        type: 'image/svg+xml',
+                        purpose: 'any maskable'
+                    }
+                ]
+            };
+
+            const manifestDataUrl = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
+            const manifestLink = document.getElementById('pwaManifestLink');
+            if (manifestLink) manifestLink.href = manifestDataUrl;
+
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            if (isStandalone) {
+                const badge = document.getElementById('pwaStatusBadge');
+                if (badge) badge.textContent = 'Standalone PWA';
+            }
+        }
+
+        function copyAppUrl() {
+            const liveUrl = window.location.href;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(liveUrl).then(() => {
+                    showToast('Live App URL copied to clipboard!');
+                }).catch(() => {
+                    fallbackCopy(liveUrl);
+                });
+            } else {
+                fallbackCopy(liveUrl);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Live App URL copied!');
+            } catch (err) {
+                showToast('Could not copy URL');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            const btn = document.getElementById('nativeInstallBtn');
+            if (btn) {
+                btn.classList.remove('hidden');
+                btn.classList.add('flex');
+            }
+        });
+
+        async function triggerNativeInstall() {
+            if (!deferredInstallPrompt) {
+                openModal('installModal');
+                return;
+            }
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            if (outcome === 'accepted') {
+                showToast('PocketFlow installed to your device!');
+                document.getElementById('nativeInstallBtn').classList.add('hidden');
+            }
+            deferredInstallPrompt = null;
+        }
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    state = { ...state, ...parsed };
+                }
+            } catch (e) {
+                console.error('Could not load state from storage', e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    currency: state.currency,
+                    budget: state.budget,
+                    expenses: state.expenses,
+                    notifications: state.notifications,
+                    lastNotifiedTier: state.lastNotifiedTier || 0
+                }));
+            } catch (e) {
+                console.error('Could not save state to storage', e);
+            }
+        }
+
+        // ==========================================
+        // INITIALIZATION & CORE RENDERING
+        // ==========================================
+        window.onload = function () {
+            setupWebAppManifest();
+            loadState();
+            checkPushPermissionUI();
+            setupModalBackdrops();
+
+            const now = new Date();
+            document.getElementById('currentMonthDisplay').textContent =
+                now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            const expenseDateInput = document.getElementById('expenseDate');
+            if (expenseDateInput) expenseDateInput.value = getLocalDateStr();
+
+            const currencySelect = document.getElementById('currencySelect');
+            currencySelect.value = state.currency;
+            currencySelect.addEventListener('change', (e) => {
+                state.currency = e.target.value;
+                saveState();
+                renderAll();
+                showToast(`Currency updated to ${state.currency}`);
+            });
+
+            renderModalCategories();
+            renderAll(true);
+        };
+
+        function formatMoney(num) {
+            return Number(num).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function getCategoryMeta(catId) {
+            return CATEGORIES.find(c => c.id === catId) || CATEGORIES[CATEGORIES.length - 1];
+        }
+
+        function getCurrentMonthExpenses() {
+            const currentMonthPrefix = getLocalDateStr().slice(0, 7);
+            return state.expenses.filter(e => (e.date || '').startsWith(currentMonthPrefix));
+        }
+
+        function renderAll(isInitialLoad = false) {
+            document.getElementById('heroCurrency').textContent = state.currency;
+            document.getElementById('modalCurrencySymbol').textContent = state.currency;
+            document.getElementById('budgetModalCurrency').textContent = state.currency;
+
+            const monthExpenses = getCurrentMonthExpenses();
+            const totalSpent = monthExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
+            const remaining = state.budget - totalSpent;
+            const actualPercentage = state.budget > 0 ? Math.round((totalSpent / state.budget) * 100) : 0;
+            const visualPercentage = Math.min(100, actualPercentage);
+
+            const dayOfMonth = Math.max(1, new Date().getDate());
+            const dailyAvg = totalSpent / dayOfMonth;
+
+            document.getElementById('totalSpentDisplay').textContent = formatMoney(totalSpent);
+            document.getElementById('budgetLimitDisplay').textContent = `${state.currency} ${Number(state.budget).toLocaleString()}`;
+            document.getElementById('budgetPercentageText').textContent = `${actualPercentage}% of budget used`;
+
+            // Evaluate robust notification thresholds
+            evaluateSpendingAlerts(totalSpent, state.budget, isInitialLoad);
+
+            const progressBar = document.getElementById('budgetProgressBar');
+            progressBar.style.width = `${visualPercentage}%`;
+            if (actualPercentage >= 90) {
+                progressBar.className = 'h-full bg-gradient-to-r from-rose-500 to-amber-500 rounded-full transition-all duration-500';
+            } else if (actualPercentage >= 75) {
+                progressBar.className = 'h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-500';
+            } else {
+                progressBar.className = 'h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500';
+            }
+
+            const remainingEl = document.getElementById('remainingBudgetDisplay');
+            if (remaining >= 0) {
+                remainingEl.textContent = `${state.currency} ${formatMoney(remaining)}`;
+                remainingEl.className = 'font-bold text-base text-slate-100';
+            } else {
+                remainingEl.textContent = `-${state.currency} ${formatMoney(Math.abs(remaining))}`;
+                remainingEl.className = 'font-bold text-base text-rose-400';
+            }
+
+            document.getElementById('dailyAvgDisplay').textContent = `${state.currency} ${formatMoney(dailyAvg)}`;
+            document.getElementById('transactionCountBadge').textContent = `${monthExpenses.length} ${monthExpenses.length === 1 ? 'item' : 'items'}`;
+
+            renderCategoryFilterBar();
+            renderExpenseList();
+            renderAnalytics(totalSpent, monthExpenses);
+            renderNotificationsUI();
+        }
+
+        // ==========================================
+        // UI RENDERING HELPERS
+        // ==========================================
+        function renderModalCategories() {
+            const container = document.getElementById('modalCategoryGrid');
+            if (!container) return;
+
+            container.innerHTML = CATEGORIES.map(cat => {
+                const isSelected = state.selectedModalCategory === cat.id;
+                return `
+                    <button type="button" onclick="selectModalCategory('${cat.id}')"
+                        class="p-2.5 rounded-xl border text-left flex flex-col items-center justify-center gap-1 transition ${isSelected ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300' : 'border-slate-800 bg-slate-950 text-slate-400 hover:text-slate-200'}">
+                        <i class="fa-solid ${cat.icon} text-sm"></i>
+                        <span class="text-[10px] font-semibold text-center truncate w-full">${cat.name.split(' ')[0]}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectModalCategory(catId) {
+            state.selectedModalCategory = catId;
+            renderModalCategories();
+        }
+
+        function renderCategoryFilterBar() {
+            const bar = document.getElementById('categoryFilterBar');
+            if (!bar) return;
+
+            let html = `
+                <button onclick="setCategoryFilter('all')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${state.selectedCategoryFilter === 'all' ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}">
+                    All
+                </button>
+            `;
+
+            CATEGORIES.forEach(cat => {
+                const isActive = state.selectedCategoryFilter === cat.id;
+                html += `
+                    <button onclick="setCategoryFilter('${cat.id}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${isActive ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}">
+                        <i class="fa-solid ${cat.icon}"></i>
+                        <span>${cat.name.split(' ')[0]}</span>
+                    </button>
+                `;
+            });
+
+            bar.innerHTML = html;
+        }
+
+        function setCategoryFilter(filterId) {
+            state.selectedCategoryFilter = filterId;
+            renderCategoryFilterBar();
+            renderExpenseList();
+        }
+
+        function handleSearch(e) {
+            state.searchQuery = (e.target.value || '').trim().toLowerCase();
+            renderExpenseList();
+        }
+
+        function renderExpenseList() {
+            const container = document.getElementById('expenseList');
+            if (!container) return;
+
+            let filtered = [...state.expenses];
+
+            // Sort expenses by date descending (newest first)
+            filtered.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+            if (state.selectedCategoryFilter !== 'all') {
+                filtered = filtered.filter(e => e.category === state.selectedCategoryFilter);
+            }
+
+            if (state.searchQuery) {
+                filtered = filtered.filter(e => {
+                    const noteMatch = (e.note || '').toLowerCase().includes(state.searchQuery);
+                    const cat = getCategoryMeta(e.category);
+                    const catMatch = cat.name.toLowerCase().includes(state.searchQuery);
+                    return noteMatch || catMatch;
+                });
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-slate-800/30 border border-slate-800 rounded-3xl p-8 text-center text-slate-500">
+                        <i class="fa-solid fa-receipt text-3xl mb-2 text-slate-600"></i>
+                        <p class="text-xs font-medium">No expenses found.</p>
+                        <p class="text-[11px] text-slate-600 mt-1">Tap the plus button below to log a purchase.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const cat = getCategoryMeta(item.category);
+                const datePart = (item.date || '').split('T')[0];
+                const displayDate = datePart ? new Date(datePart + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Today';
+
+                return `
+                    <div class="bg-slate-800/40 hover:bg-slate-800/70 border border-slate-800/90 rounded-2xl p-3.5 flex items-center justify-between transition group">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 rounded-xl ${cat.bgSoft} ${cat.text} flex items-center justify-center shrink-0">
+                                <i class="fa-solid ${cat.icon} text-base"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="font-bold text-xs text-white truncate group-hover:text-emerald-400 transition">${escapeHtml(item.note)}</h4>
+                                <div class="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+                                    <span>${cat.name}</span>
+                                    <span>•</span>
+                                    <span>${displayDate}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2.5">
+                            <span class="font-bold text-sm text-slate-100 whitespace-nowrap">
+                                -${state.currency} ${formatMoney(item.amount)}
+                            </span>
+                            <button onclick="deleteExpense('${item.id}')" class="w-7 h-7 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 flex items-center justify-center transition" title="Delete expense">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAnalytics(totalSpent, monthExpenses) {
+            const barContainer = document.getElementById('multiCategoryBar');
+            const listContainer = document.getElementById('categoryBreakdownList');
+            if (!barContainer || !listContainer) return;
+
+            const categoryTotals = {};
+            CATEGORIES.forEach(c => categoryTotals[c.id] = 0);
+
+            monthExpenses.forEach(exp => {
+                if (categoryTotals[exp.category] !== undefined) {
+                    categoryTotals[exp.category] += Number(exp.amount);
+                } else {
+                    categoryTotals['other'] = (categoryTotals['other'] || 0) + Number(exp.amount);
+                }
+            });
+
+            if (totalSpent === 0) {
+                barContainer.innerHTML = '<div class="w-full h-full bg-slate-800"></div>';
+                listContainer.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">No spending logged for this month yet.</p>';
+                return;
+            }
+
+            // Render Stacked Bar
+            barContainer.innerHTML = CATEGORIES.map(cat => {
+                const amount = categoryTotals[cat.id] || 0;
+                if (amount <= 0) return '';
+                const pct = (amount / totalSpent) * 100;
+                return `<div style="width: ${pct}%; background-color: ${cat.hex}" title="${cat.name}: ${pct.toFixed(1)}%"></div>`;
+            }).join('');
+
+            // Render List Items
+            listContainer.innerHTML = CATEGORIES.map(cat => {
+                const amount = categoryTotals[cat.id] || 0;
+                const pct = totalSpent > 0 ? ((amount / totalSpent) * 100).toFixed(0) : 0;
+
+                return `
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full ${cat.color}"></span>
+                                <span class="text-slate-300 font-medium">${cat.name}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-bold text-slate-200">${state.currency} ${formatMoney(amount)}</span>
+                                <span class="text-slate-500 text-[10px] ml-1">(${pct}%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                            <div class="h-full ${cat.color} rounded-full" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // ROBUST NOTIFICATION & ALERT SYSTEM
+        // ==========================================
+        function evaluateSpendingAlerts(totalSpent, budget, isInitialLoad = false) {
+            if (!budget || budget <= 0) return;
+            const ratio = totalSpent / budget;
+            let currentTier = 0;
+            let alertMsg = '';
+            let alertTitle = '';
+
+            if (ratio >= 1.0) {
+                currentTier = 100;
+                alertTitle = '🚨 Monthly Budget Exceeded!';
+                alertMsg = `You have spent ${state.currency} ${formatMoney(totalSpent)}, exceeding your ${state.currency} ${formatMoney(budget)} monthly limit!`;
+            } else if (ratio >= 0.8) {
+                currentTier = 80;
+                alertTitle = '⚠️ Budget Warning (80% Reached)';
+                alertMsg = `You have used ${Math.round(ratio * 100)}% of your monthly budget. Only ${state.currency} ${formatMoney(budget - totalSpent)} left.`;
+            } else if (ratio >= 0.5) {
+                currentTier = 50;
+                alertTitle = 'ℹ️ Budget Milestone (50%)';
+                alertMsg = `You have reached half of your monthly budget (${Math.round(ratio * 100)}% spent).`;
+            }
+
+            // Update live banner UI
+            const banner = document.getElementById('liveAlertBanner');
+            const bannerText = document.getElementById('liveAlertText');
+            if (banner && bannerText) {
+                if (currentTier >= 80) {
+                    banner.classList.remove('hidden');
+                    bannerText.textContent = alertMsg;
+                } else {
+                    banner.classList.add('hidden');
+                }
+            }
+
+            // On initial page load, do not create duplicate notifications or blast alerts
+            if (isInitialLoad) {
+                state.lastNotifiedTier = currentTier;
+                return;
+            }
+
+            // Trigger notification only if tier increased during active usage
+            if (currentTier > (state.lastNotifiedTier || 0)) {
+                state.lastNotifiedTier = currentTier;
+                addNotificationItem(alertTitle, alertMsg, currentTier === 100 ? 'danger' : 'warning');
+                sendBrowserPush(alertTitle, alertMsg);
+            } else if (currentTier < (state.lastNotifiedTier || 0)) {
+                state.lastNotifiedTier = currentTier;
+            }
+        }
+
+        function addNotificationItem(title, body, type = 'info') {
+            const newNotif = {
+                id: 'notif-' + Date.now(),
+                title,
+                body,
+                time: 'Just now',
+                type,
+                read: false
+            };
+            state.notifications.unshift(newNotif);
+            saveState();
+            renderNotificationsUI();
+        }
+
+        function renderNotificationsUI() {
+            const listContainer = document.getElementById('notificationsList');
+            const badge = document.getElementById('notificationBadgeCount');
+            if (!listContainer || !badge) return;
+
+            const unreadCount = state.notifications.filter(n => !n.read).length;
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+            } else {
+                badge.classList.add('hidden');
+                badge.classList.remove('flex');
+            }
+
+            if (state.notifications.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-10 text-slate-500 text-xs">
+                        <i class="fa-solid fa-bell-slash text-2xl mb-2"></i>
+                        <p>No recent alerts or notifications.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = state.notifications.map(n => {
+                let iconClass = 'fa-circle-info text-sky-400 bg-sky-500/15';
+                if (n.type === 'warning') iconClass = 'fa-triangle-exclamation text-amber-400 bg-amber-500/15';
+                if (n.type === 'danger') iconClass = 'fa-circle-exclamation text-rose-400 bg-rose-500/15';
+
+                return `
+                    <div onclick="markNotificationRead('${n.id}')" class="bg-slate-950 border ${n.read ? 'border-slate-800/60 opacity-75' : 'border-slate-800'} rounded-2xl p-3.5 flex items-start gap-3 cursor-pointer transition hover:border-slate-700">
+                        <div class="w-8 h-8 rounded-xl ${iconClass} flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid ${iconClass.split(' ')[0]} text-xs"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <h5 class="font-bold text-xs text-white truncate">${escapeHtml(n.title)}</h5>
+                                <span class="text-[10px] text-slate-500 ml-2">${n.time}</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mt-1 leading-relaxed">${escapeHtml(n.body)}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function markNotificationRead(id) {
+            const item = state.notifications.find(n => n.id === id);
+            if (item) {
+                item.read = true;
+                saveState();
+                renderNotificationsUI();
+            }
+        }
+
+        function clearAllNotifications() {
+            state.notifications = [];
+            saveState();
+            renderNotificationsUI();
+            showToast('All notifications cleared');
+        }
+
+        function checkPushPermissionUI() {
+            const btn = document.getElementById('pushPermissionBtn');
+            if (!btn) return;
+            if (!('Notification' in window)) {
+                btn.textContent = 'Not Supported';
+                btn.disabled = true;
+                return;
+            }
+            if (Notification.permission === 'granted') {
+                btn.textContent = 'Enabled';
+                btn.className = 'px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold';
+            } else if (Notification.permission === 'denied') {
+                btn.textContent = 'Blocked';
+                btn.className = 'px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold';
+            }
+        }
+
+        async function requestPushPermission() {
+            if (!('Notification' in window)) {
+                showToast('Browser does not support notifications');
+                return;
+            }
+            let perm;
+            try {
+                perm = await Notification.requestPermission();
+            } catch (e) {
+                perm = await new Promise(resolve => Notification.requestPermission(resolve));
+            }
+            checkPushPermissionUI();
+            if (perm === 'granted') {
+                showToast('Push notifications enabled successfully!');
+                try {
+                    new Notification('PocketFlow Alerts Active', {
+                        body: 'You will now receive desktop and mobile alerts when approaching budget limits.'
+                    });
+                } catch (e) {
+                    console.log('Direct notification constructor not available:', e);
+                }
+            } else {
+                showToast('Permission denied for notifications');
+            }
+        }
+
+        function sendBrowserPush(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                try {
+                    new Notification(title, { body });
+                } catch (e) {
+                    console.error('Push notification error', e);
+                }
+            }
+        }
+
+        // ==========================================
+        // EXPENSE ACTIONS & MODALS
+        // ==========================================
+        function handleSaveExpense(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const note = document.getElementById('expenseNote').value.trim();
+            const date = document.getElementById('expenseDate').value || getLocalDateStr();
+
+            if (!amount || amount <= 0 || !note) return;
+
+            const newExpense = {
+                id: 'exp-' + Date.now(),
+                amount,
+                category: state.selectedModalCategory,
+                note,
+                date
+            };
+
+            state.expenses.unshift(newExpense);
+
+            // Check if single expense is unusually large (> 25% of monthly budget)
+            if (amount >= state.budget * 0.25) {
+                addNotificationItem('💸 Large Expense Logged', `You recorded "${note}" for ${state.currency} ${formatMoney(amount)}, which is a significant portion of your budget.`, 'warning');
+            }
+
+            saveState();
+            renderAll();
+
+            document.getElementById('expenseAmount').value = '';
+            document.getElementById('expenseNote').value = '';
+            closeModal('addExpenseModal');
+            showToast('Expense added successfully!');
+        }
+
+        function deleteExpense(id) {
+            state.expenses = state.expenses.filter(e => e.id !== id);
+            saveState();
+            renderAll();
+            showToast('Transaction removed');
+        }
+
+        function handleSaveBudget(e) {
+            e.preventDefault();
+            const val = parseFloat(document.getElementById('budgetInput').value);
+            if (val && val > 0) {
+                state.budget = val;
+                saveState();
+                renderAll();
+                closeModal('budgetModal');
+                showToast('Monthly budget updated!');
+            }
+        }
+
+        function clearAllExpenses() {
+            state.expenses = [];
+            saveState();
+            renderAll();
+            closeModal('confirmClearModal');
+            showToast('All expenses cleared');
+        }
+
+        function switchTab(tab) {
+            const viewTrans = document.getElementById('viewTransactions');
+            const viewAna = document.getElementById('viewAnalytics');
+            const btnTrans = document.getElementById('tabTransactions');
+            const btnAna = document.getElementById('tabAnalytics');
+
+            if (tab === 'transactions') {
+                viewTrans.classList.remove('hidden');
+                viewAna.classList.add('hidden');
+                btnTrans.className = 'py-2.5 text-xs font-bold rounded-xl bg-slate-800 text-emerald-400 shadow transition flex items-center justify-center gap-1.5';
+                btnAna.className = 'py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5';
+            } else {
+                viewTrans.classList.add('hidden');
+                viewAna.classList.remove('hidden');
+                btnAna.className = 'py-2.5 text-xs font-bold rounded-xl bg-slate-800 text-emerald-400 shadow transition flex items-center justify-center gap-1.5';
+                btnTrans.className = 'py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5';
+            }
+        }
+
+        function backupJSON() {
+            const dataStr = JSON.stringify({
+                currency: state.currency,
+                budget: state.budget,
+                expenses: state.expenses,
+                exportedAt: new Date().toISOString()
+            }, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `PocketFlow_Backup_${getLocalDateStr()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Backup JSON downloaded!');
+        }
+
+        function restoreJSON(event) {
+            const input = event.target;
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported.expenses)) {
+                        state.expenses = imported.expenses;
+                        if (imported.budget) state.budget = Number(imported.budget);
+                        if (imported.currency) {
+                            state.currency = imported.currency;
+                            const currencySelect = document.getElementById('currencySelect');
+                            if (currencySelect) currencySelect.value = state.currency;
+                        }
+                        saveState();
+                        renderAll(true);
+                        showToast('Data restored successfully!');
+                    } else {
+                        showToast('Invalid backup file');
+                    }
+                } catch (err) {
+                    showToast('Could not read backup file');
+                } finally {
+                    input.value = '';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function setupModalBackdrops() {
+            document.querySelectorAll('.modal-backdrop').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const openModalEl = document.querySelector('.modal-backdrop:not(.hidden)');
+                    if (openModalEl) {
+                        closeModal(openModalEl.id);
+                    }
+                }
+            });
+        }
+
+        function openModal(id) {
+            if (id === 'budgetModal') {
+                document.getElementById('budgetInput').value = state.budget;
+            } else if (id === 'addExpenseModal') {
+                const dateEl = document.getElementById('expenseDate');
+                if (dateEl) dateEl.value = getLocalDateStr();
+            }
+            const modalEl = document.getElementById(id);
+            if (modalEl) {
+                modalEl.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        function closeModal(id) {
+            const modalEl = document.getElementById(id);
+            if (modalEl) {
+                modalEl.classList.add('hidden');
+            }
+            if (!document.querySelector('.modal-backdrop:not(.hidden)')) {
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        function exportCSV() {
+            if (state.expenses.length === 0) {
+                showToast('No expenses to export');
+                return;
+            }
+            const headers = ['Date', 'Category', 'Description', 'Currency', 'Amount'];
+            const rows = state.expenses.map(e => [
+                e.date || '',
+                e.category || '',
+                `"${(e.note || '').replace(/"/g, '""')}"`,
+                `"${(state.currency || '').replace(/"/g, '""')}"`,
+                Number(e.amount).toFixed(2)
+            ]);
+            const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `PocketFlow_Expenses_${getLocalDateStr()}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('CSV exported!');
+        }
+
+        function downloadSingleFileApp() {
+            closeModal('installModal');
+            setTimeout(() => {
+                const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'PocketFlow_Tracker.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('App HTML downloaded!');
+            }, 100);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2200);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
