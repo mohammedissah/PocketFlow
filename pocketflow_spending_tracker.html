@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="PocketFlow">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0f172a">
-    <link id="pwaManifestLink" rel="manifest" href="">
-    <link id="appleTouchIconLink" rel="apple-touch-icon" href="">
+    <link id="pwaManifestLink" rel="manifest">
+    <link id="appleTouchIconLink" rel="apple-touch-icon">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -43,6 +43,9 @@
     </script>
 
     <style>
+        :root {
+            color-scheme: dark;
+        }
         body {
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
@@ -253,7 +256,7 @@
             </div>
 
             <!-- RIGHT COLUMN: Transactions Feed & Search/Filter -->
-            <section id="viewTransactions" class="lg:col-span-7 space-y-4">
+            <section id="viewTransactions" class="lg:col-span-7 space-y-4 lg:block">
                 <!-- Search & Quick Filter Bar -->
                 <div class="bg-slate-800/40 border border-slate-800 rounded-2xl p-3 space-y-3">
                     <div class="relative">
@@ -299,7 +302,7 @@
     </div>
 
     <!-- MODAL 1: ADD EXPENSE MODAL -->
-    <div id="addExpenseModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div id="addExpenseModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter">
             <div class="flex items-center justify-between mb-5">
                 <h3 class="text-lg font-bold text-white">Add Expense</h3>
@@ -348,7 +351,7 @@
     </div>
 
     <!-- MODAL 2: EDIT BUDGET MODAL -->
-    <div id="budgetModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div id="budgetModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-bold text-white">Monthly Budget Target</h3>
@@ -360,7 +363,7 @@
             <form onsubmit="handleSaveBudget(event)" class="space-y-4">
                 <div class="relative">
                     <span id="budgetModalCurrency" class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-emerald-400">GH₵</span>
-                    <input type="number" id="budgetInput" step="1" min="1" required
+                    <input type="number" id="budgetInput" step="any" min="1" required
                         class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl py-3.5 pl-16 pr-4 text-xl font-bold text-white focus:outline-none">
                 </div>
                 <button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition">
@@ -371,7 +374,7 @@
     </div>
 
     <!-- MODAL 3: ADD TO HOME SCREEN GUIDE -->
-    <div id="installModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div id="installModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2.5">
@@ -429,7 +432,7 @@
     </div>
 
     <!-- MODAL 4: CONFIRM CLEAR ALL -->
-    <div id="confirmClearModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div id="confirmClearModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center">
             <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-3 text-xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
@@ -448,7 +451,7 @@
     </div>
 
     <!-- MODAL 5: NOTIFICATIONS & ALERTS CENTER -->
-    <div id="notificationsModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div id="notificationsModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter max-h-[85vh] flex flex-col">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2.5">
@@ -494,7 +497,13 @@
         // APP CONFIG & STATE DATA
         // ==========================================
         const STORAGE_KEY = 'pocketflow_data_v2';
-        const todayStr = new Date().toISOString().split('T')[0];
+
+        function getLocalDateStr(date = new Date()) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
 
         const CATEGORIES = [
             { id: 'food', name: 'Food & Dining', icon: 'fa-utensils', color: 'bg-emerald-500', hex: '#10b981', bgSoft: 'bg-emerald-500/15', text: 'text-emerald-400' },
@@ -509,13 +518,14 @@
             currency: 'GH₵',
             budget: 2500,
             expenses: [
-                { id: 'exp-1', amount: 120, category: 'food', note: 'Waakye & Juice', date: todayStr },
-                { id: 'exp-2', amount: 45, category: 'transport', note: 'Bolt ride', date: todayStr },
-                { id: 'exp-3', amount: 200, category: 'bills', note: 'MTN 15GB Data Bundle', date: new Date(Date.now() - 86400000).toISOString().split('T')[0] }
+                { id: 'exp-1', amount: 120, category: 'food', note: 'Waakye & Juice', date: getLocalDateStr() },
+                { id: 'exp-2', amount: 45, category: 'transport', note: 'Bolt ride', date: getLocalDateStr() },
+                { id: 'exp-3', amount: 200, category: 'bills', note: 'MTN 15GB Data Bundle', date: getLocalDateStr(new Date(Date.now() - 86400000)) }
             ],
             notifications: [
                 { id: 'notif-1', title: 'Welcome to PocketFlow', body: 'Start logging expenses to monitor your budget alerts.', time: 'Just now', type: 'info', read: false }
             ],
+            lastNotifiedTier: 0,
             selectedModalCategory: 'food',
             selectedCategoryFilter: 'all',
             searchQuery: ''
@@ -561,10 +571,9 @@
                 ]
             };
 
-            const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-            const manifestUrl = URL.createObjectURL(manifestBlob);
+            const manifestDataUrl = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
             const manifestLink = document.getElementById('pwaManifestLink');
-            if (manifestLink) manifestLink.href = manifestUrl;
+            if (manifestLink) manifestLink.href = manifestDataUrl;
 
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
             if (isStandalone) {
@@ -644,7 +653,8 @@
                     currency: state.currency,
                     budget: state.budget,
                     expenses: state.expenses,
-                    notifications: state.notifications
+                    notifications: state.notifications,
+                    lastNotifiedTier: state.lastNotifiedTier || 0
                 }));
             } catch (e) {
                 console.error('Could not save state to storage', e);
@@ -658,12 +668,14 @@
             setupWebAppManifest();
             loadState();
             checkPushPermissionUI();
+            setupModalBackdrops();
 
             const now = new Date();
             document.getElementById('currentMonthDisplay').textContent =
                 now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
-            document.getElementById('expenseDate').value = todayStr;
+            const expenseDateInput = document.getElementById('expenseDate');
+            if (expenseDateInput) expenseDateInput.value = getLocalDateStr();
 
             const currencySelect = document.getElementById('currencySelect');
             currencySelect.value = state.currency;
@@ -675,7 +687,7 @@
             });
 
             renderModalCategories();
-            renderAll();
+            renderAll(true);
         };
 
         function formatMoney(num) {
@@ -690,11 +702,11 @@
         }
 
         function getCurrentMonthExpenses() {
-            const currentMonthPrefix = todayStr.slice(0, 7);
+            const currentMonthPrefix = getLocalDateStr().slice(0, 7);
             return state.expenses.filter(e => (e.date || '').startsWith(currentMonthPrefix));
         }
 
-        function renderAll() {
+        function renderAll(isInitialLoad = false) {
             document.getElementById('heroCurrency').textContent = state.currency;
             document.getElementById('modalCurrencySymbol').textContent = state.currency;
             document.getElementById('budgetModalCurrency').textContent = state.currency;
@@ -702,23 +714,24 @@
             const monthExpenses = getCurrentMonthExpenses();
             const totalSpent = monthExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
             const remaining = state.budget - totalSpent;
-            const percentage = state.budget > 0 ? Math.min(100, Math.round((totalSpent / state.budget) * 100)) : 0;
+            const actualPercentage = state.budget > 0 ? Math.round((totalSpent / state.budget) * 100) : 0;
+            const visualPercentage = Math.min(100, actualPercentage);
 
             const dayOfMonth = Math.max(1, new Date().getDate());
             const dailyAvg = totalSpent / dayOfMonth;
 
             document.getElementById('totalSpentDisplay').textContent = formatMoney(totalSpent);
             document.getElementById('budgetLimitDisplay').textContent = `${state.currency} ${Number(state.budget).toLocaleString()}`;
-            document.getElementById('budgetPercentageText').textContent = `${percentage}% of budget used`;
+            document.getElementById('budgetPercentageText').textContent = `${actualPercentage}% of budget used`;
 
             // Evaluate robust notification thresholds
-            evaluateSpendingAlerts(totalSpent, state.budget);
+            evaluateSpendingAlerts(totalSpent, state.budget, isInitialLoad);
 
             const progressBar = document.getElementById('budgetProgressBar');
-            progressBar.style.width = `${percentage}%`;
-            if (percentage >= 90) {
+            progressBar.style.width = `${visualPercentage}%`;
+            if (actualPercentage >= 90) {
                 progressBar.className = 'h-full bg-gradient-to-r from-rose-500 to-amber-500 rounded-full transition-all duration-500';
-            } else if (percentage >= 75) {
+            } else if (actualPercentage >= 75) {
                 progressBar.className = 'h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-500';
             } else {
                 progressBar.className = 'h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500';
@@ -804,7 +817,10 @@
             const container = document.getElementById('expenseList');
             if (!container) return;
 
-            let filtered = state.expenses;
+            let filtered = [...state.expenses];
+
+            // Sort expenses by date descending (newest first)
+            filtered.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
             if (state.selectedCategoryFilter !== 'all') {
                 filtered = filtered.filter(e => e.category === state.selectedCategoryFilter);
@@ -832,7 +848,8 @@
 
             container.innerHTML = filtered.map(item => {
                 const cat = getCategoryMeta(item.category);
-                const displayDate = item.date ? new Date(item.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Today';
+                const datePart = (item.date || '').split('T')[0];
+                const displayDate = datePart ? new Date(datePart + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Today';
 
                 return `
                     <div class="bg-slate-800/40 hover:bg-slate-800/70 border border-slate-800/90 rounded-2xl p-3.5 flex items-center justify-between transition group">
@@ -921,9 +938,7 @@
         // ==========================================
         // ROBUST NOTIFICATION & ALERT SYSTEM
         // ==========================================
-        let lastNotifiedTier = 0; // 0: none, 50: 50%, 80: 80%, 100: 100%
-
-        function evaluateSpendingAlerts(totalSpent, budget) {
+        function evaluateSpendingAlerts(totalSpent, budget, isInitialLoad = false) {
             if (!budget || budget <= 0) return;
             const ratio = totalSpent / budget;
             let currentTier = 0;
@@ -956,13 +971,19 @@
                 }
             }
 
-            // Trigger notification if tier increased
-            if (currentTier > lastNotifiedTier) {
-                lastNotifiedTier = currentTier;
+            // On initial page load, do not create duplicate notifications or blast alerts
+            if (isInitialLoad) {
+                state.lastNotifiedTier = currentTier;
+                return;
+            }
+
+            // Trigger notification only if tier increased during active usage
+            if (currentTier > (state.lastNotifiedTier || 0)) {
+                state.lastNotifiedTier = currentTier;
                 addNotificationItem(alertTitle, alertMsg, currentTier === 100 ? 'danger' : 'warning');
                 sendBrowserPush(alertTitle, alertMsg);
-            } else if (currentTier < lastNotifiedTier) {
-                lastNotifiedTier = currentTier;
+            } else if (currentTier < (state.lastNotifiedTier || 0)) {
+                state.lastNotifiedTier = currentTier;
             }
         }
 
@@ -1062,16 +1083,25 @@
 
         async function requestPushPermission() {
             if (!('Notification' in window)) {
-                showToast('Browser does not support push notifications');
+                showToast('Browser does not support notifications');
                 return;
             }
-            const perm = await Notification.requestPermission();
+            let perm;
+            try {
+                perm = await Notification.requestPermission();
+            } catch (e) {
+                perm = await new Promise(resolve => Notification.requestPermission(resolve));
+            }
             checkPushPermissionUI();
             if (perm === 'granted') {
                 showToast('Push notifications enabled successfully!');
-                new Notification('PocketFlow Alerts Active', {
-                    body: 'You will now receive desktop and mobile alerts when approaching budget limits.'
-                });
+                try {
+                    new Notification('PocketFlow Alerts Active', {
+                        body: 'You will now receive desktop and mobile alerts when approaching budget limits.'
+                    });
+                } catch (e) {
+                    console.log('Direct notification constructor not available:', e);
+                }
             } else {
                 showToast('Permission denied for notifications');
             }
@@ -1094,7 +1124,7 @@
             e.preventDefault();
             const amount = parseFloat(document.getElementById('expenseAmount').value);
             const note = document.getElementById('expenseNote').value.trim();
-            const date = document.getElementById('expenseDate').value || todayStr;
+            const date = document.getElementById('expenseDate').value || getLocalDateStr();
 
             if (!amount || amount <= 0 || !note) return;
 
@@ -1158,13 +1188,13 @@
             if (tab === 'transactions') {
                 viewTrans.classList.remove('hidden');
                 viewAna.classList.add('hidden');
-                btnTrans.className = 'py-2.5 text-xs font-bold rounded-xl bg-slate-800 text-emerald-400 shadow transition flex items-center justify-center gap-2';
-                btnAna.className = 'py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-2';
+                btnTrans.className = 'py-2.5 text-xs font-bold rounded-xl bg-slate-800 text-emerald-400 shadow transition flex items-center justify-center gap-1.5';
+                btnAna.className = 'py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5';
             } else {
                 viewTrans.classList.add('hidden');
                 viewAna.classList.remove('hidden');
-                btnAna.className = 'py-2.5 text-xs font-bold rounded-xl bg-slate-800 text-emerald-400 shadow transition flex items-center justify-center gap-2';
-                btnTrans.className = 'py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-2';
+                btnAna.className = 'py-2.5 text-xs font-bold rounded-xl bg-slate-800 text-emerald-400 shadow transition flex items-center justify-center gap-1.5';
+                btnTrans.className = 'py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5';
             }
         }
 
@@ -1179,7 +1209,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `PocketFlow_Backup_${todayStr}.json`;
+            a.download = `PocketFlow_Backup_${getLocalDateStr()}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1188,7 +1218,8 @@
         }
 
         function restoreJSON(event) {
-            const file = event.target.files[0];
+            const input = event.target;
+            const file = input.files && input.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -1199,30 +1230,65 @@
                         if (imported.budget) state.budget = Number(imported.budget);
                         if (imported.currency) {
                             state.currency = imported.currency;
-                            document.getElementById('currencySelect').value = state.currency;
+                            const currencySelect = document.getElementById('currencySelect');
+                            if (currencySelect) currencySelect.value = state.currency;
                         }
                         saveState();
-                        renderAll();
+                        renderAll(true);
                         showToast('Data restored successfully!');
                     } else {
                         showToast('Invalid backup file');
                     }
                 } catch (err) {
                     showToast('Could not read backup file');
+                } finally {
+                    input.value = '';
                 }
             };
             reader.readAsText(file);
         }
 
+        function setupModalBackdrops() {
+            document.querySelectorAll('.modal-backdrop').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const openModalEl = document.querySelector('.modal-backdrop:not(.hidden)');
+                    if (openModalEl) {
+                        closeModal(openModalEl.id);
+                    }
+                }
+            });
+        }
+
         function openModal(id) {
             if (id === 'budgetModal') {
                 document.getElementById('budgetInput').value = state.budget;
+            } else if (id === 'addExpenseModal') {
+                const dateEl = document.getElementById('expenseDate');
+                if (dateEl) dateEl.value = getLocalDateStr();
             }
-            document.getElementById(id).classList.remove('hidden');
+            const modalEl = document.getElementById(id);
+            if (modalEl) {
+                modalEl.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
         }
 
         function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
+            const modalEl = document.getElementById(id);
+            if (modalEl) {
+                modalEl.classList.add('hidden');
+            }
+            if (!document.querySelector('.modal-backdrop:not(.hidden)')) {
+                document.body.classList.remove('overflow-hidden');
+            }
         }
 
         function exportCSV() {
@@ -1232,37 +1298,40 @@
             }
             const headers = ['Date', 'Category', 'Description', 'Currency', 'Amount'];
             const rows = state.expenses.map(e => [
-                e.date,
-                e.category,
-                `"${e.note.replace(/"/g, '""')}"`,
-                state.currency,
-                e.amount
+                e.date || '',
+                e.category || '',
+                `"${(e.note || '').replace(/"/g, '""')}"`,
+                `"${(state.currency || '').replace(/"/g, '""')}"`,
+                Number(e.amount).toFixed(2)
             ]);
-            const csvContent = 'data:text/csv;charset=utf-8,'
-                + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-
-            const encodedUri = encodeURI(csvContent);
+            const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `PocketFlow_Expenses_${todayStr}.csv`);
+            link.href = url;
+            link.download = `PocketFlow_Expenses_${getLocalDateStr()}.csv`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            URL.revokeObjectURL(url);
             showToast('CSV exported!');
         }
 
         function downloadSingleFileApp() {
-            const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'PocketFlow_Tracker.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('App HTML downloaded!');
+            closeModal('installModal');
+            setTimeout(() => {
+                const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'PocketFlow_Tracker.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('App HTML downloaded!');
+            }, 100);
         }
 
         function showToast(msg) {
