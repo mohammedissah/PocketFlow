@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>PocketFlow - Spending Tracker</title>
     <!-- PWA / Home Screen Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,9 +46,32 @@
         :root {
             color-scheme: dark;
         }
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+            -webkit-text-size-adjust: 100%;
+        }
         body {
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
+            padding-bottom: max(7.5rem, calc(6.5rem + env(safe-area-inset-bottom)));
+        }
+        @media (min-width: 1024px) {
+            body {
+                padding-bottom: 3rem;
+            }
+        }
+        /* Safe area support for iOS notches & Dynamic Island */
+        header {
+            padding-top: max(1.25rem, calc(0.75rem + env(safe-area-inset-top)));
+            padding-left: max(0.875rem, calc(0.875rem + env(safe-area-inset-left)));
+            padding-right: max(0.875rem, calc(0.875rem + env(safe-area-inset-right)));
+        }
+        .safe-bottom-pad {
+            padding-bottom: max(1.25rem, calc(0.75rem + env(safe-area-inset-bottom)));
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
         }
         /* Hide scrollbars for horizontal category pills */
         .no-scrollbar::-webkit-scrollbar {
@@ -57,6 +80,8 @@
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
         }
         /* Smooth modal animations */
         .modal-enter {
@@ -66,44 +91,47 @@
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        /* Standalone PWA safe area padding */
-        @media all and (display-mode: standalone) {
-            header {
-                padding-top: max(1.5rem, env(safe-area-inset-top));
+        /* Prevent auto-zoom on inputs in iOS Safari */
+        @media screen and (max-width: 640px) {
+            input[type="text"],
+            input[type="number"],
+            input[type="date"],
+            select {
+                font-size: 16px !important;
             }
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen pb-28 lg:pb-12 selection:bg-emerald-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-[100dvh] selection:bg-emerald-500 selection:text-white">
 
     <!-- Responsive Web App Shell -->
-    <div class="max-w-6xl mx-auto min-h-screen flex flex-col relative bg-slate-900/90 shadow-2xl border-x border-slate-800/60">
+    <div class="max-w-6xl mx-auto min-h-[100dvh] flex flex-col relative bg-slate-900/90 shadow-2xl sm:border-x border-slate-800/60">
 
         <!-- Top Web App Navigation Bar -->
-        <header class="px-5 lg:px-8 pt-5 pb-4 flex items-center justify-between sticky top-0 z-20 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                    <i class="fa-solid fa-wallet text-slate-950 text-lg"></i>
+        <header class="px-3.5 sm:px-5 lg:px-8 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-20 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80">
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+                    <i class="fa-solid fa-wallet text-slate-950 text-base sm:text-lg"></i>
                 </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="font-bold text-lg lg:text-xl tracking-tight leading-none">PocketFlow</h1>
-                        <span id="pwaStatusBadge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Live PWA</span>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                        <h1 class="font-bold text-base sm:text-lg lg:text-xl tracking-tight leading-none truncate">PocketFlow</h1>
+                        <span id="pwaStatusBadge" class="hidden min-[400px]:inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">Live PWA</span>
                     </div>
-                    <p id="currentMonthDisplay" class="text-xs text-slate-400 mt-0.5 font-medium">Monthly Tracker</p>
+                    <p id="currentMonthDisplay" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium truncate">Monthly Tracker</p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <!-- Live Host Quick Link Badge / Copy URL -->
-                <button onclick="copyAppUrl()" class="hidden sm:flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-2 rounded-xl text-xs font-semibold transition" title="Copy live link">
+                <button onclick="copyAppUrl()" class="hidden md:flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-2 rounded-xl text-xs font-semibold transition" title="Copy live link">
                     <i class="fa-solid fa-link text-emerald-400"></i>
                     <span>Share URL</span>
                 </button>
 
                 <!-- Notifications Bell Center -->
-                <button onclick="openModal('notificationsModal')" class="relative bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl border border-slate-700 transition flex items-center gap-1.5 text-xs font-semibold" title="Notifications & Alerts">
-                    <i class="fa-solid fa-bell text-emerald-400"></i>
+                <button onclick="openModal('notificationsModal')" class="relative w-8 h-8 sm:w-9 sm:h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center text-xs font-semibold" title="Notifications & Alerts" aria-label="Notifications">
+                    <i class="fa-solid fa-bell text-emerald-400 text-xs sm:text-sm"></i>
                     <span id="notificationBadgeCount" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-bold items-center justify-center">0</span>
                 </button>
 
@@ -114,13 +142,13 @@
                 </button>
 
                 <!-- Native One-Tap PWA Install Button -->
-                <button id="nativeInstallBtn" onclick="triggerNativeInstall()" class="hidden items-center gap-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-3 py-2 rounded-xl text-xs font-bold transition">
+                <button id="nativeInstallBtn" onclick="triggerNativeInstall()" class="hidden items-center gap-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition">
                     <i class="fa-solid fa-download"></i>
-                    <span>Install App</span>
+                    <span class="hidden sm:inline">Install</span>
                 </button>
 
                 <!-- Currency Selector -->
-                <select id="currencySelect" aria-label="Currency" class="bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-emerald-400 rounded-xl px-2.5 py-2 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer">
+                <select id="currencySelect" aria-label="Currency" class="bg-slate-800 hover:bg-slate-700 text-[11px] sm:text-xs font-semibold text-emerald-400 rounded-xl px-2 sm:px-2.5 py-1.5 sm:py-2 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer">
                     <option value="GH₵">GH₵ (GHS)</option>
                     <option value="$">$ (USD)</option>
                     <option value="€">€ (EUR)</option>
@@ -129,40 +157,40 @@
                 </select>
 
                 <!-- Install to Home Screen Guide Button -->
-                <button onclick="openModal('installModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl border border-slate-700 transition relative flex items-center gap-1.5 text-xs font-semibold" title="Add to Home Screen">
-                    <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
-                    <span class="hidden sm:inline">Home Screen</span>
+                <button onclick="openModal('installModal')" class="w-8 h-8 sm:w-auto sm:px-3 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs font-semibold" title="Add to Home Screen" aria-label="Add to Home Screen">
+                    <i class="fa-solid fa-mobile-screen-button text-emerald-400 text-xs sm:text-sm"></i>
+                    <span class="hidden sm:inline">Install</span>
                 </button>
             </div>
         </header>
 
         <!-- Main Responsive Grid Area -->
-        <main class="flex-1 px-5 lg:px-8 pt-6 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <main class="flex-1 px-3.5 sm:px-5 lg:px-8 pt-4 sm:pt-6 pb-6 sm:pb-8 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
 
             <!-- LEFT COLUMN: Summary Card & Category Breakdown -->
-            <div class="lg:col-span-5 space-y-6">
+            <div class="lg:col-span-5 space-y-5 sm:space-y-6">
                 <!-- Live Alert Banner -->
-                <div id="liveAlertBanner" class="hidden bg-rose-500/10 border border-rose-500/30 rounded-2xl p-4 flex items-start gap-3 text-rose-300 shadow-lg">
+                <div id="liveAlertBanner" class="hidden bg-rose-500/10 border border-rose-500/30 rounded-2xl p-3.5 sm:p-4 flex items-start gap-3 text-rose-300 shadow-lg">
                     <i class="fa-solid fa-triangle-exclamation text-base mt-0.5 shrink-0"></i>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <h4 class="font-bold text-xs uppercase tracking-wider text-rose-200">Budget Warning</h4>
                         <p id="liveAlertText" class="text-xs mt-1 leading-relaxed">You have crossed 80% of your monthly limit.</p>
                     </div>
                 </div>
 
                 <!-- Hero Budget Summary Card -->
-                <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-800 via-slate-800/95 to-slate-900 p-5 lg:p-6 border border-slate-700/70 shadow-xl">
+                <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-800 via-slate-800/95 to-slate-900 p-4 sm:p-6 border border-slate-700/70 shadow-xl">
                     <div class="absolute -right-10 -top-10 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
                     
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Spent (This Month)</span>
-                            <div class="flex items-baseline gap-1 mt-1">
-                                <span id="heroCurrency" class="text-2xl font-bold text-emerald-400">GH₵</span>
-                                <h2 id="totalSpentDisplay" class="text-4xl font-extrabold tracking-tight text-white">0.00</h2>
+                    <div class="flex justify-between items-start gap-2 mb-4">
+                        <div class="min-w-0 pr-1">
+                            <span class="text-[11px] sm:text-xs uppercase tracking-wider text-slate-400 font-semibold truncate block">Total Spent (This Month)</span>
+                            <div class="flex items-baseline gap-1 mt-1 flex-wrap">
+                                <span id="heroCurrency" class="text-xl sm:text-2xl font-bold text-emerald-400">GH₵</span>
+                                <h2 id="totalSpentDisplay" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white break-all">0.00</h2>
                             </div>
                         </div>
-                        <button onclick="openModal('budgetModal')" class="text-xs font-medium bg-slate-700/70 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl border border-slate-600/60 flex items-center gap-1.5 transition">
+                        <button onclick="openModal('budgetModal')" class="text-xs font-semibold bg-slate-700/70 hover:bg-slate-700 text-slate-200 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-600/60 flex items-center gap-1.5 transition shrink-0">
                             <i class="fa-solid fa-pen text-[10px] text-emerald-400"></i>
                             <span>Budget</span>
                         </button>
@@ -180,20 +208,20 @@
                     </div>
 
                     <!-- Quick Stats Row -->
-                    <div class="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-slate-700/60">
-                        <div class="bg-slate-900/60 rounded-2xl p-3 border border-slate-800/80">
-                            <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-                                <i class="fa-solid fa-piggy-bank text-emerald-400"></i>
-                                <span>Remaining</span>
+                    <div class="grid grid-cols-2 gap-2 sm:gap-3 mt-4 sm:mt-5 pt-3.5 sm:pt-4 border-t border-slate-700/60">
+                        <div class="bg-slate-900/60 rounded-2xl p-2.5 sm:p-3 border border-slate-800/80 min-w-0">
+                            <div class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-400 mb-1">
+                                <i class="fa-solid fa-piggy-bank text-emerald-400 shrink-0"></i>
+                                <span class="truncate">Remaining</span>
                             </div>
-                            <p id="remainingBudgetDisplay" class="font-bold text-base text-slate-100">GH₵ 2,500.00</p>
+                            <p id="remainingBudgetDisplay" class="font-bold text-sm sm:text-base text-slate-100 truncate">GH₵ 2,500.00</p>
                         </div>
-                        <div class="bg-slate-900/60 rounded-2xl p-3 border border-slate-800/80">
-                            <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-                                <i class="fa-solid fa-chart-line text-amber-400"></i>
-                                <span>Daily Avg</span>
+                        <div class="bg-slate-900/60 rounded-2xl p-2.5 sm:p-3 border border-slate-800/80 min-w-0">
+                            <div class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-400 mb-1">
+                                <i class="fa-solid fa-chart-line text-amber-400 shrink-0"></i>
+                                <span class="truncate">Daily Avg</span>
                             </div>
-                            <p id="dailyAvgDisplay" class="font-bold text-base text-slate-100">GH₵ 0.00</p>
+                            <p id="dailyAvgDisplay" class="font-bold text-sm sm:text-base text-slate-100 truncate">GH₵ 0.00</p>
                         </div>
                     </div>
                 </section>
@@ -258,7 +286,7 @@
             <!-- RIGHT COLUMN: Transactions Feed & Search/Filter -->
             <section id="viewTransactions" class="lg:col-span-7 space-y-4 lg:block">
                 <!-- Search & Quick Filter Bar -->
-                <div class="bg-slate-800/40 border border-slate-800 rounded-2xl p-3 space-y-3">
+                <div class="bg-slate-800/40 border border-slate-800 rounded-2xl p-2.5 sm:p-3 space-y-2.5 sm:space-y-3">
                     <div class="relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
                         <input type="text" id="searchInput" oninput="handleSearch(event)" placeholder="Search expenses by note or category..."
@@ -266,7 +294,7 @@
                     </div>
 
                     <!-- Category Filter Pills -->
-                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5" id="categoryFilterBar">
+                    <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-0.5" id="categoryFilterBar">
                         <!-- Populated via JS -->
                     </div>
                 </div>
@@ -291,8 +319,8 @@
 
         <!-- Floating Bottom Action Bar (Mobile & Tablet) -->
         <div class="fixed bottom-0 left-0 right-0 z-30 pointer-events-none lg:hidden">
-            <div class="max-w-md mx-auto px-5 pb-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-3 pointer-events-auto">
-                <button onclick="openModal('addExpenseModal')" class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2">
+            <div class="max-w-md mx-auto px-4 sm:px-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-3 pointer-events-auto safe-bottom-pad">
+                <button onclick="openModal('addExpenseModal')" class="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2" aria-label="Log New Expense">
                     <i class="fa-solid fa-plus text-base"></i>
                     <span>Log New Expense</span>
                 </button>
@@ -303,10 +331,11 @@
 
     <!-- MODAL 1: ADD EXPENSE MODAL -->
     <div id="addExpenseModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter">
-            <div class="flex items-center justify-between mb-5">
-                <h3 class="text-lg font-bold text-white">Add Expense</h3>
-                <button onclick="closeModal('addExpenseModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[85vh] overflow-y-auto">
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
+            <div class="flex items-center justify-between mb-4 sm:mb-5">
+                <h3 class="text-base sm:text-lg font-bold text-white">Add Expense</h3>
+                <button onclick="closeModal('addExpenseModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -352,10 +381,11 @@
 
     <!-- MODAL 2: EDIT BUDGET MODAL -->
     <div id="budgetModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[85vh] overflow-y-auto">
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-bold text-white">Monthly Budget Target</h3>
-                <button onclick="closeModal('budgetModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                <h3 class="text-base sm:text-lg font-bold text-white">Monthly Budget Target</h3>
+                <button onclick="closeModal('budgetModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -375,15 +405,16 @@
 
     <!-- MODAL 3: ADD TO HOME SCREEN GUIDE -->
     <div id="installModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter max-h-[90vh] overflow-y-auto">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[85vh] overflow-y-auto">
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                         <i class="fa-solid fa-mobile-screen"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-white">Add to Home Screen</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-white">Add to Home Screen</h3>
                 </div>
-                <button onclick="closeModal('installModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                <button onclick="closeModal('installModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -433,7 +464,7 @@
 
     <!-- MODAL 4: CONFIRM CLEAR ALL -->
     <div id="confirmClearModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-5 sm:p-6 shadow-2xl text-center">
             <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-3 text-xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
@@ -452,15 +483,16 @@
 
     <!-- MODAL 5: NOTIFICATIONS & ALERTS CENTER -->
     <div id="notificationsModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl modal-enter max-h-[85vh] flex flex-col">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[85vh] flex flex-col">
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                         <i class="fa-solid fa-bell"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-white">Notifications & Alerts</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-white">Notifications & Alerts</h3>
                 </div>
-                <button onclick="closeModal('notificationsModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                <button onclick="closeModal('notificationsModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -784,7 +816,7 @@
             if (!bar) return;
 
             let html = `
-                <button onclick="setCategoryFilter('all')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${state.selectedCategoryFilter === 'all' ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}">
+                <button onclick="setCategoryFilter('all')" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition ${state.selectedCategoryFilter === 'all' ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}">
                     All
                 </button>
             `;
@@ -792,7 +824,7 @@
             CATEGORIES.forEach(cat => {
                 const isActive = state.selectedCategoryFilter === cat.id;
                 html += `
-                    <button onclick="setCategoryFilter('${cat.id}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${isActive ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}">
+                    <button onclick="setCategoryFilter('${cat.id}')" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition flex items-center gap-1.5 ${isActive ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}">
                         <i class="fa-solid ${cat.icon}"></i>
                         <span>${cat.name.split(' ')[0]}</span>
                     </button>
@@ -852,26 +884,26 @@
                 const displayDate = datePart ? new Date(datePart + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Today';
 
                 return `
-                    <div class="bg-slate-800/40 hover:bg-slate-800/70 border border-slate-800/90 rounded-2xl p-3.5 flex items-center justify-between transition group">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 rounded-xl ${cat.bgSoft} ${cat.text} flex items-center justify-center shrink-0">
-                                <i class="fa-solid ${cat.icon} text-base"></i>
+                    <div class="bg-slate-800/40 hover:bg-slate-800/70 border border-slate-800/90 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between gap-2.5 transition group">
+                        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${cat.bgSoft} ${cat.text} flex items-center justify-center shrink-0">
+                                <i class="fa-solid ${cat.icon} text-sm sm:text-base"></i>
                             </div>
                             <div class="min-w-0">
-                                <h4 class="font-bold text-xs text-white truncate group-hover:text-emerald-400 transition">${escapeHtml(item.note)}</h4>
-                                <div class="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
-                                    <span>${cat.name}</span>
+                                <h4 class="font-bold text-xs sm:text-sm text-white truncate group-hover:text-emerald-400 transition">${escapeHtml(item.note)}</h4>
+                                <div class="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                                    <span class="truncate">${cat.name}</span>
                                     <span>•</span>
-                                    <span>${displayDate}</span>
+                                    <span class="shrink-0">${displayDate}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-2.5">
-                            <span class="font-bold text-sm text-slate-100 whitespace-nowrap">
+                        <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                            <span class="font-bold text-xs sm:text-sm text-slate-100 whitespace-nowrap">
                                 -${state.currency} ${formatMoney(item.amount)}
                             </span>
-                            <button onclick="deleteExpense('${item.id}')" class="w-7 h-7 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 flex items-center justify-center transition" title="Delete expense">
+                            <button onclick="deleteExpense('${escapeHtml(item.id)}')" class="w-8 h-8 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/15 active:bg-rose-500/25 flex items-center justify-center transition active:scale-90" title="Delete expense" aria-label="Delete expense">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </div>
