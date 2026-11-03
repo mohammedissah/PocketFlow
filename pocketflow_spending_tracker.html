@@ -154,6 +154,12 @@
                     <span>Share URL</span>
                 </button>
 
+                <!-- PocketCoach AI Chatbot Button -->
+                <button onclick="openModal('aiCoachModal')" class="relative w-8 h-8 sm:w-auto sm:px-2.5 sm:py-2 bg-gradient-to-r from-emerald-500/15 to-teal-500/15 hover:from-emerald-500/25 hover:to-teal-500/25 text-emerald-300 rounded-xl border border-emerald-500/30 transition flex items-center justify-center gap-1.5 text-xs font-bold" title="PocketCoach AI Financial Advisor" aria-label="PocketCoach AI">
+                    <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 text-xs sm:text-sm"></i>
+                    <span class="hidden md:inline">AI Coach</span>
+                </button>
+
                 <!-- Notifications Bell Center -->
                 <button onclick="openModal('notificationsModal')" class="relative w-8 h-8 sm:w-9 sm:h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center text-xs font-semibold" title="Notifications & Alerts" aria-label="Notifications">
                     <i class="fa-solid fa-bell text-emerald-400 text-xs sm:text-sm"></i>
@@ -310,6 +316,25 @@
                         </div>
                     </div>
 
+                    <!-- AI Spending Coach Card -->
+                    <div class="bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-3xl p-5 relative overflow-hidden shadow-xl">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-base"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-white">Need spending habit advice?</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Ask PocketCoach AI to audit your habits or structure your 50/30/20 budget.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openModal('aiCoachModal')" class="w-full mt-3.5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-500/20">
+                            <i class="fa-solid fa-comments"></i>
+                            <span>Chat with PocketCoach AI</span>
+                        </button>
+                    </div>
+
                     <!-- Web App Backup, Restore & Reset Card -->
                     <div class="bg-slate-800/30 border border-slate-800 rounded-2xl p-4 space-y-3">
                         <div class="flex items-center justify-between">
@@ -372,8 +397,11 @@
 
         <!-- Floating Bottom Action Bar (Mobile & Tablet) -->
         <div class="fixed bottom-0 left-0 right-0 z-30 pointer-events-none lg:hidden">
-            <div class="max-w-md mx-auto px-4 sm:px-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-3 pointer-events-auto safe-bottom-pad">
-                <button onclick="openModal('addExpenseModal')" class="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2" aria-label="Log New Expense">
+            <div class="max-w-md mx-auto px-4 sm:px-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-2.5 pointer-events-auto safe-bottom-pad">
+                <button onclick="openModal('aiCoachModal')" class="w-12 h-12 rounded-2xl bg-slate-900 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shadow-lg active:scale-95 transition shrink-0" title="Ask AI Financial Coach" aria-label="AI Coach">
+                    <i class="fa-solid fa-wand-magic-sparkles text-base"></i>
+                </button>
+                <button onclick="openModal('addExpenseModal')" class="flex-1 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2" aria-label="Log New Expense">
                     <i class="fa-solid fa-plus text-base"></i>
                     <span>Log New Expense</span>
                 </button>
@@ -572,6 +600,122 @@
             <div id="notificationsList" class="space-y-2.5 overflow-y-auto flex-1 pr-1">
                 <!-- Populated via JS -->
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL 6: POCKETCOACH AI CHATBOT (HABIT & SPENDING ADVISOR) -->
+    <div id="aiCoachModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl modal-enter h-[92dvh] sm:h-[660px] flex flex-col overflow-hidden">
+            <!-- Mobile Grab Handle -->
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto my-2.5 sm:hidden shrink-0"></div>
+
+            <!-- Chatbot Header -->
+            <div class="px-4 sm:px-6 py-3 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-900/90">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-emerald-300 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sm sm:text-base"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm sm:text-base font-bold text-white">PocketCoach AI</h3>
+                            <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                Live Coach
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Budget structuring & spending habits</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <!-- Toggle Gemini API key setting -->
+                    <button onclick="toggleCoachApiKeyDrawer()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 flex items-center justify-center transition" title="Gemini AI Settings" aria-label="Settings">
+                        <i class="fa-solid fa-gear text-xs"></i>
+                    </button>
+                    <!-- Reset Chat -->
+                    <button onclick="resetCoachChat()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition" title="Clear Conversation" aria-label="Clear Chat">
+                        <i class="fa-solid fa-arrow-rotate-right text-xs"></i>
+                    </button>
+                    <!-- Close Modal -->
+                    <button onclick="closeModal('aiCoachModal')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition" title="Close" aria-label="Close">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Financial Snapshot Ribbon -->
+            <div id="coachContextRibbon" class="px-4 py-2 bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-between text-[11px] shrink-0 text-slate-300 overflow-x-auto no-scrollbar">
+                <!-- Dynamically updated -->
+            </div>
+
+            <!-- Optional Gemini API Key Drawer (collapsible) -->
+            <div id="coachApiKeyDrawer" class="hidden bg-slate-950 p-4 border-b border-slate-800 shrink-0 text-xs space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-key text-emerald-400"></i>
+                        Connect Gemini API Key (Optional)
+                    </span>
+                    <button onclick="toggleCoachApiKeyDrawer()" class="text-slate-400 hover:text-white text-xs">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    Provide a free Gemini API key from <a href="https://aistudio.google.com" target="_blank" rel="noopener" class="text-emerald-400 underline">Google AI Studio</a> for advanced generative responses. If empty, PocketCoach uses its built-in offline financial habit engine.
+                </p>
+                <div class="flex gap-2">
+                    <input type="password" id="geminiApiKeyInput" placeholder="Paste AI Studio Key (AIzaSy...)" 
+                        class="flex-1 bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none">
+                    <button onclick="saveGeminiApiKey()" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
+                        Save
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Scroll Area -->
+            <div id="coachMessagesContainer" class="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs">
+                <!-- Chat bubbles rendered via JS -->
+            </div>
+
+            <!-- Quick Habit Prompt Suggestion Chips -->
+            <div class="px-3 py-2 bg-slate-950/60 border-t border-slate-800/60 shrink-0 overflow-x-auto no-scrollbar">
+                <div class="flex items-center gap-1.5 w-max">
+                    <button type="button" onclick="sendQuickPrompt('How should I structure my budget using the 50/30/20 rule?')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-chart-pie text-emerald-400 text-[10px]"></i>
+                        <span>50/30/20 Budget</span>
+                    </button>
+                    <button type="button" onclick="sendQuickPrompt('Analyze my spending habits and tell me how I am doing.')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-magnifying-glass-chart text-sky-400 text-[10px]"></i>
+                        <span>Habit Audit</span>
+                    </button>
+                    <button type="button" onclick="sendQuickPrompt('What is my safe daily spending limit for the rest of this month?')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-day text-amber-400 text-[10px]"></i>
+                        <span>Daily Limit</span>
+                    </button>
+                    <button type="button" onclick="sendQuickPrompt('How can I stop impulse spending and emotional buying?')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-rose-400 text-[10px]"></i>
+                        <span>Stop Impulse Buys</span>
+                    </button>
+                    <button type="button" onclick="sendQuickPrompt('Give me practical ways to cut down on my food and dining expenses.')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-utensils text-emerald-400 text-[10px]"></i>
+                        <span>Cut Food Costs</span>
+                    </button>
+                    <button type="button" onclick="sendQuickPrompt('How do I build an emergency fund step by step?')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-piggy-bank text-teal-400 text-[10px]"></i>
+                        <span>Emergency Fund</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Input Form -->
+            <form id="coachChatForm" onsubmit="handleCoachSubmit(event)" class="p-3 sm:p-4 bg-slate-900 border-t border-slate-800 shrink-0 safe-bottom-pad">
+                <div class="flex items-center gap-2">
+                    <input type="text" id="coachUserInput" placeholder="Ask about budget, spending habits, or 'Can I afford X'..." required autocomplete="off"
+                        class="flex-1 bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl py-2.5 sm:py-3 px-4 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition">
+                    <button type="submit" id="coachSendBtn" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold flex items-center justify-center shadow-lg shadow-emerald-500/20 active:scale-95 transition shrink-0" aria-label="Send Message">
+                        <i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1744,6 +1888,8 @@
             } else if (id === 'addExpenseModal') {
                 const dateEl = document.getElementById('expenseDate');
                 if (dateEl) dateEl.value = getLocalDateStr();
+            } else if (id === 'aiCoachModal') {
+                initCoachChat();
             }
             const modalEl = document.getElementById(id);
             if (modalEl) {
@@ -1819,6 +1965,515 @@
             const div = document.createElement('div');
             div.textContent = str;
             return div.innerHTML;
+        }
+
+        // ==========================================
+        // POCKETCOACH AI: FINANCIAL HABIT & SPENDING CHATBOT
+        // ==========================================
+        let coachChatHistory = [];
+
+        function getSpendingContext() {
+            const currency = state.currency || 'GH₵';
+            const budget = Number(state.budget) || 0;
+            const monthExpenses = getCurrentMonthExpenses();
+            const totalSpent = monthExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
+            const remaining = budget - totalSpent;
+            const pctUsed = budget > 0 ? Math.round((totalSpent / budget) * 100) : 0;
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const todayDate = now.getDate();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysRemaining = Math.max(1, daysInMonth - todayDate + 1);
+
+            const todayStr = getLocalDateStr();
+            const todayExpenses = state.expenses.filter(e => (e.date || '').startsWith(todayStr));
+            const spentToday = todayExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
+            const dailyAvg = totalSpent / Math.max(1, todayDate);
+            const safeDailyAllowance = remaining > 0 ? (remaining / daysRemaining) : 0;
+
+            // Category Breakdown
+            const categoryTotals = {};
+            CATEGORIES.forEach(c => categoryTotals[c.id] = 0);
+            monthExpenses.forEach(exp => {
+                if (categoryTotals[exp.category] !== undefined) {
+                    categoryTotals[exp.category] += Number(exp.amount);
+                } else {
+                    categoryTotals['other'] = (categoryTotals['other'] || 0) + Number(exp.amount);
+                }
+            });
+
+            const breakdown = CATEGORIES.map(cat => ({
+                id: cat.id,
+                name: cat.name,
+                amount: categoryTotals[cat.id] || 0,
+                pct: totalSpent > 0 ? Math.round(((categoryTotals[cat.id] || 0) / totalSpent) * 100) : 0
+            })).sort((a, b) => b.amount - a.amount);
+
+            const topCategory = breakdown[0] || { name: 'None', amount: 0, pct: 0 };
+
+            // Recent 4 expenses
+            const recentExpensesSummary = state.expenses.slice(0, 4).map(e => {
+                const cat = getCategoryMeta(e.category);
+                return `${e.note} (${currency} ${formatMoney(e.amount)}, ${cat.name})`;
+            }).join('; ') || 'No recent purchases logged';
+
+            return {
+                currency,
+                budget,
+                totalSpent,
+                remaining,
+                pctUsed,
+                spentToday,
+                dailyAvg,
+                daysInMonth,
+                todayDate,
+                daysRemaining,
+                safeDailyAllowance,
+                breakdown,
+                topCategory,
+                recentExpensesSummary
+            };
+        }
+
+        function formatCoachMarkdown(text) {
+            if (!text) return '';
+            let html = escapeHtml(text);
+            // Bold
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>');
+            // Italic
+            html = html.replace(/\*(.*?)\*/g, '<em class="text-slate-300">$1</em>');
+            // List items starting with • or - or *
+            html = html.replace(/^[•\-\*]\s+(.*)$/gm, '<li class="ml-4 list-disc text-slate-200 my-0.5">$1</li>');
+            // Group lists
+            html = html.replace(/((?:<li[^>]*>.*?<\/li>\s*)+)/g, '<ul class="my-1.5 space-y-1">$1</ul>');
+            // Paragraphs and breaks
+            html = html.replace(/\n\n/g, '<div class="h-2"></div>');
+            html = html.replace(/\n/g, '<br>');
+            return html;
+        }
+
+        function updateCoachContextRibbon() {
+            const ribbon = document.getElementById('coachContextRibbon');
+            if (!ribbon) return;
+            const ctx = getSpendingContext();
+            ribbon.innerHTML = `
+                <div class="flex items-center gap-3 sm:gap-4 shrink-0 font-medium">
+                    <span>Budget: <strong class="text-white">${ctx.currency} ${formatMoney(ctx.budget)}</strong></span>
+                    <span>Spent: <strong class="${ctx.pctUsed >= 90 ? 'text-rose-400' : 'text-amber-400'}">${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}%)</strong></span>
+                    <span>Remaining: <strong class="${ctx.remaining >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${ctx.currency} ${formatMoney(ctx.remaining)}</strong></span>
+                    <span>Safe Daily: <strong class="text-sky-400">${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day</strong></span>
+                </div>
+            `;
+        }
+
+        function toggleCoachApiKeyDrawer() {
+            const drawer = document.getElementById('coachApiKeyDrawer');
+            if (!drawer) return;
+            drawer.classList.toggle('hidden');
+            const input = document.getElementById('geminiApiKeyInput');
+            if (input && !drawer.classList.contains('hidden')) {
+                input.value = localStorage.getItem('pocketflow_gemini_api_key') || '';
+                input.focus();
+            }
+        }
+
+        function saveGeminiApiKey() {
+            const input = document.getElementById('geminiApiKeyInput');
+            if (!input) return;
+            const key = input.value.trim();
+            if (key) {
+                localStorage.setItem('pocketflow_gemini_api_key', key);
+                showToast('Gemini API key saved!');
+            } else {
+                localStorage.removeItem('pocketflow_gemini_api_key');
+                showToast('Gemini key removed (using offline engine)');
+            }
+            toggleCoachApiKeyDrawer();
+        }
+
+        function resetCoachChat() {
+            localStorage.removeItem('pocketflow_coach_chat');
+            coachChatHistory = [];
+            initCoachChat(true);
+            showToast('Conversation refreshed!');
+        }
+
+        function initCoachChat(forceReset = false) {
+            updateCoachContextRibbon();
+            const container = document.getElementById('coachMessagesContainer');
+            if (!container) return;
+
+            const saved = localStorage.getItem('pocketflow_coach_chat');
+            if (saved && !forceReset) {
+                try {
+                    coachChatHistory = JSON.parse(saved);
+                } catch (e) {
+                    coachChatHistory = [];
+                }
+            }
+
+            if (!coachChatHistory || coachChatHistory.length === 0) {
+                const ctx = getSpendingContext();
+                const welcomeText = `👋 Hello! I'm **PocketCoach**, your personal financial habit and budget advisor.
+
+I'm linked directly to your PocketFlow data:
+• **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
+• **Spent So Far:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
+• **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
+• **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day for the remaining ${ctx.daysRemaining} days
+
+How can I help you improve your spending habits today? Try tapping one of the quick suggestions below or ask me any question!`;
+
+                coachChatHistory = [{
+                    role: 'assistant',
+                    text: welcomeText,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                }];
+                localStorage.setItem('pocketflow_coach_chat', JSON.stringify(coachChatHistory));
+            }
+
+            renderCoachMessages();
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 100);
+        }
+
+        function renderCoachMessages() {
+            const container = document.getElementById('coachMessagesContainer');
+            if (!container) return;
+
+            container.innerHTML = coachChatHistory.map(msg => {
+                const isUser = msg.role === 'user';
+                return `
+                    <div class="flex items-start gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}">
+                        ${!isUser ? `
+                            <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20 text-xs mt-0.5">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+                        ` : ''}
+                        <div class="max-w-[85%] sm:max-w-[80%] ${isUser ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl rounded-tr-none px-3.5 py-2.5 shadow-md shadow-emerald-900/30' : 'bg-slate-950 border border-slate-800 text-slate-200 rounded-2xl rounded-tl-none p-3.5 leading-relaxed'}">
+                            <div class="text-xs sm:text-[13px] leading-relaxed">
+                                ${formatCoachMarkdown(msg.text)}
+                            </div>
+                            <span class="text-[9px] ${isUser ? 'text-emerald-200' : 'text-slate-500'} block mt-1 text-right">${msg.time || ''}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function sendQuickPrompt(promptText) {
+            const input = document.getElementById('coachUserInput');
+            if (input) {
+                input.value = promptText;
+            }
+            handleCoachSubmit(new Event('submit'));
+        }
+
+        async function handleCoachSubmit(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const input = document.getElementById('coachUserInput');
+            if (!input) return;
+            const query = input.value.trim();
+            if (!query) return;
+
+            input.value = '';
+            const sendBtn = document.getElementById('coachSendBtn');
+            if (sendBtn) sendBtn.disabled = true;
+
+            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // 1. Add user message
+            coachChatHistory.push({
+                role: 'user',
+                text: query,
+                time: timeNow
+            });
+            renderCoachMessages();
+
+            const container = document.getElementById('coachMessagesContainer');
+            container.scrollTop = container.scrollHeight;
+
+            // 2. Add temporary typing indicator
+            const typingId = 'typing-' + Date.now();
+            const typingBubble = document.createElement('div');
+            typingBubble.id = typingId;
+            typingBubble.className = 'flex items-start gap-2.5 justify-start';
+            typingBubble.innerHTML = `
+                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20 text-xs mt-0.5">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl rounded-tl-none px-3.5 py-2.5 flex items-center gap-1.5 text-slate-400">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]"></span>
+                    <span class="text-[11px] ml-1">Analyzing habits...</span>
+                </div>
+            `;
+            container.appendChild(typingBubble);
+            container.scrollTop = container.scrollHeight;
+
+            const ctx = getSpendingContext();
+            let responseText = '';
+
+            try {
+                // Try Gemini API if key is present
+                const apiKey = localStorage.getItem('pocketflow_gemini_api_key');
+                if (apiKey) {
+                    responseText = await callGeminiAPI(query, ctx);
+                }
+            } catch (err) {
+                console.warn('Gemini API call failed, falling back to offline advisor:', err);
+            }
+
+            // Fallback to built-in Intelligent Habit Coach Engine
+            if (!responseText) {
+                // Add a small natural delay so offline responses feel thoughtful
+                await new Promise(r => setTimeout(r, 400));
+                responseText = generateOfflineCoachResponse(query, ctx);
+            }
+
+            // Remove typing indicator
+            const typingEl = document.getElementById(typingId);
+            if (typingEl) typingEl.remove();
+
+            // Append assistant reply
+            coachChatHistory.push({
+                role: 'assistant',
+                text: responseText,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            localStorage.setItem('pocketflow_coach_chat', JSON.stringify(coachChatHistory));
+            renderCoachMessages();
+            container.scrollTop = container.scrollHeight;
+
+            if (sendBtn) sendBtn.disabled = false;
+        }
+
+        async function callGeminiAPI(userQuery, ctx) {
+            const apiKey = localStorage.getItem('pocketflow_gemini_api_key');
+            if (!apiKey) return null;
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+            const systemInstruction = `You are PocketCoach, an encouraging, practical, and expert personal financial coach and behavioral spending habit advisor.
+You are embedded directly inside PocketFlow, the user's spending tracker web app.
+The user's current live financial snapshot:
+- Currency: ${ctx.currency}
+- Monthly Budget: ${ctx.currency} ${formatMoney(ctx.budget)}
+- Spent This Month: ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
+- Remaining Balance: ${ctx.currency} ${formatMoney(ctx.remaining)}
+- Spent Today: ${ctx.currency} ${formatMoney(ctx.spentToday)}
+- Average Spent Per Day This Month: ${ctx.currency} ${formatMoney(ctx.dailyAvg)}
+- Safe Daily Spending Allowance for the Remaining ${ctx.daysRemaining} Days: ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day
+- Top Spending Category: ${ctx.topCategory.name} (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of total)
+- Recent Expenses: ${ctx.recentExpensesSummary}
+
+Guidelines:
+1. Always incorporate their actual currency (${ctx.currency}) and exact numbers into your advice.
+2. Structure your recommendations with clean bullet points, bold key principles, and actionable behavioral habits (such as the 50/30/20 rule, 48-hour wait rule, zero-based budgeting, pay-yourself-first).
+3. Be warm, empathetic, realistic, and motivating—never judgmental or punitive.
+4. Keep answers concise, highly structured for mobile screens, and strictly focused on budgeting, savings, and spending habits.`;
+
+            const contents = [
+                {
+                    role: 'user',
+                    parts: [{ text: userQuery }]
+                }
+            ];
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: contents,
+                    systemInstruction: {
+                        parts: [{ text: systemInstruction }]
+                    },
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 1000
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data?.candidates?.[0]?.content?.parts?.[0]?.text || null;
+        }
+
+        function generateOfflineCoachResponse(query, ctx) {
+            const q = query.toLowerCase().trim();
+
+            // 1. 50/30/20 Rule & Budget Structuring
+            if (q.includes('structure') || q.includes('50/30/20') || q.includes('divide') || q.includes('allocate') || q.includes('how should i budget') || q.includes('framework')) {
+                const needs = ctx.budget * 0.5;
+                const wants = ctx.budget * 0.3;
+                const savings = ctx.budget * 0.2;
+
+                return `📊 **How to Structure Your Budget: The 50/30/20 Rule**
+
+Based on your current monthly budget of **${ctx.currency} ${formatMoney(ctx.budget)}**, here is your ideal blueprint:
+
+• **50% Needs (${ctx.currency} ${formatMoney(needs)}):**
+  Rent, essential groceries, electricity/water bills, transport to work, and debt minimums. These are non-negotiable survival expenses.
+
+• **30% Wants (${ctx.currency} ${formatMoney(wants)}):**
+  Dining out, movies, weekend fun, shopping, and subscriptions. Enjoy life without guilt, but never exceed this ceiling!
+
+• **20% Savings & Debt Acceleration (${ctx.currency} ${formatMoney(savings)}):**
+  Emergency savings buffer, high-interest debt payoffs, and investments.
+
+💡 **Habit Rule:** *Pay Yourself First!* The day you receive income, immediately transfer the **${ctx.currency} ${formatMoney(savings)}** into a separate savings account before you start spending.`;
+            }
+
+            // 2. Spending Habit Audit / How am I doing?
+            if (q.includes('audit') || q.includes('analyze') || q.includes('how am i doing') || q.includes('habit') || q.includes('status') || q.includes('check')) {
+                const isOverBudget = ctx.remaining < 0;
+                const isPacingFast = ctx.dailyAvg > ctx.safeDailyAllowance;
+
+                let pacingVerdict = '';
+                if (isOverBudget) {
+                    pacingVerdict = `🚨 **Over Budget Warning:** You have exceeded your budget by **${ctx.currency} ${formatMoney(Math.abs(ctx.remaining))}**. For the remaining ${ctx.daysRemaining} days, switch to a strictly essential "No-Spend" mode.`;
+                } else if (isPacingFast) {
+                    pacingVerdict = `⚠️ **Pacing Caution:** You've been spending an average of **${ctx.currency} ${formatMoney(ctx.dailyAvg)}/day**, but your safe limit is **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**. You need to dial back non-essential purchases to avoid running out before month-end.`;
+                } else {
+                    pacingVerdict = `🌟 **Great Pacing:** You are averaging **${ctx.currency} ${formatMoney(ctx.dailyAvg)}/day**, well below your safe daily allowance of **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**. You're on track to finish the month with a surplus!`;
+                }
+
+                return `🔍 **Your Spending Habit Audit**
+
+• **Total Spent:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% of your ${ctx.currency} ${formatMoney(ctx.budget)} budget)
+• **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
+• **Days Left in Month:** ${ctx.daysRemaining} days
+• **Top Spending Category:** **${ctx.topCategory.name}** (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of spending)
+
+${pacingVerdict}
+
+🎯 **3 Behavioral Actions to Take Right Now:**
+1. **Target ${ctx.topCategory.name}:** Since it's ${ctx.topCategory.pct}% of your total outflow, trim 15% off this category next week.
+2. **Cap Daily Outflow:** Keep daily spending under **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}**.
+3. **Log Before Sleeping:** Review every purchase at night to keep financial awareness sharp.`;
+            }
+
+            // 3. Daily Limit / Safe Daily Allowance
+            if (q.includes('daily limit') || q.includes('daily allowance') || q.includes('spend a day') || q.includes('spend per day') || q.includes('today limit') || q.includes('how much can i spend')) {
+                const todayLeft = Math.max(0, ctx.safeDailyAllowance - ctx.spentToday);
+                return `🎯 **Your Daily Spending Target**
+
+• **Safe Daily Allowance:** **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**
+• **Days Remaining:** ${ctx.daysRemaining} days
+• **Already Spent Today:** ${ctx.currency} ${formatMoney(ctx.spentToday)}
+• **Remaining Headroom for Today:** **${ctx.currency} ${formatMoney(todayLeft)}**
+
+💡 **Habit Rule:** If you spend less than ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)} today, the unused money automatically rolls over to increase your daily allowance for the rest of the month!`;
+            }
+
+            // 4. "Can I Afford X?" Check
+            const numberMatch = q.match(/(\d+(?:\.\d{1,2})?)/);
+            if (q.includes('afford') || q.includes('can i buy') || q.includes('can i spend') || (numberMatch && (q.includes('buy') || q.includes('purchase')))) {
+                if (numberMatch) {
+                    const cost = parseFloat(numberMatch[1]);
+                    if (cost > ctx.remaining) {
+                        return `🚨 **Can You Afford It? (No)**
+
+The item costs **${ctx.currency} ${formatMoney(cost)}**, but you only have **${ctx.currency} ${formatMoney(ctx.remaining)}** remaining in this month's budget.
+
+• Purchasing this will put you **${ctx.currency} ${formatMoney(cost - ctx.remaining)} in the red**.
+• **Recommendation:** Postpone this purchase until your new monthly budget resets, or identify another expense to cancel first!`;
+                    } else {
+                        const newRemaining = ctx.remaining - cost;
+                        const newSafeDaily = newRemaining / ctx.daysRemaining;
+                        const isHeavy = cost > ctx.safeDailyAllowance * 1.5;
+
+                        return `🤔 **Can You Afford It? (${isHeavy ? 'Caution Needed' : 'Yes, Safely'})**
+
+• **Item Cost:** ${ctx.currency} ${formatMoney(cost)}
+• **Current Remaining:** ${ctx.currency} ${formatMoney(ctx.remaining)}
+• **Remaining After Purchase:** ${ctx.currency} ${formatMoney(newRemaining)}
+• **New Safe Daily Limit:** ${ctx.currency} ${formatMoney(newSafeDaily)}/day (down from ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day)
+
+${isHeavy ? `⚠️ **Coach Advice:** This purchase eats a major chunk of your monthly balance. Unless it is an urgent Need, apply the **48-Hour Rule**—wait 2 days before buying. If you still feel you need it, go ahead!` : `✅ **Coach Advice:** This comfortably fits within your budget without endangering your month-end goals.`}`;
+                    }
+                }
+            }
+
+            // 5. Stopping Impulse Buys & Emotional Spending
+            if (q.includes('impulse') || q.includes('emotional') || q.includes('stop spending') || q.includes('control') || q.includes('addiction') || q.includes('urge')) {
+                return `🛑 **4 Mental Habits to Stop Impulse Spending**
+
+1. **The 48-Hour Cooling Rule:**
+   Whenever you see an item you want to buy online or in a shop, add it to a wishlist on your phone. Wait 48 hours. Research shows over 70% of impulse buying urges disappear after two nights of sleep.
+
+2. **The "Life Energy" Conversion:**
+   Divide the price of the item by your approximate hourly take-home income. For example, if an item costs ${ctx.currency} 200 and you earn ${ctx.currency} 25/hour: ask yourself, *"Is this item worth 8 hours of hard work at my desk?"*
+
+3. **Delete Saved Payment Cards:**
+   Remove auto-fill cards from food delivery and shopping apps. Having to stand up, grab your physical wallet, and type 16 digits introduces friction that stops half of impulse buys.
+
+4. **The 1-In, 1-Out Rule:**
+   For every new discretionary item you purchase (clothes, shoes, tech), you must give away, sell, or donate an old item.`;
+            }
+
+            // 6. Food & Dining Habits
+            if (q.includes('food') || q.includes('dining') || q.includes('eat') || q.includes('restaurant') || q.includes('groceries') || q.includes('takeout')) {
+                return `🍲 **Smart Habits to Cut Food & Dining Costs**
+
+Food is usually the largest "leak" in any personal budget. Here are practical ways to save without feeling deprived:
+
+• **Batch Cook & Reheat:** Cook larger portions for dinner 3 nights a week and pack the leftovers for lunch. This instantly cuts daily restaurant spending by 50%.
+• **Shop with a Strict List:** Never step into a supermarket or market hungry. A written list prevents impulse snack and beverage purchases.
+• **Set a Weekly Dining-Out Cap:** Allocate a fixed amount for weekend eating out (e.g. ${ctx.currency} ${formatMoney(ctx.budget * 0.1)}/week). When it runs out, cook at home!
+• **Watch the Liquid Calories:** Bottled drinks, sodas, and daily specialty juices can silently add up to over 15% of your food budget. Drink more water!`;
+            }
+
+            // 7. Transport & Utility/Bills Habits
+            if (q.includes('transport') || q.includes('uber') || q.includes('bolt') || q.includes('car') || q.includes('bill') || q.includes('data') || q.includes('subscription')) {
+                return `🚗 **Habits to Trim Transport & Monthly Bills**
+
+• **Batch Your Errands:** Combine 3 short trips into a single outing instead of taking individual rides throughout the week.
+• **Buy Mobile Data in Bulk:** Purchasing daily micro-data bundles can cost 30% to 50% more over a 30-day period than buying one larger monthly plan.
+• **Subscription Audit:** Check your phone settings and cancel any streaming or app subscriptions you haven't opened in the past 14 days.
+• **Compare Ride Times:** Avoid peak surge pricing by traveling 15 minutes earlier or walking short distances when safe.`;
+            }
+
+            // 8. Emergency Fund Step-by-Step
+            if (q.includes('emergency') || q.includes('save money') || q.includes('savings') || q.includes('buffer')) {
+                const starterFund = ctx.budget * 0.5;
+                const fullFund = ctx.budget * 3;
+                return `🛡️ **How to Build a bulletproof Emergency Fund**
+
+An emergency fund prevents unexpected car repairs, medical bills, or family needs from putting you into debt.
+
+• **Phase 1: The Starter Shield (${ctx.currency} ${formatMoney(starterFund)}):**
+  Aim for half a month's basic budget first. This handles sudden minor emergencies without panic.
+
+• **Phase 2: The 3-Month Fortress (${ctx.currency} ${formatMoney(fullFund)}):**
+  Gradually build 3 months of essential living expenses by saving your 20% allocation every payday.
+
+• **Golden Rule:** Keep this money in a separate high-yield or locked account without an active debit card attached to your phone!`;
+            }
+
+            // Default General Response
+            return `💡 **PocketCoach Spending Habit Advice**
+
+Here is your current financial posture:
+• **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
+• **Remaining:** ${ctx.currency} ${formatMoney(ctx.remaining)} (${ctx.pctUsed}% used)
+• **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day (${ctx.daysRemaining} days left)
+
+**What would you like to explore?**
+• Ask *"How should I structure my budget?"* for the 50/30/20 breakdown
+• Ask *"Analyze my spending habits"* for a deep audit
+• Ask *"Can I afford [amount]?"* before making any purchase
+• Ask *"How to stop impulse buying"* for behavioral psychology hacks`;
         }
     </script>
 </body>
