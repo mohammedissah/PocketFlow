@@ -397,11 +397,8 @@
 
         <!-- Floating Bottom Action Bar (Mobile & Tablet) -->
         <div class="fixed bottom-0 left-0 right-0 z-30 pointer-events-none lg:hidden">
-            <div class="max-w-md mx-auto px-4 sm:px-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-2.5 pointer-events-auto safe-bottom-pad">
-                <button onclick="openModal('aiCoachModal')" class="w-12 h-12 rounded-2xl bg-slate-900 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shadow-lg active:scale-95 transition shrink-0" title="Ask AI Financial Coach" aria-label="AI Coach">
-                    <i class="fa-solid fa-wand-magic-sparkles text-base"></i>
-                </button>
-                <button onclick="openModal('addExpenseModal')" class="flex-1 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2" aria-label="Log New Expense">
+            <div class="max-w-md mx-auto px-4 sm:px-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-3 pointer-events-auto safe-bottom-pad">
+                <button onclick="openModal('addExpenseModal')" class="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2" aria-label="Log New Expense">
                     <i class="fa-solid fa-plus text-base"></i>
                     <span>Log New Expense</span>
                 </button>
@@ -604,16 +601,18 @@
     </div>
 
     <!-- MODAL 6: POCKETCOACH AI CHATBOT (HABIT & SPENDING ADVISOR) -->
-    <div id="aiCoachModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl modal-enter h-[92dvh] sm:h-[660px] flex flex-col overflow-hidden">
+    <div id="aiCoachModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm sm:backdrop-blur-none sm:bg-transparent hidden flex items-end sm:items-end justify-center sm:justify-end p-0 sm:p-6 sm:pb-24 pointer-events-auto sm:pointer-events-none">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl modal-enter h-[90dvh] sm:h-[620px] flex flex-col overflow-hidden sm:pointer-events-auto">
             <!-- Mobile Grab Handle -->
             <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto my-2.5 sm:hidden shrink-0"></div>
 
             <!-- Chatbot Header -->
             <div class="px-4 sm:px-6 py-3 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-900/90">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-emerald-300 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
-                        <i class="fa-solid fa-wand-magic-sparkles text-sm sm:text-base"></i>
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-purple-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 shrink-0">
+                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        </svg>
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
@@ -717,6 +716,21 @@
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- Floating Circular AI Chatbot Widget (Always floating on screen) -->
+    <div id="aiCoachWidgetWrapper" class="fixed bottom-24 right-4 sm:bottom-7 sm:right-7 z-40 flex items-center justify-center">
+        <button id="aiCoachFloatBtn" onclick="toggleAICoachChat()" class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-indigo-600 via-violet-600 to-purple-500 hover:from-indigo-500 hover:via-violet-500 hover:to-purple-400 text-white flex items-center justify-center shadow-xl shadow-indigo-600/35 hover:shadow-indigo-600/55 hover:scale-105 active:scale-95 transition-all duration-300 group" aria-label="Open PocketCoach AI">
+            <!-- Outline Message Bubble Icon (matches user's screenshot) -->
+            <svg id="aiCoachIconOpen" class="w-6 h-6 sm:w-7 sm:h-7 text-white transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+            <!-- Close 'X' Icon -->
+            <i id="aiCoachIconClose" class="fa-solid fa-xmark text-xl text-white hidden"></i>
+
+            <!-- Live Status Pulse Dot -->
+            <span class="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-900 animate-pulse"></span>
+        </button>
     </div>
 
     <!-- Toast Notification -->
@@ -1890,6 +1904,7 @@
                 if (dateEl) dateEl.value = getLocalDateStr();
             } else if (id === 'aiCoachModal') {
                 initCoachChat();
+                updateCoachFloatBtnState(true);
             }
             const modalEl = document.getElementById(id);
             if (modalEl) {
@@ -1902,6 +1917,9 @@
             const modalEl = document.getElementById(id);
             if (modalEl) {
                 modalEl.classList.add('hidden');
+            }
+            if (id === 'aiCoachModal') {
+                updateCoachFloatBtnState(false);
             }
             if (!document.querySelector('.modal-backdrop:not(.hidden)')) {
                 document.body.classList.remove('overflow-hidden');
@@ -1971,6 +1989,29 @@
         // POCKETCOACH AI: FINANCIAL HABIT & SPENDING CHATBOT
         // ==========================================
         let coachChatHistory = [];
+
+        function toggleAICoachChat() {
+            const modalEl = document.getElementById('aiCoachModal');
+            if (modalEl && !modalEl.classList.contains('hidden')) {
+                closeModal('aiCoachModal');
+            } else {
+                openModal('aiCoachModal');
+            }
+        }
+
+        function updateCoachFloatBtnState(isOpen) {
+            const iconOpen = document.getElementById('aiCoachIconOpen');
+            const iconClose = document.getElementById('aiCoachIconClose');
+            if (iconOpen && iconClose) {
+                if (isOpen) {
+                    iconOpen.classList.add('hidden');
+                    iconClose.classList.remove('hidden');
+                } else {
+                    iconOpen.classList.remove('hidden');
+                    iconClose.classList.add('hidden');
+                }
+            }
+        }
 
         function getSpendingContext() {
             const currency = state.currency || 'GH₵';
