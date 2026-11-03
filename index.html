@@ -232,21 +232,28 @@
                         </div>
                     </div>
 
-                    <!-- Quick Stats Row -->
-                    <div class="grid grid-cols-2 gap-2 sm:gap-3 mt-4 sm:mt-5 pt-3.5 sm:pt-4 border-t border-slate-700/60">
-                        <div class="bg-slate-900/60 rounded-2xl p-2.5 sm:p-3 border border-slate-800/80 min-w-0">
-                            <div class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-400 mb-1">
-                                <i class="fa-solid fa-piggy-bank text-emerald-400 shrink-0"></i>
+                    <!-- Quick Stats Row (Today, Remaining, Daily Avg) -->
+                    <div class="grid grid-cols-3 gap-2 sm:gap-2.5 mt-4 sm:mt-5 pt-3.5 sm:pt-4 border-t border-slate-700/60">
+                        <div class="bg-slate-900/60 rounded-2xl p-2 sm:p-2.5 border border-slate-800/80 min-w-0">
+                            <div class="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-slate-400 mb-1">
+                                <i class="fa-solid fa-calendar-day text-emerald-400 shrink-0 text-[10px] sm:text-xs"></i>
+                                <span class="truncate">Spent Today</span>
+                            </div>
+                            <p id="spentTodayDisplay" class="font-bold text-xs sm:text-sm lg:text-base text-white truncate">GH₵ 0.00</p>
+                        </div>
+                        <div class="bg-slate-900/60 rounded-2xl p-2 sm:p-2.5 border border-slate-800/80 min-w-0">
+                            <div class="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-slate-400 mb-1">
+                                <i class="fa-solid fa-piggy-bank text-teal-400 shrink-0 text-[10px] sm:text-xs"></i>
                                 <span class="truncate">Remaining</span>
                             </div>
-                            <p id="remainingBudgetDisplay" class="font-bold text-sm sm:text-base text-slate-100 truncate">GH₵ 2,500.00</p>
+                            <p id="remainingBudgetDisplay" class="font-bold text-xs sm:text-sm lg:text-base text-slate-100 truncate">GH₵ 2,500.00</p>
                         </div>
-                        <div class="bg-slate-900/60 rounded-2xl p-2.5 sm:p-3 border border-slate-800/80 min-w-0">
-                            <div class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-400 mb-1">
-                                <i class="fa-solid fa-chart-line text-amber-400 shrink-0"></i>
+                        <div class="bg-slate-900/60 rounded-2xl p-2 sm:p-2.5 border border-slate-800/80 min-w-0">
+                            <div class="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-slate-400 mb-1">
+                                <i class="fa-solid fa-chart-line text-amber-400 shrink-0 text-[10px] sm:text-xs"></i>
                                 <span class="truncate">Daily Avg</span>
                             </div>
-                            <p id="dailyAvgDisplay" class="font-bold text-sm sm:text-base text-slate-100 truncate">GH₵ 0.00</p>
+                            <p id="dailyAvgDisplay" class="font-bold text-xs sm:text-sm lg:text-base text-slate-100 truncate">GH₵ 0.00</p>
                         </div>
                     </div>
                 </section>
@@ -263,8 +270,29 @@
                     </button>
                 </div>
 
-                <!-- Analytics / Category Breakdown Section -->
+                <!-- Analytics / Category & Daily Breakdown Section -->
                 <section id="viewAnalytics" class="hidden lg:block space-y-5">
+                    <!-- Daily Spending Breakdown Card -->
+                    <div class="bg-slate-800/50 border border-slate-800 rounded-3xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-200">Daily Spending (Past 7 Days)</h3>
+                                <p class="text-[11px] text-slate-400 mt-0.5">Track how much you spend each day</p>
+                            </div>
+                            <span id="dailyAvgBadge" class="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">Avg: GH₵ 0.00/day</span>
+                        </div>
+
+                        <!-- 7-day mini bar chart -->
+                        <div id="dailyChartContainer" class="flex items-end justify-between gap-1.5 h-24 pt-2 pb-1.5 px-1 border-b border-slate-800/80 mb-3">
+                            <!-- Populated via JS -->
+                        </div>
+
+                        <!-- Daily spending summary list -->
+                        <div id="dailyBreakdownList" class="space-y-2">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
                     <div class="bg-slate-800/50 border border-slate-800 rounded-3xl p-5">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-sm font-bold text-slate-200">Spending by Category</h3>
@@ -944,6 +972,11 @@
             const actualPercentage = state.budget > 0 ? Math.round((totalSpent / state.budget) * 100) : 0;
             const visualPercentage = Math.min(100, actualPercentage);
 
+            // Calculate daily metrics
+            const todayStr = getLocalDateStr();
+            const todayExpenses = state.expenses.filter(e => (e.date || '').startsWith(todayStr));
+            const spentToday = todayExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
+
             const dayOfMonth = Math.max(1, new Date().getDate());
             const dailyAvg = totalSpent / dayOfMonth;
 
@@ -964,16 +997,33 @@
                 progressBar.className = 'h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500';
             }
 
+            // Spent Today
+            const spentTodayEl = document.getElementById('spentTodayDisplay');
+            if (spentTodayEl) {
+                spentTodayEl.textContent = `${state.currency} ${formatMoney(spentToday)}`;
+            }
+
+            // Remaining
             const remainingEl = document.getElementById('remainingBudgetDisplay');
             if (remaining >= 0) {
                 remainingEl.textContent = `${state.currency} ${formatMoney(remaining)}`;
-                remainingEl.className = 'font-bold text-base text-slate-100';
+                remainingEl.className = 'font-bold text-xs sm:text-sm lg:text-base text-slate-100 truncate';
             } else {
                 remainingEl.textContent = `-${state.currency} ${formatMoney(Math.abs(remaining))}`;
-                remainingEl.className = 'font-bold text-base text-rose-400';
+                remainingEl.className = 'font-bold text-xs sm:text-sm lg:text-base text-rose-400 truncate';
             }
 
-            document.getElementById('dailyAvgDisplay').textContent = `${state.currency} ${formatMoney(dailyAvg)}`;
+            // Daily Avg
+            const dailyAvgEl = document.getElementById('dailyAvgDisplay');
+            if (dailyAvgEl) {
+                dailyAvgEl.textContent = `${state.currency} ${formatMoney(dailyAvg)}`;
+            }
+
+            const dailyAvgBadge = document.getElementById('dailyAvgBadge');
+            if (dailyAvgBadge) {
+                dailyAvgBadge.textContent = `Avg: ${state.currency} ${formatMoney(dailyAvg)}/day`;
+            }
+
             document.getElementById('transactionCountBadge').textContent = `${monthExpenses.length} ${monthExpenses.length === 1 ? 'item' : 'items'}`;
 
             renderCategoryFilterBar();
@@ -1040,14 +1090,43 @@
             renderExpenseList();
         }
 
+        function formatGroupDate(dateStr) {
+            if (!dateStr) return 'Today';
+            const today = getLocalDateStr();
+            const yDate = new Date();
+            yDate.setDate(yDate.getDate() - 1);
+            const yesterday = getLocalDateStr(yDate);
+
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                const year = Number(parts[0]);
+                const month = Number(parts[1]) - 1;
+                const day = Number(parts[2]);
+                const d = new Date(year, month, day);
+
+                if (dateStr === today) {
+                    return `Today, ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+                } else if (dateStr === yesterday) {
+                    return `Yesterday, ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+                } else {
+                    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                }
+            }
+            return dateStr;
+        }
+
         function renderExpenseList() {
             const container = document.getElementById('expenseList');
             if (!container) return;
 
             let filtered = [...state.expenses];
 
-            // Sort expenses by date descending (newest first)
-            filtered.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+            // Sort expenses by date descending (newest first), then by id descending
+            filtered.sort((a, b) => {
+                const dateCmp = (b.date || '').localeCompare(a.date || '');
+                if (dateCmp !== 0) return dateCmp;
+                return (b.id || '').localeCompare(a.id || '');
+            });
 
             if (state.selectedCategoryFilter !== 'all') {
                 filtered = filtered.filter(e => e.category === state.selectedCategoryFilter);
@@ -1073,41 +1152,156 @@
                 return;
             }
 
-            container.innerHTML = filtered.map(item => {
-                const cat = getCategoryMeta(item.category);
-                const datePart = (item.date || '').split('T')[0];
-                const displayDate = datePart ? new Date(datePart + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Today';
+            // Group filtered expenses by date
+            const groupsByDate = {};
+            const groupOrder = [];
+            filtered.forEach(item => {
+                const dateKey = (item.date || '').split('T')[0] || getLocalDateStr();
+                if (!groupsByDate[dateKey]) {
+                    groupsByDate[dateKey] = {
+                        date: dateKey,
+                        total: 0,
+                        items: []
+                    };
+                    groupOrder.push(dateKey);
+                }
+                groupsByDate[dateKey].total += Number(item.amount);
+                groupsByDate[dateKey].items.push(item);
+            });
 
-                return `
-                    <div class="bg-slate-800/40 hover:bg-slate-800/70 border border-slate-800/90 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between gap-2.5 transition group">
-                        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${cat.bgSoft} ${cat.text} flex items-center justify-center shrink-0">
-                                <i class="fa-solid ${cat.icon} text-sm sm:text-base"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <h4 class="font-bold text-xs sm:text-sm text-white truncate group-hover:text-emerald-400 transition">${escapeHtml(item.note)}</h4>
-                                <div class="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
-                                    <span class="truncate">${cat.name}</span>
-                                    <span>•</span>
-                                    <span class="shrink-0">${displayDate}</span>
+            container.innerHTML = groupOrder.map(dateKey => {
+                const group = groupsByDate[dateKey];
+                const dateLabel = formatGroupDate(dateKey);
+
+                const itemsHtml = group.items.map(item => {
+                    const cat = getCategoryMeta(item.category);
+                    return `
+                        <div class="bg-slate-800/40 hover:bg-slate-800/70 border border-slate-800/90 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between gap-2.5 transition group">
+                            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${cat.bgSoft} ${cat.text} flex items-center justify-center shrink-0">
+                                    <i class="fa-solid ${cat.icon} text-sm sm:text-base"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <h4 class="font-bold text-xs sm:text-sm text-white truncate group-hover:text-emerald-400 transition">${escapeHtml(item.note)}</h4>
+                                    <div class="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                                        <span class="truncate">${cat.name}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
-                            <span class="font-bold text-xs sm:text-sm text-slate-100 whitespace-nowrap">
-                                -${state.currency} ${formatMoney(item.amount)}
-                            </span>
-                            <button onclick="deleteExpense('${escapeHtml(item.id)}')" class="w-8 h-8 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/15 active:bg-rose-500/25 flex items-center justify-center transition active:scale-90" title="Delete expense" aria-label="Delete expense">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
+                            <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                                <span class="font-bold text-xs sm:text-sm text-slate-100 whitespace-nowrap">
+                                    -${state.currency} ${formatMoney(item.amount)}
+                                </span>
+                                <button onclick="deleteExpense('${escapeHtml(item.id)}')" class="w-8 h-8 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/15 active:bg-rose-500/25 flex items-center justify-center transition active:scale-90" title="Delete expense" aria-label="Delete expense">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="space-y-2 mb-3">
+                        <div class="flex items-center justify-between px-2 pt-1 pb-0.5 text-xs">
+                            <div class="flex items-center gap-1.5 font-bold text-slate-300">
+                                <i class="fa-regular fa-calendar text-[11px] text-emerald-400"></i>
+                                <span>${dateLabel}</span>
+                                <span class="text-[10px] text-slate-500 font-normal">(${group.items.length})</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[10px] text-slate-400 font-medium">Day Total: </span>
+                                <span class="font-bold text-xs text-rose-400">-${state.currency} ${formatMoney(group.total)}</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            ${itemsHtml}
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
+        function renderDailyAnalytics() {
+            const chartContainer = document.getElementById('dailyChartContainer');
+            const dailyBreakdownList = document.getElementById('dailyBreakdownList');
+            if (!chartContainer || !dailyBreakdownList) return;
+
+            const last7Days = [];
+            const today = new Date();
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(today.getDate() - i);
+                const dateStr = getLocalDateStr(d);
+                const isToday = i === 0;
+                const isYesterday = i === 1;
+
+                const dayShort = isToday ? 'Today' : (isYesterday ? 'Yest' : d.toLocaleDateString('en-US', { weekday: 'short' }));
+                const dayFull = isToday ? 'Today' : (isYesterday ? 'Yesterday' : d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }));
+
+                const dayExpenses = state.expenses.filter(e => (e.date || '').startsWith(dateStr));
+                const dayTotal = dayExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
+
+                last7Days.push({
+                    dateStr,
+                    dayShort,
+                    dayFull,
+                    total: dayTotal,
+                    count: dayExpenses.length,
+                    isToday
+                });
+            }
+
+            const maxDayTotal = Math.max(...last7Days.map(d => d.total), 1);
+
+            // Render 7-day mini bar chart
+            chartContainer.innerHTML = last7Days.map(day => {
+                const heightPct = day.total > 0 ? Math.max(16, Math.round((day.total / maxDayTotal) * 100)) : 6;
+                const barGradient = day.isToday
+                    ? (day.total > 0 ? 'bg-gradient-to-t from-emerald-600 to-teal-400 shadow-sm shadow-emerald-500/20' : 'bg-emerald-500/20')
+                    : (day.total > 0 ? 'bg-gradient-to-t from-sky-600 to-teal-500' : 'bg-slate-800');
+                const labelColor = day.isToday ? 'text-emerald-400 font-bold' : 'text-slate-400';
+
+                return `
+                    <div class="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer" title="${day.dayFull}: ${state.currency} ${formatMoney(day.total)}">
+                        <span class="text-[9px] font-semibold ${day.total > 0 ? 'text-slate-300' : 'text-transparent'} transition whitespace-nowrap mb-1">
+                            ${day.total > 0 ? formatMoney(day.total) : ''}
+                        </span>
+                        <div class="w-full max-w-[26px] ${barGradient} rounded-t-md transition-all duration-300" style="height: ${heightPct}%"></div>
+                        <span class="text-[10px] ${labelColor} mt-1.5 truncate max-w-[36px] text-center">${day.dayShort}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Render daily summary list
+            const activeDays = [...last7Days].filter(d => d.total > 0).reverse();
+            if (activeDays.length === 0) {
+                dailyBreakdownList.innerHTML = `
+                    <div class="text-center py-4 text-slate-500 text-xs">
+                        <i class="fa-regular fa-calendar-xmark text-lg mb-1 block"></i>
+                        <p>No expenses recorded in the past 7 days.</p>
+                    </div>
+                `;
+            } else {
+                dailyBreakdownList.innerHTML = activeDays.map(d => {
+                    return `
+                        <div class="flex items-center justify-between text-xs py-1.5 border-b border-slate-800/40 last:border-0">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="w-2 h-2 rounded-full ${d.isToday ? 'bg-emerald-400' : 'bg-sky-400'} shrink-0"></span>
+                                <span class="text-slate-300 font-medium truncate">${d.dayFull}</span>
+                                <span class="text-[10px] text-slate-500 shrink-0">(${d.count} ${d.count === 1 ? 'item' : 'items'})</span>
+                            </div>
+                            <span class="font-bold text-slate-100 shrink-0">
+                                -${state.currency} ${formatMoney(d.total)}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
         function renderAnalytics(totalSpent, monthExpenses) {
+            renderDailyAnalytics();
             const barContainer = document.getElementById('multiCategoryBar');
             const listContainer = document.getElementById('categoryBreakdownList');
             if (!barContainer || !listContainer) return;
