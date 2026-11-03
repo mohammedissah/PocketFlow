@@ -1,5 +1,5 @@
-// PocketFlow Service Worker v1.0
-const CACHE_NAME = 'pocketflow-cache-v1';
+// PocketFlow Service Worker v2.0
+const CACHE_NAME = 'pocketflow-cache-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

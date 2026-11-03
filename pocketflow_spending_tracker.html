@@ -178,6 +178,12 @@
                     <span class="hidden sm:inline">Install</span>
                 </button>
 
+                <!-- App Guide / How to Use Button -->
+                <button onclick="openModal('helpGuideModal')" class="w-8 h-8 sm:w-auto sm:px-2.5 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs font-semibold" title="How to Use PocketFlow" aria-label="How to Use Guide">
+                    <i class="fa-solid fa-circle-question text-emerald-400 text-xs sm:text-sm"></i>
+                    <span class="hidden sm:inline">Guide</span>
+                </button>
+
                 <!-- Currency Selector -->
                 <select id="currencySelect" aria-label="Currency" class="bg-slate-800 hover:bg-slate-700 text-[11px] sm:text-xs font-semibold text-emerald-400 rounded-xl px-2 sm:px-2.5 py-1.5 sm:py-2 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer">
                     <option value="GH₵">GH₵</option>
@@ -197,6 +203,31 @@
 
         <!-- Main Responsive Grid Area -->
         <main class="flex-1 px-3.5 sm:px-5 lg:px-8 pt-4 sm:pt-6 pb-6 sm:pb-8 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
+
+            <!-- Welcome / How to Use Guide Banner (Top across full grid width) -->
+            <div id="welcomeGuideBanner" class="lg:col-span-12 bg-gradient-to-r from-emerald-950/70 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-3xl p-3.5 sm:p-4 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-400 to-teal-500 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0 font-bold">
+                        <i class="fa-solid fa-circle-play text-lg"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-xs sm:text-sm text-white">How to Use PocketFlow</h3>
+                            <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Quick Start</span>
+                        </div>
+                        <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Learn how to edit your budget, clear pre-loaded expenses, use the AI chatbot, log expenses & install on phone.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 self-stretch sm:self-auto shrink-0 justify-end">
+                    <button onclick="openModal('helpGuideModal')" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20">
+                        <i class="fa-solid fa-book-open text-xs"></i>
+                        <span>Open Guide</span>
+                    </button>
+                    <button onclick="dismissWelcomeBanner()" class="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition text-xs" title="Dismiss" aria-label="Dismiss banner">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
 
             <!-- LEFT COLUMN: Summary Card & Category Breakdown -->
             <div class="lg:col-span-5 space-y-5 sm:space-y-6">
@@ -357,6 +388,10 @@
                                 <input type="file" accept=".json" onchange="restoreJSON(event)" class="hidden">
                             </label>
                         </div>
+                        <button onclick="openModal('helpGuideModal')" class="w-full mt-2 py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 border border-slate-700/80 transition">
+                            <i class="fa-solid fa-circle-question text-emerald-400"></i>
+                            <span>How to Use PocketFlow (User Guide)</span>
+                        </button>
                     </div>
                 </section>
             </div>
@@ -381,10 +416,28 @@
                 <div class="flex items-center justify-between px-1">
                     <h3 class="text-sm font-bold text-slate-300">Transactions</h3>
                     <div class="flex items-center gap-2">
+                        <button onclick="openModal('confirmClearModal')" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1.5 bg-rose-500/10 hover:bg-rose-500/20 px-2.5 sm:px-3 py-1.5 rounded-xl border border-rose-500/20 transition" title="Clear all expenses">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                            <span class="hidden sm:inline">Clear All</span>
+                            <span class="sm:hidden">Clear</span>
+                        </button>
                         <button onclick="exportCSV()" class="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1.5 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 transition">
                             <i class="fa-solid fa-file-csv text-xs"></i> Export CSV
                         </button>
                     </div>
+                </div>
+
+                <!-- Sample Data Helper Notice -->
+                <div id="sampleDataBanner" class="hidden bg-slate-900/90 border border-amber-500/30 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-2.5 text-xs text-slate-300 shadow-md">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <div class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-xs">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <span class="truncate text-[11px] sm:text-xs">3 pre-loaded sample expenses shown.</span>
+                    </div>
+                    <button onclick="openModal('confirmClearModal')" class="text-rose-400 hover:text-rose-300 font-bold text-[11px] whitespace-nowrap bg-rose-500/10 hover:bg-rose-500/20 px-2.5 py-1 rounded-lg border border-rose-500/20 transition shrink-0">
+                        Clear Samples
+                    </button>
                 </div>
 
                 <!-- Expense List Container -->
@@ -405,6 +458,454 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- MODAL 0: HOW TO USE / QUICK START GUIDE MODAL -->
+    <div id="helpGuideModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[88vh] flex flex-col">
+            <!-- Mobile Grab Handle -->
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden shrink-0"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-bold shadow-md shadow-emerald-500/20">
+                        <i class="fa-solid fa-book-open text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-white">How to Use PocketFlow</h3>
+                        <p class="text-[11px] text-slate-400">Step-by-step user guide & shortcuts</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('helpGuideModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="py-2.5 border-b border-slate-800/80 overflow-x-auto no-scrollbar shrink-0">
+                <div class="flex items-center gap-1.5 w-max" id="guideTabsNav">
+                    <button type="button" onclick="switchGuideTab('overview')" id="guideTab-overview" class="guide-tab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-emerald-500 text-slate-950 shrink-0">
+                        <i class="fa-solid fa-rocket mr-1 text-[10px]"></i> 1. Start
+                    </button>
+                    <button type="button" onclick="switchGuideTab('budget')" id="guideTab-budget" class="guide-tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-800 text-slate-300 hover:text-white shrink-0">
+                        <i class="fa-solid fa-pen mr-1 text-[10px]"></i> 2. Budget
+                    </button>
+                    <button type="button" onclick="switchGuideTab('clear')" id="guideTab-clear" class="guide-tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-800 text-slate-300 hover:text-white shrink-0">
+                        <i class="fa-solid fa-trash-can mr-1 text-[10px]"></i> 3. Clear Pre-loaded
+                    </button>
+                    <button type="button" onclick="switchGuideTab('chatbot')" id="guideTab-chatbot" class="guide-tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-800 text-slate-300 hover:text-white shrink-0">
+                        <i class="fa-solid fa-comments mr-1 text-[10px]"></i> 4. AI Coach
+                    </button>
+                    <button type="button" onclick="switchGuideTab('expenses')" id="guideTab-expenses" class="guide-tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-800 text-slate-300 hover:text-white shrink-0">
+                        <i class="fa-solid fa-plus mr-1 text-[10px]"></i> 5. Log Expense
+                    </button>
+                    <button type="button" onclick="switchGuideTab('install')" id="guideTab-install" class="guide-tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-800 text-slate-300 hover:text-white shrink-0">
+                        <i class="fa-solid fa-mobile-screen mr-1 text-[10px]"></i> 6. Download App
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scrollable Guide Content Area -->
+            <div id="guideScrollContent" class="flex-1 overflow-y-auto py-3.5 space-y-4 text-xs pr-1">
+
+                <!-- SECTION 1: OVERVIEW & OPENING THE LINK -->
+                <div id="guideSection-overview" class="space-y-3.5">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2.5">
+                        <div class="flex items-center gap-2 font-bold text-emerald-400 text-sm">
+                            <i class="fa-solid fa-rocket"></i>
+                            <span>Opening the App Link (Getting Started)</span>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed text-xs">
+                            Welcome to <strong>PocketFlow</strong>! When you open the link in any mobile or desktop browser:
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <div class="flex items-center gap-2 font-semibold text-white mb-1">
+                                    <i class="fa-solid fa-user-shield text-emerald-400"></i>
+                                    <span>No Sign-Up or Login</span>
+                                </div>
+                                <p class="text-slate-400 text-[11px] leading-relaxed">
+                                    No account, password, or email required. You can start tracking your spending immediately.
+                                </p>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <div class="flex items-center gap-2 font-semibold text-white mb-1">
+                                    <i class="fa-solid fa-lock text-emerald-400"></i>
+                                    <span>100% Private & Local</span>
+                                </div>
+                                <p class="text-slate-400 text-[11px] leading-relaxed">
+                                    All data is saved locally on your phone or computer memory. Your money data never leaves your device.
+                                </p>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <div class="flex items-center gap-2 font-semibold text-white mb-1">
+                                    <i class="fa-solid fa-wifi text-emerald-400"></i>
+                                    <span>Works Offline</span>
+                                </div>
+                                <p class="text-slate-400 text-[11px] leading-relaxed">
+                                    Once loaded, PocketFlow works completely offline without mobile data or WiFi.
+                                </p>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <div class="flex items-center gap-2 font-semibold text-white mb-1">
+                                    <i class="fa-solid fa-coins text-emerald-400"></i>
+                                    <span>Currency Selection</span>
+                                </div>
+                                <p class="text-slate-400 text-[11px] leading-relaxed">
+                                    Use the currency menu at the top to switch between <strong>GH₵ (Cedis)</strong>, <strong>$ USD</strong>, <strong>€ EUR</strong>, <strong>£ GBP</strong>, or <strong>₦ NGN</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" onclick="closeModal('helpGuideModal')" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
+                            Close
+                        </button>
+                        <button type="button" onclick="switchGuideTab('budget')" class="py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition flex items-center gap-1.5">
+                            <span>Next: How to Edit Budget</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: HOW TO EDIT THE BUDGET -->
+                <div id="guideSection-budget" class="hidden space-y-3.5">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center gap-2 font-bold text-emerald-400 text-sm">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>How to Edit Your Monthly Budget</span>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed">
+                            Setting your own monthly spending target lets PocketFlow track your progress and calculate your safe daily allowance:
+                        </p>
+                        <div class="space-y-2.5 text-slate-200">
+                            <div class="flex items-start gap-2.5 bg-slate-900/90 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">1</span>
+                                <div>
+                                    <p class="font-semibold text-white">Find the "Total Spent" Card</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">Look at the large card at the top of your screen that shows your total spent and progress bar.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5 bg-slate-900/90 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">2</span>
+                                <div>
+                                    <p class="font-semibold text-white">Tap the "Budget" Button</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">Tap the grey button with the green pen icon labeled <strong>"Budget"</strong> in the top-right corner of that card.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5 bg-slate-900/90 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">3</span>
+                                <div>
+                                    <p class="font-semibold text-white">Enter Your Target Limit</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">Type in your monthly allowance (e.g. <code class="text-emerald-400 font-mono">2500</code>, <code class="text-emerald-400 font-mono">3000</code>, or your personal number).</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5 bg-slate-900/90 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">4</span>
+                                <div>
+                                    <p class="font-semibold text-white">Tap "Update Budget"</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">PocketFlow immediately updates your limit, percentage used bar, remaining balance, and safe daily allowance!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Direct Shortcut Action -->
+                        <div class="pt-2">
+                            <button type="button" onclick="closeModal('helpGuideModal'); openModal('budgetModal');" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-500/20">
+                                <i class="fa-solid fa-pen"></i>
+                                <span>Edit My Budget Right Now</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" onclick="switchGuideTab('overview')" class="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            <span>Back</span>
+                        </button>
+                        <button type="button" onclick="switchGuideTab('clear')" class="py-2.5 px-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition flex items-center gap-1.5">
+                            <span>Next: Clear Pre-loaded</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: HOW TO CLEAR PRE-LOADED EXPENSES -->
+                <div id="guideSection-clear" class="hidden space-y-3.5">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center gap-2 font-bold text-rose-400 text-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                            <span>How to Clear Pre-Loaded Expenses</span>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed">
+                            PocketFlow comes with 3 pre-loaded demo purchases (<em>Waakye & Juice</em>, <em>Bolt ride</em>, and <em>MTN Data Bundle</em>) to show you how day grouping and categories work. You can clear them in 1 tap:
+                        </p>
+
+                        <div class="space-y-3">
+                            <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5">
+                                <h4 class="font-bold text-white text-xs mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-bolt text-amber-400"></i>
+                                    <span>Method 1: Clear All at Once (1-Tap Reset)</span>
+                                </h4>
+                                <ol class="list-decimal list-inside space-y-1 text-slate-300 text-[11px] leading-relaxed">
+                                    <li>In the <strong>Transactions</strong> section, tap the red <strong>"Clear All"</strong> button located next to "Export CSV".</li>
+                                    <li>On the confirmation dialog, tap <strong>"Yes, Delete"</strong>.</li>
+                                    <li>All pre-loaded expenses are wiped clean, resetting your spent total to 0.00 so you can track your real spending!</li>
+                                </ol>
+                            </div>
+
+                            <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5">
+                                <h4 class="font-bold text-white text-xs mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-hand-pointer text-sky-400"></i>
+                                    <span>Method 2: Delete Transactions Individually</span>
+                                </h4>
+                                <ol class="list-decimal list-inside space-y-1 text-slate-300 text-[11px] leading-relaxed">
+                                    <li>In your transactions list, look at any expense row.</li>
+                                    <li>Tap the <strong>Trash Can icon (<i class="fa-solid fa-trash-can text-slate-400 px-0.5"></i>)</strong> on the right side of that expense.</li>
+                                    <li>That specific expense will be permanently deleted immediately.</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Direct Shortcut Action -->
+                        <div class="pt-2">
+                            <button type="button" onclick="closeModal('helpGuideModal'); openModal('confirmClearModal');" class="w-full py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold text-xs flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <span>Clear Pre-Loaded Expenses Now</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" onclick="switchGuideTab('budget')" class="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            <span>Back</span>
+                        </button>
+                        <button type="button" onclick="switchGuideTab('chatbot')" class="py-2.5 px-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition flex items-center gap-1.5">
+                            <span>Next: How to Use AI Coach</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: HOW TO USE THE CHATBOT -->
+                <div id="guideSection-chatbot" class="hidden space-y-3.5">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center gap-2 font-bold text-indigo-400 text-sm">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>How to Use the PocketCoach AI Chatbot</span>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed">
+                            <strong>PocketCoach AI</strong> is your personal financial habit and budget advisor. It is linked directly to your real-time numbers:
+                        </p>
+
+                        <div class="space-y-2.5 text-slate-200">
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <p class="font-semibold text-white flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-comment-dots"></i></span>
+                                    <span>1. How to Open the Chatbot</span>
+                                </p>
+                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">
+                                    Tap the <strong>floating purple circular button (<i class="fa-regular fa-comment text-white"></i>)</strong> with the pulsing green dot in the bottom-right corner of your screen, or tap <strong>"AI Coach"</strong> in the top header.
+                                </p>
+                            </div>
+
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <p class="font-semibold text-white flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-chart-line"></i></span>
+                                    <span>2. Live Financial Ribbon</span>
+                                </p>
+                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">
+                                    The ribbon across the top of the chat displays your real-time Monthly Budget, Spent amount, Remaining Balance, and Safe Daily Allowance.
+                                </p>
+                            </div>
+
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <p class="font-semibold text-white flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-hand-pointer"></i></span>
+                                    <span>3. Tap Quick Suggestion Chips</span>
+                                </p>
+                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">Tap any quick prompt chip at the bottom:</p>
+                                <div class="grid grid-cols-2 gap-1.5 mt-2">
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-emerald-300">📊 50/30/20 Budget</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-sky-300">🔍 Habit Audit</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-amber-300">🎯 Daily Limit</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-rose-300">🛑 Stop Impulse Buys</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <p class="font-semibold text-white flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-keyboard"></i></span>
+                                    <span>4. Ask Anything (e.g. "Can I Afford X?")</span>
+                                </p>
+                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">
+                                    Type naturally in the chat input. For example: <em>"Can I afford GH₵ 150 for sneakers?"</em> PocketCoach checks your remaining balance and days left to give you an honest recommendation.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Direct Shortcut Action -->
+                        <div class="pt-2">
+                            <button type="button" onclick="closeModal('helpGuideModal'); openModal('aiCoachModal');" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-indigo-600/25">
+                                <i class="fa-solid fa-comments"></i>
+                                <span>Open PocketCoach AI Chatbot</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" onclick="switchGuideTab('clear')" class="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            <span>Back</span>
+                        </button>
+                        <button type="button" onclick="switchGuideTab('expenses')" class="py-2.5 px-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition flex items-center gap-1.5">
+                            <span>Next: How to Log Expenses</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SECTION 5: HOW TO LOG NEW EXPENSES -->
+                <div id="guideSection-expenses" class="hidden space-y-3.5">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center gap-2 font-bold text-emerald-400 text-sm">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            <span>How to Log New Expenses</span>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed">
+                            Logging purchases takes just 5 seconds so you always know where your money goes:
+                        </p>
+
+                        <div class="space-y-2.5 text-slate-200">
+                            <div class="flex items-start gap-2.5 bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">1</span>
+                                <div>
+                                    <p class="font-semibold text-white">Tap "Log New Expense"</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">On mobile, tap the large green button pinned at the bottom. On desktop, tap "+ Add Expense" at the top right.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-2.5 bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">2</span>
+                                <div>
+                                    <p class="font-semibold text-white">Enter the Amount</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">Type in the price (e.g. <code class="text-emerald-400 font-mono">45.00</code>).</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-2.5 bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">3</span>
+                                <div>
+                                    <p class="font-semibold text-white">Choose a Category</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">Select Food, Transport, Bills, Shopping, Leisure, or Other.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-2.5 bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">4</span>
+                                <div>
+                                    <p class="font-semibold text-white">Add Description & Date</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">Add a quick note (e.g. <em>"Jollof & Chicken"</em> or <em>"Bolt ride to work"</em>). Date defaults to today.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-2.5 bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">5</span>
+                                <div>
+                                    <p class="font-semibold text-white">Tap "Save Expense"</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">The item is instantly saved offline, grouped under today's date, and reflected across all charts!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Direct Shortcut Action -->
+                        <div class="pt-2">
+                            <button type="button" onclick="closeModal('helpGuideModal'); openModal('addExpenseModal');" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-500/20">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Log an Expense Right Now</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" onclick="switchGuideTab('chatbot')" class="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            <span>Back</span>
+                        </button>
+                        <button type="button" onclick="switchGuideTab('install')" class="py-2.5 px-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition flex items-center gap-1.5">
+                            <span>Next: How to Download App</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SECTION 6: HOW TO DOWNLOAD / INSTALL ON ANDROID & IOS -->
+                <div id="guideSection-install" class="hidden space-y-3.5">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center gap-2 font-bold text-teal-400 text-sm">
+                            <i class="fa-solid fa-mobile-screen"></i>
+                            <span>How to Download / Install the App (Android & iOS)</span>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed text-xs">
+                            PocketFlow is a <strong>Progressive Web App (PWA)</strong>. You do <strong>not</strong> need to visit Google Play or the App Store. You install it directly from your phone's browser in 10 seconds:
+                        </p>
+
+                        <!-- Android Card -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                            <div class="flex items-center gap-2 font-bold text-emerald-400 text-xs">
+                                <i class="fa-brands fa-android text-base"></i>
+                                <span>For Android (Google Chrome)</span>
+                            </div>
+                            <ol class="list-decimal list-inside space-y-1.5 text-slate-300 text-[11px] leading-relaxed">
+                                <li>Open your PocketFlow link in <strong>Google Chrome</strong>.</li>
+                                <li>Tap the <strong>Three Dots Menu (<i class="fa-solid fa-ellipsis-vertical text-emerald-400 px-1"></i>)</strong> in Chrome's top-right corner.</li>
+                                <li>Tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</li>
+                                <li>Confirm by tapping <strong>"Install"</strong> or <strong>"Add"</strong>.</li>
+                                <li>The PocketFlow icon will now appear on your home screen and app drawer. It opens full-screen without any browser address bar!</li>
+                            </ol>
+                        </div>
+
+                        <!-- iOS Card -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                            <div class="flex items-center gap-2 font-bold text-emerald-400 text-xs">
+                                <i class="fa-brands fa-apple text-base"></i>
+                                <span>For iPhone & iPad (Safari)</span>
+                            </div>
+                            <ol class="list-decimal list-inside space-y-1.5 text-slate-300 text-[11px] leading-relaxed">
+                                <li>Open your PocketFlow link in <strong>Safari</strong> (Apple requires Safari for installing home screen apps).</li>
+                                <li>Tap the <strong>Share Button (<i class="fa-solid fa-arrow-up-from-bracket text-emerald-400 px-1"></i>)</strong> at the bottom center of Safari.</li>
+                                <li>Scroll down the share sheet and tap <strong>"Add to Home Screen" (<i class="fa-regular fa-square-plus text-emerald-400 px-1"></i>)</strong>.</li>
+                                <li>Tap <strong>"Add"</strong> in the top-right corner.</li>
+                                <li>The PocketFlow icon will appear on your iPhone home screen and run in standalone full-screen mode!</li>
+                            </ol>
+                        </div>
+
+                        <!-- Direct Shortcut Action -->
+                        <div class="pt-2">
+                            <button type="button" onclick="closeModal('helpGuideModal'); openModal('installModal');" class="w-full py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Open Full Install Screen & Data Bundle</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" onclick="switchGuideTab('expenses')" class="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            <span>Back</span>
+                        </button>
+                        <button type="button" onclick="closeModal('helpGuideModal')" class="py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-check text-xs"></i>
+                            <span>Got It! Start Tracking</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <!-- MODAL 1: ADD EXPENSE MODAL -->
@@ -540,6 +1041,11 @@
                         <span>Download App File (.html)</span>
                     </button>
                 </div>
+
+                <button onclick="closeModal('installModal'); openModal('helpGuideModal');" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition">
+                    <i class="fa-solid fa-book-open text-emerald-400"></i>
+                    <span>View Complete App Guide (All 6 Steps)</span>
+                </button>
             </div>
         </div>
     </div>
@@ -551,7 +1057,7 @@
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <h3 class="text-base font-bold text-white mb-1">Clear All Expenses?</h3>
-            <p class="text-xs text-slate-400 mb-5">This will permanently remove all logged transactions from your device.</p>
+            <p class="text-xs text-slate-400 mb-5">This will permanently remove all transactions (including demo items) so you can start fresh with your own spending.</p>
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="closeModal('confirmClearModal')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">
                     Cancel
@@ -1082,6 +1588,7 @@
             loadState();
             checkPushPermissionUI();
             setupModalBackdrops();
+            checkWelcomeBanner();
 
             const now = new Date();
             document.getElementById('currentMonthDisplay').textContent =
@@ -1274,6 +1781,7 @@
         }
 
         function renderExpenseList() {
+            updateSampleDataBanner();
             const container = document.getElementById('expenseList');
             if (!container) return;
 
@@ -1805,7 +2313,58 @@
             saveState();
             renderAll();
             closeModal('confirmClearModal');
-            showToast('All expenses cleared');
+            showToast('All expenses cleared! Ready for your data.');
+        }
+
+        // ==========================================
+        // HOW TO USE GUIDE & SAMPLE BANNER LOGIC
+        // ==========================================
+        function switchGuideTab(tabKey) {
+            const tabs = ['overview', 'budget', 'clear', 'chatbot', 'expenses', 'install'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`guideTab-${t}`);
+                const sec = document.getElementById(`guideSection-${t}`);
+                if (btn) {
+                    if (t === tabKey) {
+                        btn.className = 'guide-tab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-emerald-500 text-slate-950 shrink-0';
+                    } else {
+                        btn.className = 'guide-tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-800 text-slate-300 hover:text-white shrink-0';
+                    }
+                }
+                if (sec) {
+                    if (t === tabKey) {
+                        sec.classList.remove('hidden');
+                    } else {
+                        sec.classList.add('hidden');
+                    }
+                }
+            });
+            const content = document.getElementById('guideScrollContent');
+            if (content) content.scrollTop = 0;
+        }
+
+        function dismissWelcomeBanner() {
+            const banner = document.getElementById('welcomeGuideBanner');
+            if (banner) banner.classList.add('hidden');
+            localStorage.setItem('pocketflow_guide_banner_dismissed', 'true');
+        }
+
+        function checkWelcomeBanner() {
+            if (localStorage.getItem('pocketflow_guide_banner_dismissed') === 'true') {
+                const banner = document.getElementById('welcomeGuideBanner');
+                if (banner) banner.classList.add('hidden');
+            }
+        }
+
+        function updateSampleDataBanner() {
+            const sampleBanner = document.getElementById('sampleDataBanner');
+            if (!sampleBanner) return;
+            const hasSampleItems = state.expenses.some(e => ['exp-1', 'exp-2', 'exp-3'].includes(e.id));
+            if (hasSampleItems) {
+                sampleBanner.classList.remove('hidden');
+            } else {
+                sampleBanner.classList.add('hidden');
+            }
         }
 
         function switchTab(tab) {
@@ -1905,6 +2464,8 @@
             } else if (id === 'aiCoachModal') {
                 initCoachChat();
                 updateCoachFloatBtnState(true);
+            } else if (id === 'helpGuideModal') {
+                switchGuideTab('overview');
             }
             const modalEl = document.getElementById(id);
             if (modalEl) {
