@@ -10,8 +10,13 @@
     <meta name="apple-mobile-web-app-title" content="PocketFlow">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0f172a">
+    <!-- App Icons (Web, Favicon & Apple Touch) -->
+    <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="204x204" href="logo.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="logo-512.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link id="appleTouchIconLink" rel="apple-touch-icon" href="logo.png">
     <link id="pwaManifestLink" rel="manifest">
-    <link id="appleTouchIconLink" rel="apple-touch-icon">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -81,7 +86,7 @@
                 padding-top: max(3.75rem, calc(2.25rem + env(safe-area-inset-top, 44px))) !important;
                 padding-bottom: 1rem !important;
             }
-            #nativeInstallBtn, #homeScreenGuideBtn {
+            #nativeInstallBtn, #homeScreenGuideBtn, #mobileDropdownInstallBtn {
                 display: none !important;
             }
         }
@@ -90,7 +95,8 @@
             padding-bottom: 1rem !important;
         }
         .is-standalone #nativeInstallBtn,
-        .is-standalone #homeScreenGuideBtn {
+        .is-standalone #homeScreenGuideBtn,
+        .is-standalone #mobileDropdownInstallBtn {
             display: none !important;
         }
         .safe-bottom-pad {
@@ -133,59 +139,65 @@
     <div class="max-w-6xl mx-auto min-h-[100dvh] flex flex-col relative bg-slate-900/90 shadow-2xl sm:border-x border-slate-800/60">
 
         <!-- Top Web App Navigation Bar -->
-        <header class="px-3.5 sm:px-5 lg:px-8 flex items-center justify-between sticky top-0 z-20 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80">
-            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-1">
-                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
-                    <i class="fa-solid fa-wallet text-slate-950 text-base sm:text-lg"></i>
-                </div>
+        <header class="px-3 sm:px-5 lg:px-8 flex items-center justify-between sticky top-0 z-20 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80">
+            <!-- App Branding & Title (Logo from image 3) -->
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <img src="logo.png" alt="PocketFlow Logo" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain shadow-lg shadow-emerald-500/20 shrink-0" onerror="this.onerror=null; this.src='logo-512.png';" />
                 <div class="min-w-0">
                     <div class="flex items-center gap-1.5">
-                        <h1 class="font-bold text-base sm:text-lg lg:text-xl tracking-tight leading-none text-white whitespace-nowrap">PocketFlow</h1>
+                        <h1 class="font-bold text-sm sm:text-lg lg:text-xl tracking-tight leading-none text-white whitespace-nowrap">PocketFlow</h1>
                         <span id="pwaStatusBadge" class="hidden sm:inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">Live PWA</span>
                     </div>
-                    <p id="currentMonthDisplay" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium whitespace-nowrap">Monthly Tracker</p>
+                    <p id="currentMonthDisplay" class="text-[10px] sm:text-xs text-slate-400 mt-0.5 font-medium whitespace-nowrap">Monthly Tracker</p>
                 </div>
             </div>
 
+            <!-- Top Action Controls (Spaced & optimized for small & large screens) -->
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <!-- Live Host Quick Link Badge / Copy URL -->
+                <!-- Live Host Quick Link Badge / Copy URL (md+) -->
                 <button onclick="copyAppUrl()" class="hidden md:flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-2 rounded-xl text-xs font-semibold transition" title="Copy live link">
                     <i class="fa-solid fa-link text-emerald-400"></i>
                     <span>Share URL</span>
                 </button>
 
-                <!-- PocketCoach AI Chatbot Button -->
-                <button onclick="openModal('aiCoachModal')" class="relative w-8 h-8 sm:w-auto sm:px-2.5 sm:py-2 bg-gradient-to-r from-emerald-500/15 to-teal-500/15 hover:from-emerald-500/25 hover:to-teal-500/25 text-emerald-300 rounded-xl border border-emerald-500/30 transition flex items-center justify-center gap-1.5 text-xs font-bold" title="PocketCoach AI Financial Advisor" aria-label="PocketCoach AI">
+                <!-- PocketCoach AI Chatbot Button (hidden on mobile because floating circular button is active; visible on sm+) -->
+                <button onclick="openModal('aiCoachModal')" class="hidden sm:flex relative w-8 h-8 sm:w-auto sm:px-2.5 sm:py-2 bg-gradient-to-r from-emerald-500/15 to-teal-500/15 hover:from-emerald-500/25 hover:to-teal-500/25 text-emerald-300 rounded-xl border border-emerald-500/30 transition items-center justify-center gap-1.5 text-xs font-bold" title="PocketCoach AI Financial Advisor" aria-label="PocketCoach AI">
                     <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 text-xs sm:text-sm"></i>
                     <span class="hidden md:inline">AI Coach</span>
                 </button>
 
-                <!-- Notifications Bell Center -->
-                <button onclick="openModal('notificationsModal')" class="relative w-8 h-8 sm:w-9 sm:h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center text-xs font-semibold" title="Notifications & Alerts" aria-label="Notifications">
-                    <i class="fa-solid fa-bell text-emerald-400 text-xs sm:text-sm"></i>
-                    <span id="notificationBadgeCount" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-bold items-center justify-center">0</span>
-                </button>
-
-                <!-- Desktop Quick Add Button -->
+                <!-- Desktop Quick Add Button (lg+) -->
                 <button onclick="openModal('addExpenseModal')" class="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition">
                     <i class="fa-solid fa-plus"></i>
                     <span>Add Expense</span>
                 </button>
 
-                <!-- Native One-Tap PWA Install Button -->
-                <button id="nativeInstallBtn" onclick="triggerNativeInstall()" class="hidden items-center gap-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition">
-                    <i class="fa-solid fa-download"></i>
-                    <span class="hidden sm:inline">Install</span>
-                </button>
-
-                <!-- App Guide / How to Use Button -->
-                <button onclick="openModal('helpGuideModal')" class="w-8 h-8 sm:w-auto sm:px-2.5 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs font-semibold" title="How to Use PocketFlow" aria-label="How to Use Guide">
+                <!-- App Guide / How to Use Button (sm+) -->
+                <button onclick="openModal('helpGuideModal')" class="hidden sm:flex w-8 h-8 sm:w-auto sm:px-2.5 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition items-center justify-center gap-1.5 text-xs font-semibold shrink-0" title="How to Use PocketFlow" aria-label="How to Use Guide">
                     <i class="fa-solid fa-circle-question text-emerald-400 text-xs sm:text-sm"></i>
                     <span class="hidden sm:inline">Guide</span>
                 </button>
 
-                <!-- Currency Selector -->
-                <select id="currencySelect" aria-label="Currency" class="bg-slate-800 hover:bg-slate-700 text-[11px] sm:text-xs font-semibold text-emerald-400 rounded-xl px-2 sm:px-2.5 py-1.5 sm:py-2 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer">
+                <!-- Native One-Tap PWA Install Button (shows when browser triggers install prompt) -->
+                <button id="nativeInstallBtn" onclick="triggerNativeInstall()" class="hidden items-center gap-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shrink-0" title="Install PocketFlow">
+                    <i class="fa-solid fa-download"></i>
+                    <span class="hidden sm:inline">Install</span>
+                </button>
+
+                <!-- Install to Home Screen Guide Button (sm+ only; on mobile accessed cleanly via More menu or native button) -->
+                <button id="homeScreenGuideBtn" onclick="openModal('installModal')" class="hidden sm:flex w-8 h-8 sm:w-auto sm:px-3 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition items-center justify-center gap-1.5 text-xs font-semibold shrink-0" title="Add to Home Screen" aria-label="Add to Home Screen">
+                    <i class="fa-solid fa-mobile-screen-button text-emerald-400 text-xs sm:text-sm"></i>
+                    <span class="hidden sm:inline">Install</span>
+                </button>
+
+                <!-- Notifications Bell Center (Visible on all screen sizes) -->
+                <button onclick="openModal('notificationsModal')" class="relative w-8 h-8 sm:w-9 sm:h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center text-xs font-semibold shrink-0" title="Notifications & Alerts" aria-label="Notifications">
+                    <i class="fa-solid fa-bell text-emerald-400 text-xs sm:text-sm"></i>
+                    <span id="notificationBadgeCount" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-bold items-center justify-center">0</span>
+                </button>
+
+                <!-- Currency Selector (Visible on all screen sizes) -->
+                <select id="currencySelect" aria-label="Currency" class="h-8 bg-slate-800 hover:bg-slate-700 text-[11px] sm:text-xs font-semibold text-emerald-400 rounded-xl px-2 sm:px-2.5 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer shrink-0">
                     <option value="GH₵">GH₵</option>
                     <option value="$">$ USD</option>
                     <option value="€">€ EUR</option>
@@ -193,11 +205,43 @@
                     <option value="₦">₦ NGN</option>
                 </select>
 
-                <!-- Install to Home Screen Guide Button -->
-                <button id="homeScreenGuideBtn" onclick="openModal('installModal')" class="w-8 h-8 sm:w-auto sm:px-3 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs font-semibold" title="Add to Home Screen" aria-label="Add to Home Screen">
-                    <i class="fa-solid fa-mobile-screen-button text-emerald-400 text-xs sm:text-sm"></i>
-                    <span class="hidden sm:inline">Install</span>
-                </button>
+                <!-- Mobile More Menu (Visible on mobile < sm to keep top bar clean and spacious) -->
+                <div class="relative sm:hidden shrink-0">
+                    <button id="mobileHeaderMenuBtn" onclick="toggleMobileHeaderMenu(event)" class="w-8 h-8 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center text-xs font-semibold shrink-0" aria-label="More options" title="More options">
+                        <i class="fa-solid fa-ellipsis-vertical text-emerald-400"></i>
+                    </button>
+                    <!-- Mobile Dropdown Menu -->
+                    <div id="mobileHeaderDropdown" class="hidden absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl py-1.5 z-50 text-xs text-slate-200 divide-y divide-slate-800/80">
+                        <button onclick="closeMobileHeaderMenu(); openModal('helpGuideModal');" class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle-question text-emerald-400 text-sm w-4 text-center"></i>
+                            <div>
+                                <div class="font-bold text-white text-xs">How to Use Guide</div>
+                                <div class="text-[10px] text-slate-400">Walkthrough & tips</div>
+                            </div>
+                        </button>
+                        <button id="mobileDropdownInstallBtn" onclick="handleMobileInstallClick();" class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-mobile-screen-button text-emerald-400 text-sm w-4 text-center"></i>
+                            <div>
+                                <div class="font-bold text-white text-xs">Add to Home Screen</div>
+                                <div class="text-[10px] text-slate-400">Install app on phone</div>
+                            </div>
+                        </button>
+                        <button onclick="closeMobileHeaderMenu(); copyAppUrl();" class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-link text-emerald-400 text-sm w-4 text-center"></i>
+                            <div>
+                                <div class="font-bold text-white text-xs">Share Live URL</div>
+                                <div class="text-[10px] text-slate-400">Copy link to clipboard</div>
+                            </div>
+                        </button>
+                        <button onclick="closeMobileHeaderMenu(); openModal('aiCoachModal');" class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 text-sm w-4 text-center"></i>
+                            <div>
+                                <div class="font-bold text-white text-xs">PocketCoach AI</div>
+                                <div class="text-[10px] text-slate-400">Ask financial coach</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -1022,9 +1066,7 @@
             <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                        <i class="fa-solid fa-mobile-screen"></i>
-                    </div>
+                    <img src="logo.png" alt="PocketFlow Logo" class="w-8 h-8 rounded-xl object-contain shadow-md shadow-emerald-500/20 shrink-0" onerror="this.onerror=null; this.src='logo-512.png';" />
                     <h3 class="text-base sm:text-lg font-bold text-white">Add to Home Screen</h3>
                 </div>
                 <button onclick="closeModal('installModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
@@ -1464,14 +1506,13 @@
                         <stop offset="100%" stop-color="#0d9488"/>
                     </linearGradient>
                 </defs>
-                <rect width="512" height="512" rx="120" fill="#0f172a"/>
-                <rect x="56" y="56" width="400" height="400" rx="96" fill="url(#g)"/>
-                <path d="M160 192h192c17.7 0 32 14.3 32 32v112c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32zm0-48h160c8.8 0 16 7.2 16 16s-7.2 16-16 16H160c-8.8 0-16-7.2-16-16s7.2-16 16-16zm168 128a24 24 0 1 0 0-48 24 24 0 0 0 0 48z" fill="#0f172a"/>
+                <rect width="512" height="512" rx="120" fill="url(#g)"/>
+                <path d="M133 213h246c22.7 0 41 18.3 41 41v143c0 22.7-18.3 41-41 41H133c-22.7 0-41-18.3-41-41V254c0-22.7 18.3-41 41-41zm0-61h205c11.3 0 20.5 9.2 20.5 20.5s-9.2 20.5-20.5 20.5H133c-11.3 0-20.5-9.2-20.5-20.5S121.7 152 133 152zm215 164a31 31 0 1 0 0-62 31 31 0 0 0 0 62z" fill="#0f172a"/>
             </svg>`;
             const iconDataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgIcon);
 
             const appleIcon = document.getElementById('appleTouchIconLink');
-            if (appleIcon) appleIcon.href = iconDataUrl;
+            if (appleIcon) appleIcon.href = 'logo.png';
 
             const manifest = {
                 name: 'PocketFlow Spending Tracker',
@@ -1482,6 +1523,18 @@
                 background_color: '#0f172a',
                 theme_color: '#0f172a',
                 icons: [
+                    {
+                        src: 'logo.png',
+                        sizes: '256x256',
+                        type: 'image/png',
+                        purpose: 'any'
+                    },
+                    {
+                        src: 'logo-512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any maskable'
+                    },
                     {
                         src: iconDataUrl,
                         sizes: '512x512',
@@ -1504,6 +1557,8 @@
                 if (guideBtn) guideBtn.classList.add('hidden');
                 const nativeBtn = document.getElementById('nativeInstallBtn');
                 if (nativeBtn) nativeBtn.classList.add('hidden');
+                const mobileInstallBtn = document.getElementById('mobileDropdownInstallBtn');
+                if (mobileInstallBtn) mobileInstallBtn.classList.add('hidden');
             }
         }
 
@@ -1546,6 +1601,11 @@
                     btn.classList.remove('hidden');
                     btn.classList.add('flex');
                 }
+                const guideBtn = document.getElementById('homeScreenGuideBtn');
+                if (guideBtn) {
+                    guideBtn.classList.add('hidden');
+                    guideBtn.classList.remove('flex');
+                }
             }
         });
 
@@ -1558,10 +1618,53 @@
             const { outcome } = await deferredInstallPrompt.userChoice;
             if (outcome === 'accepted') {
                 showToast('PocketFlow installed to your device!');
-                document.getElementById('nativeInstallBtn').classList.add('hidden');
+                const btn = document.getElementById('nativeInstallBtn');
+                if (btn) {
+                    btn.classList.add('hidden');
+                    btn.classList.remove('flex');
+                }
+                const guideBtn = document.getElementById('homeScreenGuideBtn');
+                if (guideBtn) guideBtn.classList.add('hidden');
+                const mobileInstallBtn = document.getElementById('mobileDropdownInstallBtn');
+                if (mobileInstallBtn) mobileInstallBtn.classList.add('hidden');
             }
             deferredInstallPrompt = null;
         }
+
+        function toggleMobileHeaderMenu(e) {
+            if (e) e.stopPropagation();
+            const dropdown = document.getElementById('mobileHeaderDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        function closeMobileHeaderMenu() {
+            const dropdown = document.getElementById('mobileHeaderDropdown');
+            if (dropdown && !dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+            }
+        }
+
+        function handleMobileInstallClick() {
+            closeMobileHeaderMenu();
+            if (deferredInstallPrompt) {
+                triggerNativeInstall();
+            } else {
+                openModal('installModal');
+            }
+        }
+
+        // Close mobile dropdown when tapping anywhere outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('mobileHeaderDropdown');
+            const menuBtn = document.getElementById('mobileHeaderMenuBtn');
+            if (dropdown && !dropdown.classList.contains('hidden')) {
+                if (menuBtn && !menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        });
 
         // ==========================================
         // MULTI-TIER DATA PERSISTENCE (IndexedDB + LocalStorage + SessionStorage)

@@ -1,9 +1,14 @@
-// PocketFlow Service Worker v2.4
-const CACHE_NAME = 'pocketflow-cache-v2.4';
+// PocketFlow Service Worker v2.6
+const CACHE_NAME = 'pocketflow-cache-v2.6';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
-    './pocketflow_spending_tracker.html'
+    './pocketflow_spending_tracker.html',
+    './logo.png',
+    './logo.jpg',
+    './logo-512.png',
+    './favicon.png',
+    './favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
