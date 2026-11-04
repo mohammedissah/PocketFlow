@@ -1138,16 +1138,16 @@
                             <i class="fa-solid fa-gavel text-amber-400 text-xs"></i>
                             <span>Coach Strictness Level</span>
                         </span>
-                        <span id="coachStrictnessLabel" class="text-[10px] font-bold uppercase tracking-wider text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded-full">
-                            Strict Disciplinarian
+                        <span id="coachStrictnessLabel" class="text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                            Balanced Guardian
                         </span>
                     </div>
                     <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-900 rounded-xl border border-slate-800/80">
-                        <button type="button" onclick="setCoachStrictness('strict')" id="strictBtn-strict" class="py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+                        <button type="button" onclick="setCoachStrictness('strict')" id="strictBtn-strict" class="py-1.5 px-2 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-shield-halved text-[10px]"></i>
                             <span>Strict</span>
                         </button>
-                        <button type="button" onclick="setCoachStrictness('balanced')" id="strictBtn-balanced" class="py-1.5 px-2 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1 cursor-pointer">
+                        <button type="button" onclick="setCoachStrictness('balanced')" id="strictBtn-balanced" class="py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 bg-emerald-500 text-slate-950 shadow-sm cursor-pointer">
                             <i class="fa-solid fa-scale-balanced text-[10px]"></i>
                             <span>Balanced</span>
                         </button>
@@ -1157,7 +1157,7 @@
                         </button>
                     </div>
                     <p id="coachStrictnessDesc" class="text-[11px] text-slate-400 mt-2 leading-relaxed">
-                        Zero tolerance for overspending: triggers tight daily limits, fast burn rate warnings, and disciplined coaching.
+                        Standard safeguards: notifies at 80% and 100% budget thresholds with pragmatic spending advice and a 25% daily buffer.
                     </p>
                 </div>
 
@@ -1422,7 +1422,7 @@
         let state = {
             currency: 'GH₵',
             budget: 2500,
-            coachStrictness: 'strict',
+            coachStrictness: 'balanced',
             notificationsFilter: 'all',
             lastDailyBreachDate: '',
             lastPaceNotifiedDay: 0,
@@ -1434,10 +1434,10 @@
             notifications: [
                 {
                     id: 'notif-strict-intro',
-                    title: '🛡️ PocketCoach Strict Spending Guard Active',
-                    body: 'PocketFlow is actively monitoring your daily pacing, burn rate, and category limits to curb overspending.',
-                    strictTip: 'Discipline Rule: Never buy non-essentials when your daily allowance is depleted. Use the 48-hour cooling-off rule on impulse buys.',
-                    coachPrompt: 'Explain how the PocketCoach Strict Spending Guard works, what rules I must follow to curb overspending, and better ways to manage my money.',
+                    title: '🛡️ PocketCoach Spending Guard Active',
+                    body: 'PocketFlow is monitoring your daily pacing, burn rate, and category limits in Balanced Guardian mode to curb overspending.',
+                    strictTip: 'Pacing Rule: Keep daily spending under your safe allowance and use the 48-hour cooling-off rule on impulse buys.',
+                    coachPrompt: 'Explain how the PocketCoach Spending Guard works, how Balanced Guardian mode guides my spending, and better ways to manage my money.',
                     category: 'curb',
                     type: 'curb',
                     time: 'Just now',
@@ -1664,6 +1664,8 @@
                         }
                         if (parsed.coachStrictness) {
                             state.coachStrictness = parsed.coachStrictness;
+                        } else {
+                            state.coachStrictness = 'balanced';
                         }
                         if (parsed.lastDailyBreachDate) {
                             state.lastDailyBreachDate = parsed.lastDailyBreachDate;
@@ -1686,7 +1688,7 @@
                 const payloadObj = {
                     currency: state.currency,
                     budget: state.budget,
-                    coachStrictness: state.coachStrictness || 'strict',
+                    coachStrictness: state.coachStrictness || 'balanced',
                     expenses: state.expenses,
                     notifications: state.notifications,
                     lastNotifiedTier: state.lastNotifiedTier || 0,
@@ -2223,7 +2225,7 @@
             const spentToday = todayExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
             const dailyAvg = totalSpent / todayDate;
 
-            const strictness = state.coachStrictness || 'strict';
+            const strictness = state.coachStrictness || 'balanced';
             const dailyBreachMultiplier = strictness === 'strict' ? 1.05 : (strictness === 'balanced' ? 1.25 : 1.50);
             const paceBuffer = strictness === 'strict' ? 10 : (strictness === 'balanced' ? 20 : 30);
 
@@ -2621,7 +2623,7 @@
         }
 
         function renderCoachStrictnessUI() {
-            const level = state.coachStrictness || 'strict';
+            const level = state.coachStrictness || 'balanced';
             const labelEl = document.getElementById('coachStrictnessLabel');
             const descEl = document.getElementById('coachStrictnessDesc');
 
@@ -3625,7 +3627,7 @@ I'm here to help you:
             if (has('emergency overspend', 'overspend recovery', 'curb spending', 'curb my spending', 'curb expenses', 'over budget', 'blown budget', 'budget blown', 'exceeded budget', 'recovery plan', 'stop overspending', 'spending diet', 'freeze spending', 'overspent', 'strict recovery', 'strict advice', 'emergency budget', 'curb overspending')) {
                 const overspendAmt = Math.max(0, ctx.totalSpent - ctx.budget);
                 const isOver = ctx.remaining < 0;
-                const strictness = state.coachStrictness || 'strict';
+                const strictness = state.coachStrictness || 'balanced';
                 let modeIntro = '';
                 if (strictness === 'strict') {
                     modeIntro = `🛡️ **Strict Disciplinarian Assessment Active**\nNo sugarcoating here: overshooting budget boundaries causes stress, drains savings, and forces debt. You need an immediate, strict regimen to freeze leaks and recover.`;
@@ -3758,21 +3760,20 @@ This challenge is a financial dopamine reset. For 7 days, you spend **${ctx.curr
 
             // F. Coach Strictness Mode Guidance
             if (has('coach strictness', 'strictness mode', 'strict mode', 'disciplinarian', 'balanced guardian', 'gentle guide', 'how strict')) {
-                const currentMode = state.coachStrictness || 'strict';
+                const currentMode = state.coachStrictness || 'balanced';
                 return `🛡️ **PocketCoach Strictness & Discipline System**
 
 Your current Coach Strictness Level is: **${currentMode === 'strict' ? 'Strict Disciplinarian 🛡️' : (currentMode === 'balanced' ? 'Balanced Guardian ⚖️' : 'Gentle Guide 🌱')}**
 
 Here is how each mode works:
-1. **🛡️ Strict Disciplinarian (Default & Recommended):**
+1. **⚖️ Balanced Guardian (Preset & Recommended):**
+   • Standard safeguards: notifies at 80% and 100% budget thresholds with a 25% daily spending buffer and pragmatic advice.
+   • Delivers proactive coaching and guides you to maintain healthy daily pacing.
+
+2. **🛡️ Strict Disciplinarian:**
    • Zero excuses: alerts you immediately if your daily spending breaches your safe daily allowance by even 5%!
    • Warns you aggressively if mid-month burn rate exceeds healthy pacing.
    • Delivers direct, tough-love coaching and actionable spending freezes to curb leaks.
-
-2. **⚖️ Balanced Guardian:**
-   • Standard safeguards: notifies at 80% and 100% budget thresholds.
-   • Allows a 25% buffer on daily spending before triggering alerts.
-   • Delivers pragmatic, balanced coaching.
 
 3. **🌱 Gentle Guide:**
    • Softer nudges with higher thresholds (50% daily buffer).
