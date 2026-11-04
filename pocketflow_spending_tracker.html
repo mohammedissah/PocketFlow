@@ -2815,6 +2815,7 @@
         }
 
         function consultPocketCoachFromAlert(rawPrompt, isEncoded = false) {
+            hideToast();
             const promptText = isEncoded ? decodeURIComponent(rawPrompt) : rawPrompt;
             closeModal('notificationsModal');
             openModal('aiCoachModal');
@@ -2828,6 +2829,7 @@
         }
 
         function consultPocketCoachFromBanner() {
+            hideToast();
             const prompt = window.activeBannerCoachPrompt || 'Analyze my current spending habits, curb my overspending, and give me better ways to go about my spending.';
             consultPocketCoachFromAlert(prompt);
         }
@@ -3166,6 +3168,7 @@
                 const dateEl = document.getElementById('expenseDate');
                 if (dateEl) dateEl.value = getLocalDateStr();
             } else if (id === 'aiCoachModal') {
+                hideToast();
                 initCoachChat();
                 updateCoachFloatBtnState(true);
             } else if (id === 'helpGuideModal') {
@@ -3237,49 +3240,69 @@
             }, 100);
         }
 
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            clearTimeout(window.toastTimer);
+            toast.onclick = null;
+            toast.classList.add('opacity-0', 'pointer-events-none', 'hidden');
+            toast.classList.remove('opacity-100', 'pointer-events-auto');
+        }
+
         function showStrictToast(msg, onActionClick) {
             const toast = document.getElementById('toast');
             if (!toast) return;
 
             toast.innerHTML = `
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 cursor-pointer w-full select-none">
                     <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm shrink-0"></i>
                     <span class="flex-1 text-[11px] leading-tight text-white">${escapeHtml(msg)}</span>
-                    <button id="toastActionBtn" class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 text-[11px] font-bold shrink-0 ml-1 shadow-sm active:scale-95 transition cursor-pointer">
+                    <button id="toastActionBtn" class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 text-[11px] font-bold shrink-0 ml-1 shadow-sm active:scale-95 transition cursor-pointer">
                         Ask Coach
                     </button>
                 </div>
             `;
-            toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-500/50 text-white px-3.5 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold opacity-100 pointer-events-auto transition-opacity duration-300 max-w-[92vw] sm:max-w-md';
+            toast.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+            toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-500/50 text-white px-3.5 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold opacity-100 pointer-events-auto transition-opacity duration-300 max-w-[92vw] sm:max-w-md cursor-pointer';
+
+            const dismissAndExecute = (e) => {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                // Immediately close banner automatically
+                hideToast();
+                if (onActionClick) {
+                    onActionClick();
+                }
+            };
 
             const btn = document.getElementById('toastActionBtn');
-            if (btn && onActionClick) {
-                btn.onclick = (e) => {
-                    e.stopPropagation();
-                    toast.classList.add('opacity-0');
-                    toast.classList.add('pointer-events-none');
-                    onActionClick();
-                };
+            if (btn) {
+                btn.onclick = dismissAndExecute;
             }
+            // Tapping anywhere on the banner also opens coach and closes banner
+            toast.onclick = dismissAndExecute;
 
             clearTimeout(window.toastTimer);
             window.toastTimer = setTimeout(() => {
-                toast.classList.add('opacity-0');
-                toast.classList.add('pointer-events-none');
-            }, 5000);
+                hideToast();
+            }, 6000);
         }
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
             if (!toast) return;
+            toast.onclick = null;
             toast.innerHTML = `
                 <i class="fa-solid fa-circle-check text-emerald-400"></i>
                 <span id="toastMessage">${escapeHtml(msg)}</span>
             `;
+            toast.classList.remove('hidden', 'opacity-0');
             toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-800 border border-emerald-500/40 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2 opacity-100 pointer-events-none transition-opacity duration-300';
             clearTimeout(window.toastTimer);
             window.toastTimer = setTimeout(() => {
-                toast.classList.add('opacity-0');
+                hideToast();
             }, 2200);
         }
 
