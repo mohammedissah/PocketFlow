@@ -724,25 +724,27 @@
 
                             <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
                                 <p class="font-semibold text-white flex items-center gap-2">
-                                    <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-hand-pointer"></i></span>
-                                    <span>3. Tap Quick Suggestion Chips</span>
+                                    <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-layer-group"></i></span>
+                                    <span>3. Explore 8 Financial Categories & Topic Tabs</span>
                                 </p>
-                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">Tap any quick prompt chip at the bottom:</p>
+                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">Switch across topic tabs right in the chat to explore dozens of prompt suggestions:</p>
                                 <div class="grid grid-cols-2 gap-1.5 mt-2">
-                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-emerald-300">📊 50/30/20 Budget</span>
-                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-sky-300">🔍 Habit Audit</span>
-                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-amber-300">🎯 Daily Limit</span>
-                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-rose-300">🛑 Stop Impulse Buys</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-emerald-300">📊 50/30/20 & Zero-Based</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-sky-300">💡 Live Data & Top Spend</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-rose-300">💳 Debt Snowball & Credit</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-amber-300">🛒 Cut Food, Bills & Data</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-teal-300">📈 Investing & Inflation</span>
+                                    <span class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-purple-300">🎲 Surprise Me Randomizer</span>
                                 </div>
                             </div>
 
                             <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3">
                                 <p class="font-semibold text-white flex items-center gap-2">
                                     <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-keyboard"></i></span>
-                                    <span>4. Ask Anything (e.g. "Can I Afford X?")</span>
+                                    <span>4. Ask Anything (Freeform Financial Questions)</span>
                                 </p>
                                 <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">
-                                    Type naturally in the chat input. For example: <em>"Can I afford GH₵ 150 for sneakers?"</em> PocketCoach checks your remaining balance and days left to give you an honest recommendation.
+                                    Type naturally in the chat input. For example: <em>"Can I afford 150 for sneakers?"</em>, <em>"What is my biggest expense?"</em>, or <em>"How do I invest in index funds?"</em> PocketCoach performs live data math and gives deep, structured advice.
                                 </p>
                             </div>
                         </div>
@@ -1128,7 +1130,7 @@
                                 Live Coach
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400">Budget structuring & spending habits</p>
+                        <p class="text-[11px] text-slate-400">Financial advisor, budgets & wealth coach</p>
                     </div>
                 </div>
 
@@ -1181,40 +1183,48 @@
                 <!-- Chat bubbles rendered via JS -->
             </div>
 
-            <!-- Quick Habit Prompt Suggestion Chips -->
-            <div class="px-3 py-2 bg-slate-950/60 border-t border-slate-800/60 shrink-0 overflow-x-auto no-scrollbar">
-                <div class="flex items-center gap-1.5 w-max">
-                    <button type="button" onclick="sendQuickPrompt('How should I structure my budget using the 50/30/20 rule?')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-chart-pie text-emerald-400 text-[10px]"></i>
-                        <span>50/30/20 Budget</span>
+            <!-- Topic Tabs & Suggestion Prompts Carousel -->
+            <div class="border-t border-slate-800/80 bg-slate-950/70 shrink-0 text-xs">
+                <!-- Topic Filter Tabs -->
+                <div class="px-3 pt-2 pb-1 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                    <button type="button" onclick="switchCoachTopic('popular')" id="coachTopicTab-popular" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold whitespace-nowrap transition cursor-pointer shadow-sm">
+                        🔥 Popular
                     </button>
-                    <button type="button" onclick="sendQuickPrompt('Analyze my spending habits and tell me how I am doing.')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-magnifying-glass-chart text-sky-400 text-[10px]"></i>
-                        <span>Habit Audit</span>
+                    <button type="button" onclick="switchCoachTopic('budget')" id="coachTopicTab-budget" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
+                        📊 Budgeting
                     </button>
-                    <button type="button" onclick="sendQuickPrompt('What is my safe daily spending limit for the rest of this month?')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-calendar-day text-amber-400 text-[10px]"></i>
-                        <span>Daily Limit</span>
+                    <button type="button" onclick="switchCoachTopic('liveData')" id="coachTopicTab-liveData" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
+                        💡 Live Data
                     </button>
-                    <button type="button" onclick="sendQuickPrompt('How can I stop impulse spending and emotional buying?')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-shield-halved text-rose-400 text-[10px]"></i>
-                        <span>Stop Impulse Buys</span>
+                    <button type="button" onclick="switchCoachTopic('debt')" id="coachTopicTab-debt" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
+                        💳 Debt Payoff
                     </button>
-                    <button type="button" onclick="sendQuickPrompt('Give me practical ways to cut down on my food and dining expenses.')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-utensils text-emerald-400 text-[10px]"></i>
-                        <span>Cut Food Costs</span>
+                    <button type="button" onclick="switchCoachTopic('cutCosts')" id="coachTopicTab-cutCosts" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
+                        🛒 Cut Costs
                     </button>
-                    <button type="button" onclick="sendQuickPrompt('How do I build an emergency fund step by step?')" class="px-2.5 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-piggy-bank text-teal-400 text-[10px]"></i>
-                        <span>Emergency Fund</span>
+                    <button type="button" onclick="switchCoachTopic('habits')" id="coachTopicTab-habits" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
+                        🛑 Habits
                     </button>
+                    <button type="button" onclick="switchCoachTopic('investing')" id="coachTopicTab-investing" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
+                        📈 Wealth & Invest
+                    </button>
+                    <button type="button" onclick="switchCoachTopic('goals')" id="coachTopicTab-goals" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
+                        🎯 Big Goals
+                    </button>
+                </div>
+
+                <!-- Dynamic Topic Chips Container -->
+                <div class="px-3 pb-2 pt-1 overflow-x-auto no-scrollbar">
+                    <div id="coachTopicChipsList" class="flex items-center gap-1.5 w-max">
+                        <!-- Populated dynamically via renderCoachTopicChips() -->
+                    </div>
                 </div>
             </div>
 
             <!-- Chat Input Form -->
             <form id="coachChatForm" onsubmit="handleCoachSubmit(event)" class="p-3 sm:p-4 bg-slate-900 border-t border-slate-800 shrink-0 safe-bottom-pad">
                 <div class="flex items-center gap-2">
-                    <input type="text" id="coachUserInput" placeholder="Ask about budget, spending habits, or 'Can I afford X'..." required autocomplete="off"
+                    <input type="text" id="coachUserInput" placeholder="Ask anything: budget, debt, afford X, cut costs, habits, investing..." required autocomplete="off"
                         class="flex-1 bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl py-2.5 sm:py-3 px-4 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition">
                     <button type="submit" id="coachSendBtn" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold flex items-center justify-center shadow-lg shadow-emerald-500/20 active:scale-95 transition shrink-0" aria-label="Send Message">
                         <i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i>
@@ -2639,6 +2649,134 @@
             };
         }
 
+        // ==========================================
+        // POCKETCOACH TOPICS & PROMPT SUGGESTIONS
+        // ==========================================
+        const COACH_TOPIC_DATA = {
+            popular: [
+                { label: '50/30/20 Budget', query: 'How should I structure my budget using the 50/30/20 rule?', icon: 'fa-chart-pie', color: 'text-emerald-400' },
+                { label: 'Habit Audit', query: 'Analyze my spending habits and tell me how I am doing.', icon: 'fa-magnifying-glass-chart', color: 'text-sky-400' },
+                { label: 'Daily Limit', query: 'What is my safe daily spending limit for the rest of this month?', icon: 'fa-calendar-day', color: 'text-amber-400' },
+                { label: 'Top Expense', query: 'What is my biggest single expense this month?', icon: 'fa-trophy', color: 'text-yellow-400' },
+                { label: 'Can I Afford 100?', query: 'Can I afford 100 for a purchase right now?', icon: 'fa-calculator', color: 'text-teal-400' },
+                { label: 'Stop Impulse Buys', query: 'How can I stop impulse spending and emotional buying?', icon: 'fa-shield-halved', color: 'text-rose-400' },
+                { label: 'Cut Food Costs', query: 'Give me practical ways to cut down on food and dining expenses.', icon: 'fa-utensils', color: 'text-emerald-400' },
+                { label: 'Emergency Fund', query: 'How do I build an emergency fund step by step?', icon: 'fa-piggy-bank', color: 'text-teal-400' }
+            ],
+            budget: [
+                { label: '50/30/20 Rule', query: 'How should I structure my budget using the 50/30/20 rule?', icon: 'fa-chart-pie', color: 'text-emerald-400' },
+                { label: 'Zero-Based Budget', query: 'What is zero-based budgeting and how do I do it?', icon: 'fa-scale-balanced', color: 'text-sky-400' },
+                { label: 'Envelope Method', query: 'How does the cash envelope budgeting system work?', icon: 'fa-envelope-open-text', color: 'text-indigo-400' },
+                { label: '70/20/10 Method', query: 'How does the 70/20/10 budgeting rule work?', icon: 'fa-percent', color: 'text-amber-400' },
+                { label: 'Pay Yourself First', query: 'Explain the Pay Yourself First reverse budgeting method.', icon: 'fa-arrow-up-right-dots', color: 'text-teal-400' },
+                { label: 'Japanese Kakeibo', query: 'How does the Japanese Kakeibo mindful budgeting method work?', icon: 'fa-book-bookmark', color: 'text-rose-400' },
+                { label: 'Half-Payment Method', query: 'How does the half-payment method for recurring bills work?', icon: 'fa-calendar-check', color: 'text-emerald-400' }
+            ],
+            liveData: [
+                { label: 'Biggest Expense', query: 'What is my biggest single expense this month?', icon: 'fa-trophy', color: 'text-yellow-400' },
+                { label: 'Food Spending', query: 'How much did I spend on food and dining this month?', icon: 'fa-utensils', color: 'text-emerald-400' },
+                { label: 'Transport Costs', query: 'How much did I spend on transport and Uber?', icon: 'fa-car', color: 'text-teal-400' },
+                { label: 'Bills Spending', query: 'How much did I spend on bills and mobile data?', icon: 'fa-bolt', color: 'text-sky-400' },
+                { label: 'Spent Today', query: 'How much did I spend today and how much headroom is left?', icon: 'fa-clock', color: 'text-amber-400' },
+                { label: 'Month Pacing', query: 'Will my money last until month-end at my current pace?', icon: 'fa-chart-line', color: 'text-purple-400' },
+                { label: 'Recent Purchases', query: 'Show me my recent expenses and purchases.', icon: 'fa-receipt', color: 'text-slate-300' }
+            ],
+            debt: [
+                { label: 'Snowball vs Avalanche', query: 'Snowball vs Avalanche: which debt payoff method is best for me?', icon: 'fa-snowplow', color: 'text-sky-400' },
+                { label: 'Credit Card Debt', query: 'How do I pay off high-interest credit card debt quickly?', icon: 'fa-credit-card', color: 'text-rose-400' },
+                { label: 'BNPL Traps', query: 'Is Buy Now Pay Later (BNPL) dangerous for my budget?', icon: 'fa-triangle-exclamation', color: 'text-amber-400' },
+                { label: 'Debt vs Saving', query: 'Should I pay off debt or build an emergency fund first?', icon: 'fa-scale-unbalanced', color: 'text-teal-400' },
+                { label: 'Microloans Warning', query: 'How can I avoid predatory payday loans and microloans?', icon: 'fa-ban', color: 'text-red-400' },
+                { label: 'Student Loans', query: 'How should I prioritize student loan and personal debt repayments?', icon: 'fa-graduation-cap', color: 'text-indigo-400' }
+            ],
+            cutCosts: [
+                { label: 'Cut Food Costs', query: 'Give me practical ways to cut down on food and dining expenses.', icon: 'fa-utensils', color: 'text-emerald-400' },
+                { label: 'Lower Electric Bill', query: 'How can I reduce my electricity and utility bills?', icon: 'fa-lightbulb', color: 'text-yellow-400' },
+                { label: 'Trim Data Bundles', query: 'How do I save money on mobile data and airtime plans?', icon: 'fa-wifi', color: 'text-sky-400' },
+                { label: 'Purge Subscriptions', query: 'How do I audit and cancel zombie subscriptions?', icon: 'fa-repeat', color: 'text-rose-400' },
+                { label: 'Transport Hacks', query: 'How can I reduce daily commute and rideshare spending?', icon: 'fa-car-side', color: 'text-teal-400' },
+                { label: 'Cost-Per-Wear Hack', query: 'What is the cost-per-wear formula for shopping clothes?', icon: 'fa-shirt', color: 'text-indigo-400' },
+                { label: 'Frugal Social Life', query: 'How can I have a fun social life without spending a lot of money?', icon: 'fa-champagne-glasses', color: 'text-amber-400' }
+            ],
+            habits: [
+                { label: 'Stop Impulse Buys', query: 'How can I stop impulse spending and emotional buying?', icon: 'fa-shield-halved', color: 'text-rose-400' },
+                { label: '48-Hour Cooling Rule', query: 'What is the 48-Hour cooling rule and how does it work?', icon: 'fa-hourglass-half', color: 'text-amber-400' },
+                { label: 'Stop Lifestyle Creep', query: 'How do I prevent lifestyle creep when my income increases?', icon: 'fa-arrow-trend-up', color: 'text-emerald-400' },
+                { label: 'Family Money Boundaries', query: 'How do I set boundaries with family members asking for money?', icon: 'fa-users', color: 'text-sky-400' },
+                { label: 'Overcome Money Guilt', query: 'How do I stop feeling guilty when spending money on myself?', icon: 'fa-heart', color: 'text-pink-400' },
+                { label: 'Life Energy Formula', query: 'What is the Life Energy conversion formula for purchases?', icon: 'fa-battery-three-quarters', color: 'text-teal-400' }
+            ],
+            investing: [
+                { label: 'Beginner Investing', query: 'How do I start investing as a beginner with index funds and ETFs?', icon: 'fa-arrow-trend-up', color: 'text-emerald-400' },
+                { label: 'Beat Inflation', query: 'How does inflation eat away my cash savings and how do I beat it?', icon: 'fa-fire-flame-curved', color: 'text-rose-400' },
+                { label: 'Dollar-Cost Averaging', query: 'What is Dollar-Cost Averaging (DCA) and why is it smart?', icon: 'fa-chart-simple', color: 'text-sky-400' },
+                { label: 'Rule of 72', query: 'How does compound interest work with the Rule of 72?', icon: 'fa-wand-magic-sparkles', color: 'text-amber-400' },
+                { label: 'Retirement & Pensions', query: 'What should I know about retirement, pensions, and SSNIT planning?', icon: 'fa-umbrella-beach', color: 'text-teal-400' },
+                { label: 'Emergency vs Invest', query: 'Should I invest before building a full emergency fund?', icon: 'fa-scale-balanced', color: 'text-indigo-400' }
+            ],
+            goals: [
+                { label: 'Car 20/4/10 Rule', query: 'What is the 20/4/10 rule for buying a car?', icon: 'fa-car', color: 'text-teal-400' },
+                { label: '30% Rent Rule', query: 'How much should I spend on house rent or apartment living?', icon: 'fa-house', color: 'text-sky-400' },
+                { label: 'Emergency Fund', query: 'How do I build an emergency fund step by step?', icon: 'fa-piggy-bank', color: 'text-emerald-400' },
+                { label: 'Sinking Funds', query: 'What are sinking funds and how do I set them up?', icon: 'fa-wallet', color: 'text-amber-400' },
+                { label: 'Budget Wedding', query: 'How do I budget for a wedding without going into debt?', icon: 'fa-ring', color: 'text-pink-400' },
+                { label: 'Savings Calculator', query: 'How long will it take to save 5000 at my current rate?', icon: 'fa-calculator', color: 'text-indigo-400' }
+            ]
+        };
+
+        let currentCoachTopic = 'popular';
+
+        function switchCoachTopic(topicKey) {
+            currentCoachTopic = topicKey;
+            document.querySelectorAll('.coach-topic-btn').forEach(btn => {
+                btn.className = 'coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer';
+            });
+            const activeBtn = document.getElementById(`coachTopicTab-${topicKey}`);
+            if (activeBtn) {
+                activeBtn.className = 'coach-topic-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold whitespace-nowrap transition cursor-pointer shadow-sm';
+            }
+            renderCoachTopicChips(topicKey);
+        }
+
+        function renderCoachTopicChips(topicKey = 'popular') {
+            const container = document.getElementById('coachTopicChipsList');
+            if (!container) return;
+            const items = COACH_TOPIC_DATA[topicKey] || COACH_TOPIC_DATA.popular;
+            
+            let html = items.map(item => {
+                const safeQ = encodeURIComponent(item.query);
+                return `
+                    <button type="button" onclick="sendQuickPrompt(decodeURIComponent('${safeQ}'))" 
+                        class="px-2.5 py-1.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/70 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95">
+                        <i class="fa-solid ${item.icon} ${item.color} text-[10px]"></i>
+                        <span>${escapeHtml(item.label)}</span>
+                    </button>
+                `;
+            }).join('');
+
+            // Always append the Surprise Me button
+            html += `
+                <button type="button" onclick="sendSurprisePrompt()" 
+                    class="px-2.5 py-1.5 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 hover:from-purple-500/30 hover:to-indigo-500/30 text-purple-300 hover:text-white border border-purple-500/40 text-[11px] font-semibold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95">
+                    <i class="fa-solid fa-dice text-purple-400 text-[10px]"></i>
+                    <span>Surprise Me</span>
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function sendSurprisePrompt() {
+            const allPrompts = [];
+            Object.values(COACH_TOPIC_DATA).forEach(list => {
+                list.forEach(item => {
+                    if (!allPrompts.includes(item.query)) allPrompts.push(item.query);
+                });
+            });
+            const randomPrompt = allPrompts[Math.floor(Math.random() * allPrompts.length)];
+            sendQuickPrompt(randomPrompt);
+        }
+
         function formatCoachMarkdown(text) {
             if (!text) return '';
             let html = escapeHtml(text);
@@ -2646,10 +2784,21 @@
             html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>');
             // Italic
             html = html.replace(/\*(.*?)\*/g, '<em class="text-slate-300">$1</em>');
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code class="bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded text-[11px] font-mono">$1</code>');
             // List items starting with • or - or *
             html = html.replace(/^[•\-\*]\s+(.*)$/gm, '<li class="ml-4 list-disc text-slate-200 my-0.5">$1</li>');
+            // Numbered lists
+            html = html.replace(/^(\d+)\.\s+(.*)$/gm, '<li class="ml-4 list-decimal text-slate-200 my-0.5"><strong class="text-emerald-400 font-semibold">$1.</strong> $2</li>');
             // Group lists
             html = html.replace(/((?:<li[^>]*>.*?<\/li>\s*)+)/g, '<ul class="my-1.5 space-y-1">$1</ul>');
+            // Clickable prompt pills: [[prompt: query | label]] or [[prompt: query]]
+            html = html.replace(/\[\[prompt:\s*([^\]\|]+)(?:\|([^\]]+))?\]\]/g, (match, query, label) => {
+                const q = query.trim();
+                const l = (label || q).trim();
+                const safeEncoded = encodeURIComponent(q);
+                return `<button type="button" onclick="sendQuickPrompt(decodeURIComponent('${safeEncoded}'))" class="inline-flex items-center gap-1.5 my-1 mr-1.5 px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-emerald-600/30 text-emerald-300 hover:text-white border border-emerald-500/30 hover:border-emerald-400 text-[11px] font-semibold transition cursor-pointer shadow-sm"><i class="fa-solid fa-sparkles text-[10px] text-emerald-400"></i><span>${escapeHtml(l)}</span></button>`;
+            });
             // Paragraphs and breaks
             html = html.replace(/\n\n/g, '<div class="h-2"></div>');
             html = html.replace(/\n/g, '<br>');
@@ -2704,6 +2853,7 @@
 
         function initCoachChat(forceReset = false) {
             updateCoachContextRibbon();
+            renderCoachTopicChips(currentCoachTopic);
             const container = document.getElementById('coachMessagesContainer');
             if (!container) return;
 
@@ -2720,13 +2870,16 @@
                 const ctx = getSpendingContext();
                 const welcomeText = `👋 Hello! I'm **PocketCoach**, your personal financial habit and budget advisor.
 
-I'm linked directly to your PocketFlow data:
+I'm linked directly to your live PocketFlow data:
 • **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
 • **Spent So Far:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
 • **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
 • **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day for the remaining ${ctx.daysRemaining} days
 
-How can I help you improve your spending habits today? Try tapping one of the quick suggestions below or ask me any question!`;
+I can answer **thousands of questions** across all personal finance areas—from your daily spending habits and live data audits to debt payoff, 50/30/20 budgeting, cost cutting, investing, and major life goals!
+
+**Try tapping one of these quick starters:**
+[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Target]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]`;
 
                 coachChatHistory = [{
                     role: 'assistant',
@@ -2833,7 +2986,7 @@ How can I help you improve your spending habits today? Try tapping one of the qu
             // Fallback to built-in Intelligent Habit Coach Engine
             if (!responseText) {
                 // Add a small natural delay so offline responses feel thoughtful
-                await new Promise(r => setTimeout(r, 400));
+                await new Promise(r => setTimeout(r, 350));
                 responseText = generateOfflineCoachResponse(query, ctx);
             }
 
@@ -2859,9 +3012,23 @@ How can I help you improve your spending habits today? Try tapping one of the qu
             const apiKey = localStorage.getItem('pocketflow_gemini_api_key');
             if (!apiKey) return null;
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+            // Build multi-turn conversational history (up to last 8 messages)
+            const contents = [];
+            const recent = (coachChatHistory || []).slice(-8);
+            recent.forEach(msg => {
+                contents.push({
+                    role: msg.role === 'assistant' ? 'model' : 'user',
+                    parts: [{ text: msg.text }]
+                });
+            });
+            if (contents.length === 0 || contents[contents.length - 1].parts[0].text !== userQuery) {
+                contents.push({
+                    role: 'user',
+                    parts: [{ text: userQuery }]
+                });
+            }
 
-            const systemInstruction = `You are PocketCoach, an encouraging, practical, and expert personal financial coach and behavioral spending habit advisor.
+            const systemInstruction = `You are PocketCoach, an encouraging, deeply knowledgeable, practical, and expert personal financial coach and behavioral spending habit advisor.
 You are embedded directly inside PocketFlow, the user's spending tracker web app.
 The user's current live financial snapshot:
 - Currency: ${ctx.currency}
@@ -2872,210 +3039,1034 @@ The user's current live financial snapshot:
 - Average Spent Per Day This Month: ${ctx.currency} ${formatMoney(ctx.dailyAvg)}
 - Safe Daily Spending Allowance for the Remaining ${ctx.daysRemaining} Days: ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day
 - Top Spending Category: ${ctx.topCategory.name} (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of total)
+- Category Breakdown: ${ctx.breakdown.map(b => `${b.name}: ${ctx.currency} ${formatMoney(b.amount)} (${b.pct}%)`).join(', ')}
 - Recent Expenses: ${ctx.recentExpensesSummary}
 
 Guidelines:
-1. Always incorporate their actual currency (${ctx.currency}) and exact numbers into your advice.
-2. Structure your recommendations with clean bullet points, bold key principles, and actionable behavioral habits (such as the 50/30/20 rule, 48-hour wait rule, zero-based budgeting, pay-yourself-first).
-3. Be warm, empathetic, realistic, and motivating—never judgmental or punitive.
-4. Keep answers concise, highly structured for mobile screens, and strictly focused on budgeting, savings, and spending habits.`;
+1. Always incorporate their actual currency (${ctx.currency}) and exact numbers into your calculations and advice whenever relevant.
+2. You can answer ANY financial, budgeting, saving, debt payoff, investing, cost-cutting, lifestyle decision, or behavioral psychology question.
+3. Structure your recommendations with clean bullet points, bold key principles, clear actionable steps, and emojis for readability.
+4. Be warm, empathetic, realistic, and motivating—never judgmental or punitive.
+5. Keep answers well-structured and concise for mobile screens.
+6. At the very end of your response, provide 2-3 clickable suggested follow-up questions formatted exactly like:
+   [[prompt: Next Question 1]] [[prompt: Next Question 2]]
+   These will automatically turn into interactive buttons for the user to tap!`;
 
-            const contents = [
-                {
-                    role: 'user',
-                    parts: [{ text: userQuery }]
-                }
-            ];
+            const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+            for (const model of models) {
+                try {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: contents,
+                            systemInstruction: {
+                                parts: [{ text: systemInstruction }]
+                            },
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 1200
+                            }
+                        })
+                    });
 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: contents,
-                    systemInstruction: {
-                        parts: [{ text: systemInstruction }]
-                    },
-                    generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 1000
+                    if (response.ok) {
+                        const data = await response.json();
+                        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (text) return text;
+                    } else if (response.status === 404) {
+                        continue;
+                    } else {
+                        const err = await response.json().catch(() => ({}));
+                        console.warn(`Gemini API error with ${model}:`, err?.error?.message || response.status);
+                        break;
                     }
-                })
-            });
-
-            if (!response.ok) {
-                const errData = await response.json().catch(() => ({}));
-                throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+                } catch (fetchErr) {
+                    console.warn(`Fetch error with model ${model}:`, fetchErr);
+                    break;
+                }
             }
-
-            const data = await response.json();
-            return data?.candidates?.[0]?.content?.parts?.[0]?.text || null;
+            return null;
         }
 
-        function generateOfflineCoachResponse(query, ctx) {
-            const q = query.toLowerCase().trim();
+        // ==========================================
+        // VAST OFFLINE FINANCIAL INTELLIGENCE ENGINE
+        // ==========================================
+        function generateOfflineCoachResponse(rawQuery, ctx) {
+            const q = (rawQuery || '').toLowerCase().trim();
+            const has = (...terms) => terms.some(t => {
+                if (t.includes(' ')) return q.includes(t);
+                const regex = new RegExp(`\\b${t}\\b`, 'i');
+                return regex.test(q);
+            });
 
-            // 1. 50/30/20 Rule & Budget Structuring
-            if (q.includes('structure') || q.includes('50/30/20') || q.includes('divide') || q.includes('allocate') || q.includes('how should i budget') || q.includes('framework')) {
+            // Extract numeric amount if present in query
+            const numMatch = q.match(/(?:gh[¢\?]?|\$|€|£)?\s*(\d+(?:\.\d{1,2})?)/i);
+            const detectedAmount = numMatch ? parseFloat(numMatch[1]) : null;
+
+            // 1. GREETINGS & PERSONALITY
+            if (has('hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening', 'who are you', 'what are you', 'how are you', 'pocketcoach')) {
+                return `👋 Hello there! I'm **PocketCoach**, your personal financial habit and budget advisor built into PocketFlow.
+
+I'm here to help you:
+• Track your pacing and master your **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day** safe limit
+• Structure your income with proven frameworks like **50/30/20** and **Zero-Based Budgeting**
+• Evaluate purchases instantly (*"Can I afford [amount]?"*)
+• Eliminate high-interest debt with **Snowball** or **Avalanche**
+• Cut leaks on food, bills, data bundles, and subscriptions
+• Build wealth with emergency funds and index fund investing!
+
+**What's on your mind today?**
+[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Limit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]`;
+            }
+
+            if (has('quote', 'motivate', 'motivation', 'inspire', 'inspiration', 'affirmation')) {
+                const quotes = [
+                    `🌟 *"Do not save what is left after spending, but spend what is left after saving."* — Warren Buffett\n\n💡 **Your Move Today:** Transfer your 20% savings buffer before you spend non-essentials this week!`,
+                    `🌟 *"A budget is telling your money where to go instead of wondering where it went."* — John C. Maxwell\n\n💡 **Your Move Today:** You currently have **${ctx.currency} ${formatMoney(ctx.remaining)}** remaining this month. Give every cedi a clear job!`,
+                    `🌟 *"Beware of little expenses; a small leak will sink a great ship."* — Benjamin Franklin\n\n💡 **Your Move Today:** Audit small daily purchases like snacks, drinks, or micro data bundles. Those add up fast!`,
+                    `🌟 *"Financial peace isn't the acquisition of stuff. It's learning to live on less than you make, so you can give these money leaks back to your future."* — Dave Ramsey`
+                ];
+                const picked = quotes[Math.floor(Math.random() * quotes.length)];
+                return `${picked}\n\n[[prompt: Analyze my spending habits | 🔍 Analyze My Habits]] [[prompt: How to stop impulse spending | 🛑 Stop Impulse Buys]]`;
+            }
+
+            if (has('thank', 'thanks', 'awesome', 'great job', 'helpful', 'love you')) {
+                return `😊 You are very welcome! Financial consistency is like a muscle—every day you log your spending and make intentional decisions, you get stronger.\n\nKeep up the great discipline! If there is anything else you need help with, I'm right here.\n\n[[prompt: What is my safe daily limit? | 🎯 Daily Target]] [[prompt: What is my biggest expense this month? | 🏆 Top Expense]]`;
+            }
+
+            // 2. HELP & CAPABILITIES DIRECTORY
+            if (has('what can you do', 'what can i ask', 'capabilities', 'help me', 'commands', 'topics', 'questions') || q === 'help') {
+                return `🧭 **PocketCoach AI Capabilities Directory**
+
+You can ask me questions across **8 core financial areas**:
+
+1. **📊 Budget Frameworks:**
+   Ask about *50/30/20 rule*, *Zero-based budgeting*, *Cash envelope method*, *70/20/10*, or *Japanese Kakeibo*.
+
+2. **💡 Live Expense Queries:**
+   Ask *"What is my biggest expense?"*, *"How much did I spend on Food?"*, *"Spent today"*, or *"Will my money last until month-end?"*.
+
+3. **🤔 Affordability Checks:**
+   Ask *"Can I afford [amount]?"* or *"Can I buy sneakers for 150?"* for instant math on your remaining budget & daily limit impact.
+
+4. **💳 Debt Payoff Tactics:**
+   Ask about *Snowball vs Avalanche*, *Credit card payoff*, *Buy Now Pay Later (BNPL)*, or *Student loans*.
+
+5. **🛒 Cost Cutting Hacks:**
+   Ask how to cut *food & dining*, *utility & electric bills*, *mobile data bundles*, or *cancel zombie subscriptions*.
+
+6. **🛑 Psychology & Habits:**
+   Ask about *stopping impulse buying*, *the 48-hour rule*, *lifestyle creep*, *money guilt*, or *black tax boundaries*.
+
+7. **📈 Wealth & Investing:**
+   Ask about *index funds & ETFs*, *beating inflation*, *compound interest & Rule of 72*, or *pensions & retirement*.
+
+8. **🎯 Major Life Goals:**
+   Ask about *the 20/4/10 car rule*, *the 30% rent rule*, *emergency funds*, or *wedding budgeting*.
+
+[[prompt: Analyze my spending habits | 🔍 Habit Audit]] [[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20]]`;
+            }
+
+            // 3. POCKETFLOW APP NAVIGATION
+            if (has('how to add expense', 'log expense', 'add purchase', 'new expense', 'enter expense')) {
+                return `📱 **How to Log an Expense in PocketFlow:**
+
+• **On Mobile:** Tap the large green **"+ Add Expense"** floating button at the bottom center of your screen.
+• **On Desktop:** Tap the green **"+ Add Expense"** button at the top-right corner of the page.
+• Enter the amount, pick a category (Food, Transport, Bills, etc.), add a short note, and tap **"Save Expense"**!
+
+💡 **Pro Tip:** Log purchases immediately after paying while the receipt is fresh in your mind.
+
+[[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Limit]] [[prompt: Show me my recent expenses | 📋 Recent Purchases]]`;
+            }
+
+            if (has('change currency', 'currency', 'cedis', 'usd', 'euro', 'naira', 'pounds')) {
+                return `💱 **How to Change Your Currency:**
+
+Use the currency dropdown selector located in the **top header navigation bar** of PocketFlow.
+You can switch between:
+• **GH₵** (Ghana Cedis)
+• **$** (US Dollar)
+• **€** (Euro)
+• **£** (British Pound)
+• **₦** (Nigerian Naira)
+
+All your existing expenses and budget totals will instantly update to the selected currency!
+
+[[prompt: Analyze my spending habits | 🔍 Habit Audit]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]]`;
+            }
+
+            if (has('change budget', 'edit budget', 'set budget', 'update budget')) {
+                return `🎯 **How to Update Your Monthly Budget:**
+
+1. Scroll to the top **Monthly Budget summary card**.
+2. Tap the small grey button with the green pen icon labeled **"Budget"** in the top-right corner of that card.
+3. Enter your new total monthly spending allowance and tap **"Save Budget"**.
+
+PocketCoach will automatically recalculate your safe daily allowance based on your new budget!
+
+[[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: Analyze my spending habits | 🔍 Habit Audit]]`;
+            }
+
+            if (has('export', 'download csv', 'backup', 'export data')) {
+                return `💾 **How to Export and Backup Your Data:**
+
+• In the desktop header or mobile menu, tap the **"Export CSV"** button (with the download arrow icon).
+• PocketFlow will generate a spreadsheet-compatible `.csv` file containing all your recorded transactions with dates, amounts, categories, and notes!
+• You can open this file in Microsoft Excel, Google Sheets, or Apple Numbers.
+
+[[prompt: Show me my recent expenses | 📋 Recent Purchases]] [[prompt: What is my biggest single expense this month? | 🏆 Top Expense]]`;
+            }
+
+            // 4. LIVE DATA: TOP / HIGHEST EXPENSE
+            if (has('biggest expense', 'highest expense', 'largest expense', 'most expensive', 'what did i spend the most on', 'top expense', 'top purchase')) {
+                const monthExpenses = getCurrentMonthExpenses();
+                if (monthExpenses.length === 0) {
+                    return `📊 **Highest Expense Analysis**\n\nYou haven't logged any purchases yet this month! Once you log expenses, I will immediately identify and break down your biggest cost drivers.\n\n[[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]]`;
+                }
+                const sorted = [...monthExpenses].sort((a, b) => Number(b.amount) - Number(a.amount));
+                const topExp = sorted[0];
+                const catMeta = getCategoryMeta(topExp.category);
+                const pct = ctx.totalSpent > 0 ? Math.round((Number(topExp.amount) / ctx.totalSpent) * 100) : 0;
+
+                return `🏆 **Your Highest Single Expense This Month**
+
+• **Description:** **${escapeHtml(topExp.note || 'Untitled')}**
+• **Amount:** **${ctx.currency} ${formatMoney(topExp.amount)}**
+• **Category:** ${catMeta.name}
+• **Date:** ${topExp.date || 'Recent'}
+• **Budget Impact:** This single purchase accounts for **${pct}%** of your total monthly spending so far!
+
+💡 **Coach Takeaway:** Large one-off purchases are the #1 reason monthly budgets get blown off course. When planning discretionary expenses larger than 2 days of safe allowance (${ctx.currency} ${formatMoney(ctx.safeDailyAllowance * 2)}), plan them in advance through a **Sinking Fund**!
+
+[[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds Guide]] [[prompt: Show me my recent expenses | 📋 Recent Purchases]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
+            }
+
+            // 5. LIVE DATA: CATEGORY BREAKDOWN & SPECIFIC CATEGORY SPEND
+            if (has('category breakdown', 'all categories', 'categories breakdown', 'breakdown by category', 'show categories')) {
+                const lines = ctx.breakdown.map(b => `• **${b.name}:** ${ctx.currency} ${formatMoney(b.amount)} (${b.pct}% of spending)`).join('\n');
+                return `📊 **Your Monthly Spending by Category**\n\n${lines}\n\n🏆 **Top Category Drain:** **${ctx.topCategory.name}** at ${ctx.topCategory.pct}% of total spending.\n\n[[prompt: How much did I spend on food and dining this month? | 🍲 Food Breakdown]] [[prompt: How much did I spend on transport and Uber? | 🚗 Transport Breakdown]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
+            }
+
+            // Category specific query: Food
+            if (has('food', 'dining', 'groceries', 'eating', 'restaurant', 'takeout', 'waakye', 'lunch', 'dinner')) {
+                const foodCat = ctx.breakdown.find(b => b.id === 'food') || { amount: 0, pct: 0, name: 'Food & Dining' };
+                return `🍲 **Food & Dining Spending Breakdown**
+
+• **Total Spent on Food:** **${ctx.currency} ${formatMoney(foodCat.amount)}** (${foodCat.pct}% of your total outflow)
+• **Remaining Monthly Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
+
+🎯 **3 Tactical Habits to Trim Food Leaks:**
+1. **The 3-Dinner Batch Rule:** Cook large portions 3 nights a week and reheat leftovers for lunch. This cuts weekday restaurant spending by 50%.
+2. **Beware the "Drink Tax":** Juices, sodas, and coffees routinely add 20-30% onto meal tabs without making you full. Drink more water!
+3. **Weekly Dining Out Ceiling:** Cap restaurant outings to a fixed weekly budget (e.g. ${ctx.currency} ${formatMoney(ctx.budget * 0.10)}/week).
+
+[[prompt: Give me practical ways to cut down on food and dining expenses. | 🍲 Food Cost Hacks]] [[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: Can I afford 100 for dining out? | 💳 Affordability Check]]`;
+            }
+
+            // Category specific query: Transport
+            if (has('transport', 'uber', 'bolt', 'car', 'fuel', 'taxi', 'trotro', 'commute')) {
+                const transCat = ctx.breakdown.find(b => b.id === 'transport') || { amount: 0, pct: 0, name: 'Transport & Uber' };
+                return `🚗 **Transport & Commute Spending Breakdown**
+
+• **Total Spent on Transport:** **${ctx.currency} ${formatMoney(transCat.amount)}** (${transCat.pct}% of total outflow)
+• **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day
+
+🎯 **3 Tactical Habits to Cut Transport Costs:**
+1. **Beat Surge Pricing:** Requesting rides 15 minutes before peak commute times can save up to 35% on rideshare fares.
+2. **Errand Chaining:** Combine 3 individual trips into a single continuous circuit instead of traveling back and forth.
+3. **Public Transit Hybrid:** Use public transport (trotro/bus) for the longest leg of your commute, and take rideshare only for the final mile.
+
+[[prompt: How can I reduce daily commute and rideshare spending? | 🚗 Transport Hacks]] [[prompt: What is the 20/4/10 rule for buying a car? | 🚘 Car Buying Rule]] [[prompt: Analyze my spending habits | 🔍 Habit Audit]]`;
+            }
+
+            // Category specific query: Bills & Utilities
+            if (has('bills', 'electricity', 'water', 'utilities', 'data', 'airtime', 'internet', 'power', 'mtn bundle')) {
+                const billsCat = ctx.breakdown.find(b => b.id === 'bills') || { amount: 0, pct: 0, name: 'Bills & Data' };
+                return `⚡ **Bills & Utilities Spending Breakdown**
+
+• **Total Spent on Bills:** **${ctx.currency} ${formatMoney(billsCat.amount)}** (${billsCat.pct}% of total outflow)
+
+🎯 **3 Habits to Optimize Recurring Bills:**
+1. **Bulk Mobile Data:** Buying micro-data bundles daily costs 30-50% more over 30 days than purchasing one single monthly plan.
+2. **Unplug Phantom Electronics:** TVs, game consoles, and chargers in standby draw electricity 24/7. Turn them off at the socket.
+3. **Audit Shared Accounts:** Split family Wi-Fi or streaming subscriptions with housemates to divide the bill in half.
+
+[[prompt: How do I save money on mobile data and airtime plans? | 📱 Data Bundle Hacks]] [[prompt: How can I reduce my electricity and utility bills? | 💡 Electric Bill Tips]] [[prompt: How to audit and cancel zombie subscriptions | 🔄 Purge Subscriptions]]`;
+            }
+
+            // 6. LIVE DATA: RECENT EXPENSES / TRANSACTIONS
+            if (has('recent expenses', 'recent purchases', 'recent transactions', 'latest purchases', 'last expenses', 'what did i buy', 'transaction history')) {
+                const count = Math.min(5, state.expenses.length);
+                if (count === 0) {
+                    return `📋 **Recent Transactions**\n\nYou haven't logged any expenses yet! Tap **"+ Add Expense"** to record your first purchase.\n\n[[prompt: What is my safe daily limit? | 🎯 Daily Limit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+                }
+                const recentList = state.expenses.slice(0, count).map(e => {
+                    const cat = getCategoryMeta(e.category);
+                    return `• **${escapeHtml(e.note || 'Untitled')}** — ${ctx.currency} ${formatMoney(e.amount)} *(${cat.name}, ${e.date || 'Today'})*`;
+                }).join('\n');
+
+                return `📋 **Your Last ${count} Recorded Purchases:**\n\n${recentList}\n\n💡 **Coach Tip:** Consistently reviewing your last 5 transactions keeps financial awareness sharp and eliminates mindless leaks.\n\n[[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: Analyze my spending habits | 🔍 Full Audit]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]]`;
+            }
+
+            // 7. LIVE DATA: TODAY'S SPENDING
+            if (has('spent today', 'spending today', 'today expense', 'how much did i spend today', 'what did i spend today', 'today limit')) {
+                const todayLeft = Math.max(0, ctx.safeDailyAllowance - ctx.spentToday);
+                const isOverToday = ctx.spentToday > ctx.safeDailyAllowance;
+
+                return `⏱️ **Today's Spending Snapshot**
+
+• **Spent Today:** **${ctx.currency} ${formatMoney(ctx.spentToday)}**
+• **Safe Daily Allowance:** **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**
+• **Remaining Headroom for Today:** **${ctx.currency} ${formatMoney(todayLeft)}**
+
+${isOverToday ? `⚠️ **Heads Up:** You have exceeded today's safe allowance by **${ctx.currency} ${formatMoney(ctx.spentToday - ctx.safeDailyAllowance)}**. Try to make tomorrow a low-spend day to balance your monthly pacing!` : `✅ **Great Job:** You are comfortably within today's allowance with **${ctx.currency} ${formatMoney(todayLeft)}** to spare.`}
+
+[[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Target]] [[prompt: Will my money last until month-end at my current pace? | 📈 Month Pacing]]`;
+            }
+
+            // 8. LIVE DATA: SAFE DAILY LIMIT & ALLOWANCE
+            if (has('daily limit', 'daily allowance', 'safe daily', 'how much can i spend a day', 'spend per day', 'daily budget', 'daily target', 'daily headroom')) {
+                const todayLeft = Math.max(0, ctx.safeDailyAllowance - ctx.spentToday);
+                return `🎯 **Your Safe Daily Spending Allowance**
+
+• **Daily Spending Target:** **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**
+• **Remaining Days in Month:** ${ctx.daysRemaining} days
+• **Already Spent Today:** ${ctx.currency} ${formatMoney(ctx.spentToday)}
+• **Unused Headroom Today:** **${ctx.currency} ${formatMoney(todayLeft)}**
+
+💡 **Habit Rule:** If you spend less than **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}** today, the unused money automatically rolls over and increases your daily allowance for the remaining days of the month!
+
+[[prompt: How much did I spend today and how much headroom is left? | ⏱️ Today's Spending]] [[prompt: Can I afford 100 for a purchase right now? | 💳 Affordability Check]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
+            }
+
+            // 9. LIVE DATA: MONTH-END PACING & PROJECTION
+            if (has('will my money last', 'run out', 'pacing', 'projection', 'forecast', 'will i make it', 'spending pace', 'am i spending too fast', 'make it to month end')) {
+                const projectedTotal = ctx.dailyAvg * ctx.daysInMonth;
+                const diff = ctx.budget - projectedTotal;
+                const isOver = diff < 0;
+
+                return `📈 **Month-End Financial Projection**
+
+• **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
+• **Spent So Far:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}%)
+• **Current Daily Average:** ${ctx.currency} ${formatMoney(ctx.dailyAvg)}/day
+• **Projected Month-End Outflow:** **${ctx.currency} ${formatMoney(projectedTotal)}**
+
+${isOver ? `🚨 **Pacing Alert:** At your current pace, you are on track to **exceed your budget by ${ctx.currency} ${formatMoney(Math.abs(diff))}** before the month ends! To finish on budget, cap your spending to **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day** for the remaining ${ctx.daysRemaining} days.` : `🌟 **On Track for a Surplus:** At your current pace, you will finish the month with approximately **${ctx.currency} ${formatMoney(diff)} in savings**!`}
+
+[[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Target]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
+            }
+
+            // 10. LIVE DATA: COMPREHENSIVE HABIT & SPENDING AUDIT
+            if (has('audit', 'analyze', 'how am i doing', 'status', 'habit check', 'review my spending', 'financial health', 'health check', 'score')) {
+                const isOverBudget = ctx.remaining < 0;
+                const isPacingFast = ctx.dailyAvg > ctx.safeDailyAllowance;
+
+                let pacingVerdict = '';
+                if (isOverBudget) {
+                    pacingVerdict = `🚨 **Over Budget Warning:** You have exceeded your budget by **${ctx.currency} ${formatMoney(Math.abs(ctx.remaining))}**. For the remaining ${ctx.daysRemaining} days, switch into essential "No-Spend" mode.`;
+                } else if (isPacingFast) {
+                    pacingVerdict = `⚠️ **Pacing Caution:** You are averaging **${ctx.currency} ${formatMoney(ctx.dailyAvg)}/day**, which is higher than your safe allowance of **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**. Dial back non-essentials to prevent running out.`;
+                } else {
+                    pacingVerdict = `🌟 **Healthy Pacing:** You are averaging **${ctx.currency} ${formatMoney(ctx.dailyAvg)}/day**, well below your safe limit of **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**. You are on track for a month-end surplus!`;
+                }
+
+                return `🔍 **Your Spending Habit & Health Audit**
+
+• **Total Spent:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% of your ${ctx.currency} ${formatMoney(ctx.budget)} budget)
+• **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
+• **Days Remaining:** ${ctx.daysRemaining} days
+• **Top Spending Category:** **${ctx.topCategory.name}** (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of outflow)
+
+${pacingVerdict}
+
+🎯 **3 Behavioral Actions to Take Right Now:**
+1. **Trim ${ctx.topCategory.name}:** Since it drives ${ctx.topCategory.pct}% of your total outflow, aim to reduce this category by 15% next week.
+2. **Respect the Daily Cap:** Keep daily purchases under **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}**.
+3. **Nightly Log Ritual:** Review your purchases every evening before bed to keep awareness sharp.
+
+[[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]]`;
+            }
+
+            // 11. DYNAMIC AFFORDABILITY CALCULATOR ("Can I Afford X?")
+            if (has('afford', 'can i buy', 'can i spend', 'should i buy', 'is it too much') || (detectedAmount && has('buy', 'purchase', 'cost', 'spend', 'get'))) {
+                if (detectedAmount) {
+                    const cost = detectedAmount;
+                    if (cost > ctx.remaining) {
+                        return `🚨 **Affordability Verdict: NOT RECOMMENDED (Over Budget)**
+
+The item costs **${ctx.currency} ${formatMoney(cost)}**, but you only have **${ctx.currency} ${formatMoney(ctx.remaining)}** remaining in this month's budget.
+
+• Buying this will push you **${ctx.currency} ${formatMoney(cost - ctx.remaining)} into the red**.
+• **Coach Advice:** Postpone this purchase until your new monthly budget resets, or identify another non-essential expense to cancel first!
+
+[[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds Guide]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]]`;
+                    } else {
+                        const newRemaining = ctx.remaining - cost;
+                        const newSafeDaily = ctx.daysRemaining > 0 ? (newRemaining / ctx.daysRemaining) : 0;
+                        const isHeavy = cost > (ctx.safeDailyAllowance * 1.5) || (cost > ctx.remaining * 0.4);
+
+                        return `🤔 **Affordability Verdict: ${isHeavy ? '⚠️ PROCEED WITH CAUTION' : '✅ SAFE TO BUY'}**
+
+• **Item Cost:** ${ctx.currency} ${formatMoney(cost)}
+• **Current Remaining:** ${ctx.currency} ${formatMoney(ctx.remaining)}
+• **Remaining After Purchase:** **${ctx.currency} ${formatMoney(newRemaining)}**
+• **New Safe Daily Limit:** **${ctx.currency} ${formatMoney(newSafeDaily)}/day** (down from ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day)
+
+${isHeavy ? `⚠️ **Coach Advice:** This purchase eats a large portion of your remaining monthly balance and drops your daily allowance significantly. Apply the **48-Hour Cooling Rule**—wait two nights. If you still genuinely need it on day 3, go ahead!` : `✅ **Coach Advice:** This purchase comfortably fits within your current budget without endangering your month-end financial peace.`}
+
+[[prompt: What is the 48-Hour cooling rule and how does it work? | ⏳ 48-Hour Rule]] [[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Target]]`;
+                    }
+                } else {
+                    return `🤔 **Affordability Calculator**\n\nTo check if you can afford a purchase, include the price in your question! For example:\n• *"Can I afford 120 for shoes?"*\n• *"Can I buy a gadget for 450?"*\n\nI'll calculate the exact impact on your remaining balance and safe daily allowance!\n\n[[prompt: Can I afford 50 for dinner tonight? | 🍽️ Test Afford 50]] [[prompt: Can I afford 200 for clothing? | 👕 Test Afford 200]]`;
+                }
+            }
+
+            // 12. BUDGET FRAMEWORKS: 50/30/20 RULE
+            if (has('50/30/20', '50 30 20', 'fifty thirty twenty', 'structure my budget', 'divide budget', 'how should i budget', 'allocate income', 'framework')) {
                 const needs = ctx.budget * 0.5;
                 const wants = ctx.budget * 0.3;
                 const savings = ctx.budget * 0.2;
 
                 return `📊 **How to Structure Your Budget: The 50/30/20 Rule**
 
-Based on your current monthly budget of **${ctx.currency} ${formatMoney(ctx.budget)}**, here is your ideal blueprint:
+Based on your current monthly budget of **${ctx.currency} ${formatMoney(ctx.budget)}**, here is your personalized blueprint:
 
 • **50% Needs (${ctx.currency} ${formatMoney(needs)}):**
-  Rent, essential groceries, electricity/water bills, transport to work, and debt minimums. These are non-negotiable survival expenses.
+  Rent, essential groceries, electricity/water bills, transport to work, and debt minimums. Non-negotiable survival expenses.
 
 • **30% Wants (${ctx.currency} ${formatMoney(wants)}):**
-  Dining out, movies, weekend fun, shopping, and subscriptions. Enjoy life without guilt, but never exceed this ceiling!
+  Dining out, movies, weekend leisure, shopping, and entertainment subscriptions. Enjoy life guilt-free up to this ceiling!
 
 • **20% Savings & Debt Acceleration (${ctx.currency} ${formatMoney(savings)}):**
   Emergency savings buffer, high-interest debt payoffs, and investments.
 
-💡 **Habit Rule:** *Pay Yourself First!* The day you receive income, immediately transfer the **${ctx.currency} ${formatMoney(savings)}** into a separate savings account before you start spending.`;
+💡 **Habit Rule:** *Pay Yourself First!* The day you receive income, immediately transfer the **${ctx.currency} ${formatMoney(savings)}** into a separate savings account before you start spending.
+
+[[prompt: What is zero-based budgeting and how do I do it? | ⚖️ Zero-Based Budgeting]] [[prompt: How does the cash envelope budgeting system work? | ✉️ Envelope System]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
             }
 
-            // 2. Spending Habit Audit / How am I doing?
-            if (q.includes('audit') || q.includes('analyze') || q.includes('how am i doing') || q.includes('habit') || q.includes('status') || q.includes('check')) {
-                const isOverBudget = ctx.remaining < 0;
-                const isPacingFast = ctx.dailyAvg > ctx.safeDailyAllowance;
+            // 13. BUDGET FRAMEWORKS: ZERO-BASED BUDGETING (ZBB)
+            if (has('zero based', 'zero-based', 'zbb', 'every dollar a job', 'every cedi a job', 'give every dollar a job')) {
+                return `⚖️ **Mastering Zero-Based Budgeting (ZBB)**
 
-                let pacingVerdict = '';
-                if (isOverBudget) {
-                    pacingVerdict = `🚨 **Over Budget Warning:** You have exceeded your budget by **${ctx.currency} ${formatMoney(Math.abs(ctx.remaining))}**. For the remaining ${ctx.daysRemaining} days, switch to a strictly essential "No-Spend" mode.`;
-                } else if (isPacingFast) {
-                    pacingVerdict = `⚠️ **Pacing Caution:** You've been spending an average of **${ctx.currency} ${formatMoney(ctx.dailyAvg)}/day**, but your safe limit is **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**. You need to dial back non-essential purchases to avoid running out before month-end.`;
-                } else {
-                    pacingVerdict = `🌟 **Great Pacing:** You are averaging **${ctx.currency} ${formatMoney(ctx.dailyAvg)}/day**, well below your safe daily allowance of **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**. You're on track to finish the month with a surplus!`;
-                }
+Zero-based budgeting doesn't mean having zero money in your bank account! It means:
+**Income − (Expenses + Savings + Investments) = 0**
 
-                return `🔍 **Your Spending Habit Audit**
+Every single cedi/dollar is assigned a specific job before the month starts:
+1. **List all incoming income** for the upcoming month.
+2. **List all fixed expenses:** rent, utilities, loan minimums.
+3. **List variable living costs:** groceries, transport, airtime.
+4. **Assign savings and goals:** emergency fund, sinking funds, investments.
+5. **Adjust until the remaining balance equals zero.**
 
-• **Total Spent:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% of your ${ctx.currency} ${formatMoney(ctx.budget)} budget)
-• **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
-• **Days Left in Month:** ${ctx.daysRemaining} days
-• **Top Spending Category:** **${ctx.topCategory.name}** (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of spending)
+💡 **Why ZBB Works:** When money doesn't have an assigned job, it automatically leaks away on mindless impulse purchases!
 
-${pacingVerdict}
-
-🎯 **3 Behavioral Actions to Take Right Now:**
-1. **Target ${ctx.topCategory.name}:** Since it's ${ctx.topCategory.pct}% of your total outflow, trim 15% off this category next week.
-2. **Cap Daily Outflow:** Keep daily spending under **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}**.
-3. **Log Before Sleeping:** Review every purchase at night to keep financial awareness sharp.`;
+[[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: How does the cash envelope budgeting system work? | ✉️ Envelope System]] [[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]]`;
             }
 
-            // 3. Daily Limit / Safe Daily Allowance
-            if (q.includes('daily limit') || q.includes('daily allowance') || q.includes('spend a day') || q.includes('spend per day') || q.includes('today limit') || q.includes('how much can i spend')) {
-                const todayLeft = Math.max(0, ctx.safeDailyAllowance - ctx.spentToday);
-                return `🎯 **Your Daily Spending Target**
+            // 14. BUDGET FRAMEWORKS: ENVELOPE BUDGETING
+            if (has('envelope', 'envelope method', 'envelope system', 'cash envelopes')) {
+                return `✉️ **The Cash Envelope Budgeting System**
 
-• **Safe Daily Allowance:** **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**
-• **Days Remaining:** ${ctx.daysRemaining} days
-• **Already Spent Today:** ${ctx.currency} ${formatMoney(ctx.spentToday)}
-• **Remaining Headroom for Today:** **${ctx.currency} ${formatMoney(todayLeft)}**
+The envelope system is the ultimate weapon against overspending in leak-prone categories:
 
-💡 **Habit Rule:** If you spend less than ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)} today, the unused money automatically rolls over to increase your daily allowance for the rest of the month!`;
+1. **Identify Your Danger Categories:** Food & dining, entertainment, shopping, and personal care.
+2. **Withdraw Cash on Payday:** Put the allocated budget for each category into labeled envelopes (physical envelopes or dedicated digital sub-accounts).
+3. **Spend Only from the Envelope:** When dining out, pay strictly from the Food envelope.
+4. **When the Envelope is Empty, Stop!** No borrowing from other envelopes until the next month.
+
+💡 **Why it Works:** Parting with physical cash creates biological friction in your brain that digital cards and mobile wallets numb!
+
+[[prompt: What is zero-based budgeting and how do I do it? | ⚖️ Zero-Based Budgeting]] [[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]]`;
             }
 
-            // 4. "Can I Afford X?" Check
-            const numberMatch = q.match(/(\d+(?:\.\d{1,2})?)/);
-            if (q.includes('afford') || q.includes('can i buy') || q.includes('can i spend') || (numberMatch && (q.includes('buy') || q.includes('purchase')))) {
-                if (numberMatch) {
-                    const cost = parseFloat(numberMatch[1]);
-                    if (cost > ctx.remaining) {
-                        return `🚨 **Can You Afford It? (No)**
+            // 15. BUDGET FRAMEWORKS: 70/20/10 RULE
+            if (has('70/20/10', '70 20 10', 'seventy twenty ten')) {
+                const living = ctx.budget * 0.7;
+                const savings = ctx.budget * 0.2;
+                const giving = ctx.budget * 0.1;
 
-The item costs **${ctx.currency} ${formatMoney(cost)}**, but you only have **${ctx.currency} ${formatMoney(ctx.remaining)}** remaining in this month's budget.
+                return `📐 **The 70/20/10 Budgeting Rule**
 
-• Purchasing this will put you **${ctx.currency} ${formatMoney(cost - ctx.remaining)} in the red**.
-• **Recommendation:** Postpone this purchase until your new monthly budget resets, or identify another expense to cancel first!`;
-                    } else {
-                        const newRemaining = ctx.remaining - cost;
-                        const newSafeDaily = newRemaining / ctx.daysRemaining;
-                        const isHeavy = cost > ctx.safeDailyAllowance * 1.5;
+A streamlined framework popular for people who want simpler categories:
 
-                        return `🤔 **Can You Afford It? (${isHeavy ? 'Caution Needed' : 'Yes, Safely'})**
+• **70% Living Expenses (${ctx.currency} ${formatMoney(living)}):**
+  Combines both Needs and Wants—rent, food, bills, transport, plus lifestyle and entertainment.
+• **20% Savings & Debt Acceleration (${ctx.currency} ${formatMoney(savings)}):**
+  Emergency buffer, debt payoff, and retirement investments.
+• **10% Giving, Learning & Growth (${ctx.currency} ${formatMoney(giving)}):**
+  Family support ("black tax"), charity, books, courses, or personal development.
 
-• **Item Cost:** ${ctx.currency} ${formatMoney(cost)}
-• **Current Remaining:** ${ctx.currency} ${formatMoney(ctx.remaining)}
-• **Remaining After Purchase:** ${ctx.currency} ${formatMoney(newRemaining)}
-• **New Safe Daily Limit:** ${ctx.currency} ${formatMoney(newSafeDaily)}/day (down from ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day)
-
-${isHeavy ? `⚠️ **Coach Advice:** This purchase eats a major chunk of your monthly balance. Unless it is an urgent Need, apply the **48-Hour Rule**—wait 2 days before buying. If you still feel you need it, go ahead!` : `✅ **Coach Advice:** This comfortably fits within your budget without endangering your month-end goals.`}`;
-                    }
-                }
+[[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: Explain the Pay Yourself First reverse budgeting method. | 🚀 Pay Yourself First]]`;
             }
 
-            // 5. Stopping Impulse Buys & Emotional Spending
-            if (q.includes('impulse') || q.includes('emotional') || q.includes('stop spending') || q.includes('control') || q.includes('addiction') || q.includes('urge')) {
-                return `🛑 **4 Mental Habits to Stop Impulse Spending**
+            // 16. BUDGET FRAMEWORKS: PAY YOURSELF FIRST
+            if (has('pay yourself first', 'reverse budget', 'reverse budgeting', '80/20', '80 20')) {
+                const autoSave = ctx.budget * 0.2;
+                const autoSpend = ctx.budget * 0.8;
 
-1. **The 48-Hour Cooling Rule:**
-   Whenever you see an item you want to buy online or in a shop, add it to a wishlist on your phone. Wait 48 hours. Research shows over 70% of impulse buying urges disappear after two nights of sleep.
+                return `🚀 **Pay Yourself First (Reverse Budgeting)**
 
-2. **The "Life Energy" Conversion:**
-   Divide the price of the item by your approximate hourly take-home income. For example, if an item costs ${ctx.currency} 200 and you earn ${ctx.currency} 25/hour: ask yourself, *"Is this item worth 8 hours of hard work at my desk?"*
+Traditional budgeting formula:
+`Income − Expenses = Savings` *(Usually leaves \$0 to save!)*
 
-3. **Delete Saved Payment Cards:**
-   Remove auto-fill cards from food delivery and shopping apps. Having to stand up, grab your physical wallet, and type 16 digits introduces friction that stops half of impulse buys.
+**Pay-Yourself-First formula:**
+`Income − Savings = Guilt-Free Spending`
 
-4. **The 1-In, 1-Out Rule:**
-   For every new discretionary item you purchase (clothes, shoes, tech), you must give away, sell, or donate an old item.`;
+How to execute it:
+1. The minute your salary or earnings hit your account, automatically transfer **${ctx.currency} ${formatMoney(autoSave)} (20%)** to savings or debt payoff.
+2. Pay your essential fixed bills (rent, utilities).
+3. Spend the remaining **${ctx.currency} ${formatMoney(autoSpend)}** freely without tracking every cent, because your future is already funded!
+
+[[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]]`;
             }
 
-            // 6. Food & Dining Habits
-            if (q.includes('food') || q.includes('dining') || q.includes('eat') || q.includes('restaurant') || q.includes('groceries') || q.includes('takeout')) {
-                return `🍲 **Smart Habits to Cut Food & Dining Costs**
+            // 17. BUDGET FRAMEWORKS: JAPANESE KAKEIBO
+            if (has('kakeibo', 'japanese budget', 'japanese method', 'mindful budgeting')) {
+                return `📖 **The Japanese Kakeibo Method of Mindful Money**
 
-Food is usually the largest "leak" in any personal budget. Here are practical ways to save without feeling deprived:
+Created in 1904 by Hani Motoko, *Kakeibo* turns money management into a calm, mindful ritual:
 
-• **Batch Cook & Reheat:** Cook larger portions for dinner 3 nights a week and pack the leftovers for lunch. This instantly cuts daily restaurant spending by 50%.
-• **Shop with a Strict List:** Never step into a supermarket or market hungry. A written list prevents impulse snack and beverage purchases.
-• **Set a Weekly Dining-Out Cap:** Allocate a fixed amount for weekend eating out (e.g. ${ctx.currency} ${formatMoney(ctx.budget * 0.1)}/week). When it runs out, cook at home!
-• **Watch the Liquid Calories:** Bottled drinks, sodas, and daily specialty juices can silently add up to over 15% of your food budget. Drink more water!`;
+At the start of the month, answer **4 Essential Questions:**
+1. How much money do you have coming in?
+2. How much would you like to save?
+3. How much are you spending?
+4. How can you improve?
+
+Every expense falls into **4 Mindful Pillars:**
+• **Survival (Needs):** Food, rent, transport, medicine.
+• **Optional (Wants):** Dining out, coffee, shopping.
+• **Culture (Enrichment):** Books, museum visits, music, theater.
+• **Extra (Unanticipated):** Repairs, replacement items.
+
+💡 **Habit Rule:** Reflect at the end of each week on what brought you genuine joy versus what was mindless consumption!
+
+[[prompt: What is zero-based budgeting and how do I do it? | ⚖️ Zero-Based Budgeting]] [[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]]`;
             }
 
-            // 7. Transport & Utility/Bills Habits
-            if (q.includes('transport') || q.includes('uber') || q.includes('bolt') || q.includes('car') || q.includes('bill') || q.includes('data') || q.includes('subscription')) {
-                return `🚗 **Habits to Trim Transport & Monthly Bills**
+            // 18. BUDGET FRAMEWORKS: HALF-PAYMENT METHOD
+            if (has('half payment', 'half-payment', 'bi-weekly budget', 'biweekly budget', 'split bills')) {
+                return `📅 **The Half-Payment Method for Large Recurring Bills**
 
-• **Batch Your Errands:** Combine 3 short trips into a single outing instead of taking individual rides throughout the week.
-• **Buy Mobile Data in Bulk:** Purchasing daily micro-data bundles can cost 30% to 50% more over a 30-day period than buying one larger monthly plan.
-• **Subscription Audit:** Check your phone settings and cancel any streaming or app subscriptions you haven't opened in the past 14 days.
-• **Compare Ride Times:** Avoid peak surge pricing by traveling 15 minutes earlier or walking short distances when safe.`;
+If large end-of-month bills (like rent, school fees, or car insurance) cause severe financial anxiety:
+
+1. Divide the large monthly bill by 2 (or by the number of paychecks you receive each month).
+2. From your first paycheck, immediately set aside the first half into a separate holding sub-account.
+3. From your second paycheck, set aside the remaining half.
+4. When the bill comes due at month-end, the full payment is already sitting ready without draining your living cash!
+
+[[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
             }
 
-            // 8. Emergency Fund Step-by-Step
-            if (q.includes('emergency') || q.includes('save money') || q.includes('savings') || q.includes('buffer')) {
+            // 19. DEBT PAYOFF: SNOWBALL VS AVALANCHE
+            if (has('snowball', 'avalanche', 'pay off debt', 'debt payoff', 'eliminate debt', 'clear debt', 'dave ramsey snowball')) {
+                return `❄️ **Debt Snowball vs. 🏔️ Debt Avalanche: Which is Best?**
+
+Both strategies require paying minimums on all debts, then throwing all extra cash at one target:
+
+• **The Debt Snowball (Psychological Momentum):**
+  Order debts from **smallest balance to largest balance**, ignoring interest rates.
+  *Why it works:* Knocking out small debts fast gives you quick dopamine wins that build unstoppable momentum!
+
+• **The Debt Avalanche (Mathematical Optimization):**
+  Order debts from **highest interest rate to lowest interest rate**.
+  *Why it works:* Saves you the absolute most money in interest charges and gets you debt-free faster on paper.
+
+💡 **Coach Recommendation:** If you struggle with motivation or feel overwhelmed, choose the **Snowball**. If you are numbers-driven and disciplined, choose the **Avalanche**!
+
+[[prompt: How do I pay off high-interest credit card debt quickly? | 💳 Credit Card Payoff]] [[prompt: Is Buy Now Pay Later (BNPL) dangerous for my budget? | ⚠️ BNPL Traps]] [[prompt: Should I pay off debt or build an emergency fund first? | ⚖️ Debt vs Savings]]`;
+            }
+
+            // 20. DEBT PAYOFF: CREDIT CARDS & HIGH INTEREST
+            if (has('credit card', 'credit cards', 'minimum payment', 'high interest debt', 'card debt')) {
+                return `💳 **How to Crush High-Interest Credit Card Debt**
+
+1. **Stop the Minimum Payment Trap:** Paying only the minimum on credit cards is designed by banks to keep you indebted for 15 to 25 years.
+2. **Freeze the Cards:** Remove credit cards from Apple Pay, Google Wallet, and website autofill. Switch strictly to cash or debit.
+3. **Call and Negotiate APR:** Call customer support and ask: *"I am currently paying down my balance aggressively; can you lower my interest rate to help me pay this off faster?"* Over 50% of cardholders who ask receive a rate drop!
+4. **Use Balance Transfers Wisely:** A 0% APR balance transfer card can pause interest for 12-18 months—but only if you have a strict plan to pay it off before the promotion expires.
+
+[[prompt: Snowball vs Avalanche: which debt payoff method is best for me? | ❄️ Snowball vs Avalanche]] [[prompt: Is Buy Now Pay Later (BNPL) dangerous for my budget? | ⚠️ BNPL Traps]]`;
+            }
+
+            // 21. DEBT PAYOFF: BUY NOW PAY LATER (BNPL)
+            if (has('buy now pay later', 'bnpl', 'pay in 4', 'klarna', 'afterpay', 'microloan', 'payday loan', 'quick loan')) {
+                return `⚠️ **The Hidden Traps of Buy Now Pay Later (BNPL) & Microloans**
+
+Why splitting purchases into 4 payments or taking quick loan apps is financially hazardous:
+
+• **The Dopamine Illusion:** BNPL tricks your brain into feeling like an expensive item costs only 25% of its real price.
+• **Phantom Debt Accumulation:** Having 4 small installments across different apps creates hidden monthly liabilities that silently eat away your income.
+• **Predatory Microloan Interest:** Many digital lending apps charge interest rates exceeding 100% to 200% annualized, trapping users in debt rollover cycles.
+
+💡 **Golden Rule:** If you cannot afford to pay for discretionary items in full today with cash or debit, do not buy them!
+
+[[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]] [[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]]`;
+            }
+
+            // 22. DEBT PAYOFF: STUDENT LOANS & LOW-INTEREST REPAYMENT
+            if (has('student loan', 'student loans', 'education debt', 'school loan')) {
+                return `🎓 **Smart Student Loan & Personal Loan Repayment**
+
+• **Understand the Interest Rate:** If your student loan interest rate is under 4-5%, prioritize building your emergency fund and investing over rushing to pay it off early.
+• **If Interest is High (>7%):** Treat it like urgent consumer debt and apply extra monthly cash flow.
+• **Automate Payments:** Many student loan servicers offer a 0.25% interest rate discount just for setting up auto-debit!
+• **Lump-Sum Principle Repayments:** When putting extra money toward loans, ensure the servicer applies it directly to the *principal balance*, not future interest.
+
+[[prompt: Snowball vs Avalanche: which debt payoff method is best for me? | ❄️ Debt Payoff Methods]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 23. SAVINGS: EMERGENCY FUND ROADMAP
+            if (has('emergency fund', 'starter shield', 'safety net', 'emergency savings', 'rainy day fund')) {
                 const starterFund = ctx.budget * 0.5;
                 const fullFund = ctx.budget * 3;
-                return `🛡️ **How to Build a bulletproof Emergency Fund**
+                const fortressFund = ctx.budget * 6;
 
-An emergency fund prevents unexpected car repairs, medical bills, or family needs from putting you into debt.
+                return `🛡️ **Your Step-by-Step Emergency Fund Roadmap**
 
-• **Phase 1: The Starter Shield (${ctx.currency} ${formatMoney(starterFund)}):**
-  Aim for half a month's basic budget first. This handles sudden minor emergencies without panic.
+An emergency fund prevents unexpected medical bills, car repairs, or family emergencies from forcing you into debt:
 
-• **Phase 2: The 3-Month Fortress (${ctx.currency} ${formatMoney(fullFund)}):**
-  Gradually build 3 months of essential living expenses by saving your 20% allocation every payday.
+• **Milestone 1: The Starter Shield (${ctx.currency} ${formatMoney(starterFund)}):**
+  Aim for half of one month's budget first. This stops minor crises from putting you in the red.
+• **Milestone 2: The 3-Month Fortress (${ctx.currency} ${formatMoney(fullFund)}):**
+  Covers basic rent, food, and essentials for 3 months if you experience job loss or income interruption.
+• **Milestone 3: The 6-Month Citadel (${ctx.currency} ${formatMoney(fortressFund)}):**
+  Total financial peace of mind.
 
-• **Golden Rule:** Keep this money in a separate high-yield or locked account without an active debit card attached to your phone!`;
+💡 **Where to Keep It:** In a High-Yield Savings Account (HYSA) or liquid money market fund—separated from your daily checking account without a debit card attached!
+
+[[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds Guide]] [[prompt: Should I pay off debt or build an emergency fund first? | ⚖️ Debt vs Savings]] [[prompt: How to save with the 52-week money challenge | 💰 52-Week Challenge]]`;
             }
 
-            // Default General Response
-            return `💡 **PocketCoach Spending Habit Advice**
+            // 24. SAVINGS: SINKING FUNDS
+            if (has('sinking fund', 'sinking funds', 'saving for irregular', 'planned expense fund')) {
+                return `💡 **What Are Sinking Funds & Why Do You Need Them?**
 
-Here is your current financial posture:
+An **Emergency Fund** is for the *unexpected* (hospital visit, sudden job loss).
+A **Sinking Fund** is for the *expected but irregular* expenses you know are coming:
+• Annual car insurance & servicing
+• Holiday & Christmas gifts
+• Tech upgrades (new phone or laptop)
+• Weddings & travel
+
+**How to calculate a Sinking Fund:**
+`Target Amount ÷ Number of Months until Needed = Monthly Savings Target`
+
+*Example:* A laptop costing ${ctx.currency} 1,200 needed in 6 months requires setting aside **${ctx.currency} 200/month**. When it comes time to buy, you pay cash with zero guilt!
+
+[[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 25. SAVINGS: CHALLENGES (52-WEEK & 30-DAY NO SPEND)
+            if (has('money challenge', 'no spend', '52 week', '30 day no spend', 'no-spend day')) {
+                return `🎯 **Gamified Savings Challenges to Build Discipline**
+
+1. **The 30-Day "No-Spend" Challenge:**
+   For one month, spend money strictly on essential Needs (groceries, rent, transport). Zero purchases on restaurants, shopping, or paid entertainment.
+
+2. **The 52-Week Incremental Challenge:**
+   Save 1 unit in week 1, 2 units in week 2, up to 52 units in week 52. By week 52, you will have saved over 1,378 units of currency effortlessly!
+
+3. **The "No-Spend Wednesday" Habit:**
+   Pick one day each week where you commit to spending \$0 / GH₵ 0 outside of pre-planned groceries.
+
+[[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]] [[prompt: What is the 48-Hour cooling rule and how does it work? | ⏳ 48-Hour Rule]]`;
+            }
+
+            // 26. SAVINGS: COMPOUND INTEREST & RULE OF 72
+            if (has('compound interest', 'compounding', 'rule of 72', 'time horizon', 'wealth growth')) {
+                return `📈 **The Magic of Compound Interest & The Rule of 72**
+
+Albert Einstein reportedly called compound interest the *"eighth wonder of the world"*:
+`Future Value = Principal × (1 + Interest Rate)^Time`
+
+• **The Rule of 72 (How fast your money doubles):**
+  Divide 72 by your annual expected return rate:
+  • At **6% return:** Money doubles every `72 ÷ 6 = 12 years`.
+  • At **10% return:** Money doubles every `72 ÷ 10 = 7.2 years`.
+  • At **18% return:** Money doubles every `72 ÷ 18 = 4 years`.
+
+💡 **Key Takeaway:** Time horizon is your greatest financial superpower. Investing a small amount in your 20s or 30s beats investing 3x more later in life!
+
+[[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]] [[prompt: How does inflation eat away my cash savings and how do I beat it? | 🔥 Beat Inflation]]`;
+            }
+
+            // 27. COST-CUTTING: FOOD & GROCERIES
+            if (has('cut food', 'cut dining', 'grocery bill', 'save on food', 'meal prep', 'cooking at home', 'food leaks')) {
+                return `🍲 **Tactical Ways to Slash Food & Grocery Costs**
+
+Food is usually the easiest category to cut without sacrificing quality of life:
+
+• **Never Shop Without a Written List:** Supermarkets are scientifically engineered to trigger impulse cravings. Stick strictly to your list.
+• **Buy Store Brand Generics:** Staple items like rice, oats, pasta, sugar, and flour from store brands are often 25-40% cheaper for identical ingredients.
+• **Audit Your Pantry First:** Cook "fridge clearance" dinners once a week to use up all vegetables and grains before they spoil.
+• **Limit Takeout to Special Occasions:** Restaurant meals carry up to a 300% markup over home-cooked ingredients.
+
+[[prompt: How much did I spend on food and dining this month? | 🍲 My Food Spending]] [[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Limit]]`;
+            }
+
+            // 28. COST-CUTTING: TRANSPORT & COMMUTING
+            if (has('cut transport', 'transport costs', 'save on transport', 'uber costs', 'bolt costs', 'surge pricing', 'commute savings')) {
+                return `🚗 **Tactical Ways to Reduce Transport Outflow**
+
+• **Leave 15 Minutes Early:** Avoid peak surge multiplier pricing on Uber and Bolt by traveling slightly before rush hour.
+• **Trip Chaining:** Run all weekly errands (bank, pharmacy, market) in a single loop rather than taking distinct individual trips.
+• **Check Tire Pressure Monthly:** Properly inflated tires improve car fuel efficiency by up to 3-5%.
+• **Walk Distances Under 15 Minutes:** When safe and weather permits, walking saves transport fares and doubles as daily cardio.
+
+[[prompt: How much did I spend on transport and Uber? | 🚗 My Transport Spending]] [[prompt: What is the 20/4/10 rule for buying a car? | 🚘 Car Buying Rule]]`;
+            }
+
+            // 29. COST-CUTTING: ELECTRICITY & UTILITIES
+            if (has('cut bills', 'electric bill', 'electricity bill', 'water bill', 'lower utilities', 'power bill')) {
+                return `💡 **How to Lower Your Electricity and Utility Bills**
+
+• **Kill "Phantom Loads":** Devices plugged in but turned off (TVs, microwaves, desktop monitors) can account for 10% of household electricity draw.
+• **Air Conditioning Sweet Spot:** Set AC temperature to 24°C–25°C. Every degree lower increases energy consumption by about 6-8%.
+• **Switch to LED Bulbs:** LEDs use 75% less energy and last 25 times longer than incandescent bulbs.
+• **Cold-Water Laundry:** Over 85% of energy used in washing machines goes toward heating the water. Wash clothes in cold water.
+
+[[prompt: How much did I spend on bills and mobile data? | ⚡ My Bills Spending]] [[prompt: How to audit and cancel zombie subscriptions | 🔄 Purge Subscriptions]]`;
+            }
+
+            // 30. COST-CUTTING: MOBILE DATA & PHONE PLANS
+            if (has('mobile data', 'data bundle', 'phone bill', 'airtime', 'save on internet', 'mtn data')) {
+                return `📱 **How to Slash Mobile Data & Airtime Spending**
+
+• **Buy Monthly Bulk Bundles:** Daily micro-bundles feel cheaper in the moment, but cost 30% to 50% more over 30 days than buying one large monthly data package.
+• **Disable Social Media Autoplay:** Turn off video autoplay on Instagram, TikTok, YouTube, and Twitter in settings.
+• **Download Media over Home/Work Wi-Fi:** Download podcasts, Spotify playlists, and Netflix episodes over Wi-Fi before stepping outside.
+• **Turn On Data Saver Mode:** Modern smartphones have a built-in Data Saver feature that restricts background data syncing for dormant apps.
+
+[[prompt: How much did I spend on bills and mobile data? | ⚡ My Bills Spending]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]]`;
+            }
+
+            // 31. COST-CUTTING: SUBSCRIPTIONS & DIGITAL LEAKS
+            if (has('subscription', 'cancel subscription', 'purge subscription', 'streaming service', 'netflix', 'spotify', 'zombie subscription')) {
+                return `🔄 **The "Subscription Purge" Checklist**
+
+1. **Audit Bank & App Store Receipts:** Open your Apple ID / Google Play Store account settings and review every active subscription.
+2. **Apply the "Single Streamer" Rule:** Do not pay for Netflix, Prime, Disney+, and Spotify simultaneously. Rotate them—watch one service for a month, cancel it, and switch to another.
+3. **Switch to Annual Billing Only for Staples:** If an app is genuinely essential and used daily, annual plans usually provide a 15-20% discount.
+4. **Share Family Plans:** Consolidate cloud storage or music plans with family members or trusted friends.
+
+[[prompt: How much did I spend on bills and mobile data? | ⚡ My Bills Spending]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
+            }
+
+            // 32. COST-CUTTING: SHOPPING, CLOTHES & TECH
+            if (has('shopping addiction', 'cost per wear', 'buying clothes', 'wardrobe', 'thrifting', 'buying shoes', 'shopping habit')) {
+                return `👗 **Smart Habits for Clothes, Shoes & Tech Shopping**
+
+• **The Cost-Per-Wear (CPW) Formula:**
+  `Price ÷ Estimated Days Worn = Real Cost`
+  *A high-quality pair of shoes costing ${ctx.currency} 300 worn 150 days costs only ${ctx.currency} 2/wear. A fast-fashion shirt costing ${ctx.currency} 60 worn twice costs ${ctx.currency} 30/wear!*
+
+• **The 30-Day Wishlist Rule:** Whenever you want to buy clothes or gadgets, add them to a wishlist note. Wait 30 days. If the desire is gone, you saved 100%!
+• **The "One In, One Out" Rule:** For every new article of clothing or pair of shoes you bring home, donate or sell an old one.
+
+[[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]] [[prompt: Can I afford 100 for clothing? | 💳 Affordability Check]]`;
+            }
+
+            // 33. COST-CUTTING: ENTERTAINMENT & SOCIAL LIFE (FOMO)
+            if (has('social life', 'going out', 'fomo', 'peer pressure', 'cheap fun', 'free activities', 'friends spending')) {
+                return `🥂 **How to Have a Fun Social Life Without Going Broke**
+
+• **Host Potlucks & Game Nights:** Instead of expensive restaurant dinners, invite friends over where everyone brings one dish or beverage.
+• **Be Honest About Your Goals:** Saying *"I'm working toward a big savings goal this month, can we do coffee or drinks instead of dinner?"* earns respect, not judgment!
+• **Offer Alternative Hangouts:** Suggest free art galleries, outdoor parks, bike rides, or home movie screenings.
+• **Pre-Game the Outing:** Eat a nutritious meal at home before meeting friends at lounges or clubs to avoid ordering expensive food.
+
+[[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 34. BEHAVIORAL PSYCHOLOGY: IMPULSE BUYING & RETAIL THERAPY
+            if (has('impulse', 'emotional buying', 'retail therapy', 'urge to spend', 'stop spending', 'control spending', 'shopping urge')) {
+                return `🛑 **4 Psychological Hacks to Stop Impulse Spending**
+
+1. **The 48-Hour Cooling Rule:**
+   When you feel an urge to buy an unbudgeted item, bookmark it and walk away for 48 hours. Research shows over 70% of impulse buying urges vanish after two nights of sleep.
+
+2. **Remove Frictionless Payment:**
+   Delete saved credit cards from your mobile browser and delivery apps. Having to stand up, get your physical card, and type 16 digits stops half of impulse buys!
+
+3. **Identify the Real Emotion:**
+   Are you truly buying an item, or are you feeling bored, stressed, lonely, or exhausted? Retail therapy is a temporary dopamine band-aid for an emotional need.
+
+4. **Convert Cost to Hours of Labor:**
+   Divide the price by your take-home hourly wage: *"Is this jacket worth 6 hours of sitting at my desk?"*
+
+[[prompt: What is the 48-Hour cooling rule and how does it work? | ⏳ 48-Hour Rule]] [[prompt: What is the Life Energy conversion formula for purchases? | 🔋 Life Energy Formula]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
+            }
+
+            // 35. BEHAVIORAL PSYCHOLOGY: 48-HOUR & 30-DAY COOLING RULES
+            if (has('48-hour', '48 hour', '30-day rule', '30 day rule', 'cooling off', 'cooling rule', 'cooling period')) {
+                return `⏳ **The 48-Hour and 30-Day Cooling Rules**
+
+Marketers design limited-time sales, countdown timers, and "only 2 left in stock" notices to bypass your rational prefrontal cortex and trigger fear of missing out (FOMO).
+
+• **For Purchases Under ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance * 2)} (The 48-Hour Rule):**
+  Wait 48 hours. If you still want the item after two nights of rest and it fits your budget, buy it guilt-free.
+• **For Purchases Over ${ctx.currency} ${formatMoney(ctx.budget * 0.25)} (The 30-Day Rule):**
+  Write down the item, price, and why you want it. Wait 30 calendar days. 8 out of 10 times, the intense desire cools off completely.
+
+[[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]] [[prompt: Can I afford 100 for a purchase right now? | 💳 Affordability Check]]`;
+            }
+
+            // 36. BEHAVIORAL PSYCHOLOGY: LIFESTYLE CREEP / INFLATION
+            if (has('lifestyle creep', 'lifestyle inflation', 'earning more spending more', 'higher salary broke')) {
+                return `📈 **How to Defeat Lifestyle Creep (Lifestyle Inflation)**
+
+Lifestyle creep is the phenomenon where as your income increases, your "wants" silently transform into "needs"—leaving you with \$0 saved despite earning 2x more!
+
+**The 50% Raise Rule:**
+Whenever you get a salary increase, bonus, or higher-paying client:
+• **Save / Invest 50%:** Automatically route half of the raise to investments or debt payoff before you see it.
+• **Enjoy 50%:** Use the other half to upgrade your quality of life without guilt.
+
+This guarantees your wealth grows every time your career advances!
+
+[[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]]`;
+            }
+
+            // 37. BEHAVIORAL PSYCHOLOGY: FAMILY FINANCIAL PRESSURE ("BLACK TAX")
+            if (has('black tax', 'family pressure', 'family support', 'remittance', 'giving to relatives', 'loaning money to family', 'relatives asking for money')) {
+                return `🤝 **Navigating Family Support ("Black Tax") & Boundaries**
+
+Supporting family and loved ones is deeply noble, but you cannot pour from an empty cup:
+
+1. **Create a Dedicated Budget Line Item:**
+   Allocate a fixed percentage (e.g. 5%–10% of monthly income) specifically for family support.
+2. **When the Allocation is Reached, Be Firm:**
+   *"I have already allocated my family support budget for this month. I can help again next month."*
+3. **Never Go Into Debt to Give:**
+   Taking high-interest loans to send money home hurts both you and your family in the long term.
+4. **Support Systems, Not Crises:**
+   Whenever possible, help fund education, health insurance, or trade skills rather than recurring consumable expenses.
+
+[[prompt: How does the 70/20/10 budgeting rule work? | 📐 70/20/10 Method]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 38. BEHAVIORAL PSYCHOLOGY: MONEY ANXIETY & GUILT
+            if (has('money anxiety', 'financial stress', 'fear of spending', 'money guilt', 'guilt spending', 'spending on myself')) {
+                return `💖 **Overcoming Money Anxiety & Spending Guilt**
+
+Money anxiety often comes in two opposite extremes: careless leaking or obsessive fear of spending on yourself:
+
+• **Separate Needs, Savings, and Guilt-Free Fun:**
+  When you know your bills are paid and your 20% savings buffer is safely automated, you are officially allowed to enjoy your discretionary money without guilt!
+• **Define Your Core Passions:**
+  Spend lavishly on the few things you genuinely love (travel, fitness, good food), and cut ruthlessly on things you don't care about.
+• **Focus on Trends, Not Single Days:**
+  One bad spending day will not ruin you. It's the monthly habit that counts.
+
+[[prompt: Explain the Pay Yourself First reverse budgeting method. | 🚀 Pay Yourself First]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
+            }
+
+            // 39. BEHAVIORAL PSYCHOLOGY: LIFE ENERGY / WAGE CONVERSION
+            if (has('life energy', 'hourly wage', 'hours of work', 'worth the hours')) {
+                return `🔋 **The "Life Energy" / Real Hourly Wage Formula**
+
+From the classic book *Your Money or Your Life*:
+Every time you buy something, you aren't paying with money—you are paying with chunks of your finite time on Earth!
+
+**How to calculate your Real Hourly Wage:**
+1. Calculate your take-home pay per hour after taxes and commute costs.
+2. Divide any purchase price by that number.
+*Example:* If you earn ${ctx.currency} 25/hour after deductions, a ${ctx.currency} 200 dinner outing costs **8 hours of your life energy**!
+
+Ask yourself: *"Is this purchase worth an entire work shift at my desk?"*
+
+[[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]] [[prompt: Can I afford 100 for a purchase right now? | 💳 Affordability Check]]`;
+            }
+
+            // 40. INCOME & CAREER: IRREGULAR / FREELANCE INCOME
+            if (has('irregular income', 'freelance income', 'commission income', 'variable income', 'unpredictable income')) {
+                return `💼 **How to Budget with Irregular or Freelance Income**
+
+If your income fluctuates from month to month:
+
+1. **Calculate Your Baseline Living Costs:**
+   Determine the absolute minimum you need each month for basic survival (rent, food, utilities, debt minimums).
+2. **Base Your Monthly Budget on Your Lowest Month:**
+   Set your regular lifestyle spending to what you earn in your leanest months.
+3. **Set Up an "Income Buffer" Holding Account:**
+   During bumper months, do not inflate your lifestyle! Deposit the surplus into your buffer account.
+4. **Pay Yourself a Consistent Salary:**
+   Transfer a fixed amount from your buffer account to your checking account on the 1st of every month.
+
+[[prompt: What is zero-based budgeting and how do I do it? | ⚖️ Zero-Based Budgeting]] [[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]]`;
+            }
+
+            // 41. INCOME & CAREER: SIDE HUSTLES
+            if (has('side hustle', 'make extra money', 'second income', 'earn more', 'freelancing ideas')) {
+                return `💡 **Principles for High-Leverage Side Hustles**
+
+• **Monetize Existing Skills First:** Graphic design, copywriting, bookkeeping, tutoring, social media management, or programming require \$0 startup capital.
+• **Avoid Low-Yield Inventory Traps:** Do not borrow money to buy large stockpiles of physical inventory for dropshipping or MLMs.
+• **Protect Your Primary Job:** A side hustle should never jeopardize the stability or performance of your main career.
+• **Funnel All Side Income Directly into Wealth:** Never inflate your lifestyle with side hustle income—route 100% of it into debt payoff, emergency funds, or investments!
+
+[[prompt: How to budget with irregular or freelance income | 💼 Freelance Budgeting]] [[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]]`;
+            }
+
+            // 42. INCOME & CAREER: SALARY NEGOTIATION & RAISES
+            if (has('ask for a raise', 'negotiate salary', 'salary negotiation', 'higher pay', 'raise at work')) {
+                return `💼 **How to Ask for a Raise & Negotiate Compensation**
+
+1. **Track a "Brag Sheet" Year-Round:** Document every project completed, revenue generated, process streamlined, or client praised.
+2. **Benchmark Market Rates:** Research what peers in your industry, experience level, and city are earning.
+3. **Time the Conversation Strategically:** Schedule the review after a major win or during annual budget planning, not during company layoffs.
+4. **Use Collaborative Phrasing:**
+   *"Over the past year, I've taken on [X responsibilities] which generated [Y impact]. I'd love to discuss aligning my compensation with my current contribution."*
+
+[[prompt: How do I prevent lifestyle creep when my income increases? | 📈 Defeat Lifestyle Creep]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 43. INCOME & CAREER: WINDFALLS & BONUSES
+            if (has('bonus', 'windfall', 'tax refund', 'inheritance', 'lump sum')) {
+                return `🎁 **The 50/30/20 Rule for Windfalls & Bonuses**
+
+When unexpected money, a bonus, or a tax refund arrives, avoid blowing it all:
+
+• **50% Debt & Financial Defense:** Immediately eliminate high-interest debt or top up your emergency fund.
+• **30% Long-Term Wealth:** Invest in broad index funds, retirement, or major life goals (home down payment).
+• **20% Guilt-Free Celebration:** Enjoy a well-deserved dinner, gadget, or trip with 0% guilt because the other 80% fortified your future!
+
+[[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]] [[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]]`;
+            }
+
+            // 44. INVESTING: BEGINNER 101 (INDEX FUNDS & ETFS)
+            if (has('how to invest', 'investing 101', 'start investing', 'index funds', 'etf', 'stock market', 'shares', 'stocks')) {
+                return `📈 **Investing 101 for Beginners**
+
+• **Saving vs. Investing:**
+  *Saving* preserves money for short-term goals (<3 years). *Investing* grows purchasing power for long-term wealth (5+ years).
+• **Why Index Funds & ETFs Beat Picking Stocks:**
+  An index fund (like an S&P 500 or Total World ETF) bundles hundreds of the world's most profitable companies into a single purchase. Over 90% of professional stock pickers fail to beat broad index funds over a 15-year period!
+• **The Golden Order of Investing:**
+  1. High-interest debt paid off
+  2. 3-Month Emergency Fund secure
+  3. Consistent monthly contributions into low-cost index funds/ETFs!
+
+[[prompt: What is Dollar-Cost Averaging (DCA) and why is it smart? | 📊 Dollar-Cost Averaging]] [[prompt: How does inflation eat away my cash savings and how do I beat it? | 🔥 Beat Inflation]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Rule of 72]]`;
+            }
+
+            // 45. INVESTING: BEATING INFLATION
+            if (has('inflation', 'purchasing power', 'protect from inflation', 'beat inflation', 'money losing value')) {
+                return `🔥 **How Inflation Destroys Cash & How to Beat It**
+
+Inflation is the silent tax on cash. If inflation is 8% per year, an item that costs ${ctx.currency} 100 today will cost ${ctx.currency} 108 next year.
+
+• **Cash in a Traditional Checking Account:** Guarantees a loss of purchasing power every single year!
+• **How to Fight Back:**
+  1. **Short-Term Funds:** Move idle cash into High-Yield Savings Accounts (HYSA) or Treasury Bills.
+  2. **Long-Term Funds (5+ Years):** Invest in equities/index funds, which historically outpace inflation by 4-7% annualized over the long term.
+
+[[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]] [[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]]`;
+            }
+
+            // 46. INVESTING: DOLLAR-COST AVERAGING (DCA)
+            if (has('dollar-cost averaging', 'dollar cost averaging', 'dca', 'timing the market')) {
+                return `📊 **What is Dollar-Cost Averaging (DCA)?**
+
+Trying to "time the market" (buying at the bottom, selling at the top) is nearly impossible even for Wall Street pros.
+
+**Dollar-Cost Averaging:**
+Investing a fixed amount of money at consistent regular intervals (e.g. ${ctx.currency} 200 every payday), regardless of whether market prices are up or down.
+• When prices are high, your fixed sum buys fewer shares.
+• When prices crash, your fixed sum automatically buys more shares at a discount!
+• Over time, this smooths out volatility and removes emotional panic.
+
+[[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Rule of 72]]`;
+            }
+
+            // 47. INVESTING: RETIREMENT & PENSIONS
+            if (has('retirement', 'pension', 'ssnit', '401k', 'ira', 'old age', 'retire early', 'fire')) {
+                return `🏖️ **Retirement, Pensions & SSNIT Planning**
+
+• **Never Leave Free Employer Match on the Table:** If your employer matches pension or retirement contributions, contribute up to the maximum match immediately. It is an instant 100% return on your money!
+• **National Pension Schemes (e.g. SSNIT):** Mandatory tier-1 and tier-2 pensions provide a basic safety net, but rarely cover full lifestyle expenses.
+• **Voluntary Tier-3 / Private Retirement Accounts:** Setting up personal voluntary monthly contributions is vital for complete financial independence!
+
+[[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Rule of 72]]`;
+            }
+
+            // 48. MAJOR GOALS: BUYING A CAR (20/4/10 RULE)
+            if (has('buy a car', 'car purchase', 'car loan', '20/4/10', 'afford a car')) {
+                return `🚘 **The 20/4/10 Rule for Buying a Car**
+
+Cars are rapidly depreciating assets that carry high insurance, fuel, and maintenance costs. Protect your wealth with this benchmark:
+
+• **20% Down Payment:** Put down at least 20% in cash to prevent being "underwater" on a loan.
+• **4-Year Maximum Loan Term:** Do not finance a vehicle for 5, 6, or 7 years.
+• **10% of Gross Monthly Income:** Total monthly transportation costs (loan payment + fuel + insurance + maintenance) must not exceed 10% of your gross income.
+
+[[prompt: Can I afford 500 for a down payment? | 💳 Affordability Check]] [[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]]`;
+            }
+
+            // 49. MAJOR GOALS: RENTING AN APARTMENT (30% RULE)
+            if (has('rent an apartment', 'house rent', 'moving out', 'housing costs', '30% rent', 'security deposit')) {
+                const maxRent = ctx.budget * 0.30;
+                return `🏠 **The 30% Housing & Rent Rule**
+
+• **Keep Gross Rent Under 30%:** Aim to keep your monthly rent payment under **30% of your take-home income** (approx **${ctx.currency} ${formatMoney(maxRent)}/month** based on your current budget).
+• **Remember the Hidden Move-In Costs:** Security deposits, advance rent (1-2 years in some regions), agent fees, moving trucks, and initial furnishings can equal 3x to 5x one month's rent.
+• **Budget for Utilities Separately:** Water, electricity, waste collection, and internet usually add 15-20% on top of base rent!
+
+[[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]]`;
+            }
+
+            // 50. MAJOR GOALS: WEDDING BUDGETING
+            if (has('wedding', 'marriage costs', 'wedding budget', 'plan a wedding')) {
+                return `💍 **How to Plan a Meaningful Wedding on a Sensible Budget**
+
+A wedding is a 1-day celebration; a marriage is a lifetime. Never start a marriage in debt!
+
+• **Cap the Guest List:** Food and drinks scale linearly with head count. Every 10 guests cut saves significant money.
+• **Prioritize the Big 3:** Pick the 3 things that matter most to you (e.g. photography, food, rings) and compromise on everything else (invitations, favors, car rentals).
+• **Avoid the "Wedding Markup":** When booking venues or cake bakers, ask for quotes for an "anniversary party" or "family celebration" first to see true baseline pricing.
+
+[[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 51. MAJOR GOALS: SAVINGS CALCULATOR & DURATION
+            if (has('how long to save', 'how long will it take to save', 'save for', 'savings goal')) {
+                if (detectedAmount) {
+                    const target = detectedAmount;
+                    const monthlySave20 = Math.max(10, ctx.budget * 0.20);
+                    const months = Math.ceil(target / monthlySave20);
+                    return `🎯 **Goal Savings Timeline Calculator**
+
+• **Target Goal:** **${ctx.currency} ${formatMoney(target)}**
+• **Estimated Monthly Savings Rate (20% of budget):** **${ctx.currency} ${formatMoney(monthlySave20)}/month**
+• **Estimated Time to Reach Goal:** **~${months} month${months > 1 ? 's' : ''}**
+
+💡 **Want it faster?** If you trim non-essentials in **${ctx.topCategory.name}** and save 30% (${ctx.currency} ${formatMoney(ctx.budget * 0.30)}/month), you could reach your goal in **~${Math.ceil(target / (ctx.budget * 0.30))} months**!
+
+[[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]]`;
+                }
+            }
+
+            // 52. SMART CONTEXTUAL FALLBACK SYNTHESIZER
+            // If the query doesn't match a specific branch, provide intelligent live data advice
+            const isFast = ctx.dailyAvg > ctx.safeDailyAllowance;
+            return `💡 **PocketCoach Financial Perspective**
+
+I'm analyzing your question in the context of your current financial posture:
 • **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
-• **Remaining:** ${ctx.currency} ${formatMoney(ctx.remaining)} (${ctx.pctUsed}% used)
-• **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day (${ctx.daysRemaining} days left)
+• **Spent So Far:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
+• **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
+• **Safe Daily Allowance:** **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day** (${ctx.daysRemaining} days remaining)
+• **Top Spending Area:** **${ctx.topCategory.name}** (${ctx.topCategory.pct}% of total spend)
 
-**What would you like to explore?**
-• Ask *"How should I structure my budget?"* for the 50/30/20 breakdown
-• Ask *"Analyze my spending habits"* for a deep audit
-• Ask *"Can I afford [amount]?"* before making any purchase
-• Ask *"How to stop impulse buying"* for behavioral psychology hacks`;
+${isFast ? `⚠️ *Coach Note: You are currently pacing slightly ahead of your daily allowance. Keep non-essential purchases controlled this week!*` : `🌟 *Coach Note: Your daily pacing is on track. Continue keeping non-essential outflow steady!*`}
+
+**What would you like to explore next?**
+[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Deep Habit Audit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What is my biggest single expense this month? | 🏆 Top Single Expense]] [[prompt: What can you do and what questions can I ask? | 🧭 Capabilities Directory]]`;
         }
     </script>
 </body>
