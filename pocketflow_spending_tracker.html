@@ -1135,16 +1135,16 @@
                 </div>
 
                 <div class="flex items-center gap-1.5">
-                    <!-- Toggle Gemini API key setting -->
-                    <button onclick="toggleCoachApiKeyDrawer()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 flex items-center justify-center transition" title="Gemini AI Settings" aria-label="Settings">
-                        <i class="fa-solid fa-gear text-xs"></i>
+                    <!-- Capabilities Directory button -->
+                    <button onclick="sendQuickPrompt('What can you do and what questions can I ask?')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 flex items-center justify-center transition cursor-pointer" title="PocketCoach Capabilities Guide" aria-label="Capabilities">
+                        <i class="fa-solid fa-circle-question text-xs"></i>
                     </button>
                     <!-- Reset Chat -->
-                    <button onclick="resetCoachChat()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition" title="Clear Conversation" aria-label="Clear Chat">
+                    <button onclick="resetCoachChat()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer" title="Clear Conversation" aria-label="Clear Chat">
                         <i class="fa-solid fa-arrow-rotate-right text-xs"></i>
                     </button>
                     <!-- Close Modal -->
-                    <button onclick="closeModal('aiCoachModal')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition" title="Close" aria-label="Close">
+                    <button onclick="closeModal('aiCoachModal')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer" title="Close" aria-label="Close">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
@@ -1153,29 +1153,6 @@
             <!-- Live Financial Snapshot Ribbon -->
             <div id="coachContextRibbon" class="px-4 py-2 bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-between text-[11px] shrink-0 text-slate-300 overflow-x-auto no-scrollbar">
                 <!-- Dynamically updated -->
-            </div>
-
-            <!-- Optional Gemini API Key Drawer (collapsible) -->
-            <div id="coachApiKeyDrawer" class="hidden bg-slate-950 p-4 border-b border-slate-800 shrink-0 text-xs space-y-2">
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-slate-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-key text-emerald-400"></i>
-                        Connect Gemini API Key (Optional)
-                    </span>
-                    <button onclick="toggleCoachApiKeyDrawer()" class="text-slate-400 hover:text-white text-xs">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                <p class="text-[11px] text-slate-400 leading-relaxed">
-                    Provide a free Gemini API key from <a href="https://aistudio.google.com" target="_blank" rel="noopener" class="text-emerald-400 underline">Google AI Studio</a> for advanced generative responses. If empty, PocketCoach uses its built-in offline financial habit engine.
-                </p>
-                <div class="flex gap-2">
-                    <input type="password" id="geminiApiKeyInput" placeholder="Paste AI Studio Key (AIzaSy...)" 
-                        class="flex-1 bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none">
-                    <button onclick="saveGeminiApiKey()" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
-                        Save
-                    </button>
-                </div>
             </div>
 
             <!-- Messages Scroll Area -->
@@ -2819,31 +2796,6 @@
             `;
         }
 
-        function toggleCoachApiKeyDrawer() {
-            const drawer = document.getElementById('coachApiKeyDrawer');
-            if (!drawer) return;
-            drawer.classList.toggle('hidden');
-            const input = document.getElementById('geminiApiKeyInput');
-            if (input && !drawer.classList.contains('hidden')) {
-                input.value = localStorage.getItem('pocketflow_gemini_api_key') || '';
-                input.focus();
-            }
-        }
-
-        function saveGeminiApiKey() {
-            const input = document.getElementById('geminiApiKeyInput');
-            if (!input) return;
-            const key = input.value.trim();
-            if (key) {
-                localStorage.setItem('pocketflow_gemini_api_key', key);
-                showToast('Gemini API key saved!');
-            } else {
-                localStorage.removeItem('pocketflow_gemini_api_key');
-                showToast('Gemini key removed (using offline engine)');
-            }
-            toggleCoachApiKeyDrawer();
-        }
-
         function resetCoachChat() {
             localStorage.removeItem('pocketflow_coach_chat');
             coachChatHistory = [];
@@ -2876,7 +2828,7 @@ I'm linked directly to your live PocketFlow data:
 • **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
 • **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day for the remaining ${ctx.daysRemaining} days
 
-I can answer **thousands of questions** across all personal finance areas—from your daily spending habits and live data audits to debt payoff, 50/30/20 budgeting, cost cutting, investing, and major life goals!
+Ask me **any question**—from your daily spending habits and live data audits to debt payoff, 50/30/20 budgeting, cost cutting, investing, lifestyle, or general questions! No setup or API keys needed.
 
 **Try tapping one of these quick starters:**
 [[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Target]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]`;
@@ -2971,24 +2923,9 @@ I can answer **thousands of questions** across all personal finance areas—from
             container.scrollTop = container.scrollHeight;
 
             const ctx = getSpendingContext();
-            let responseText = '';
-
-            try {
-                // Try Gemini API if key is present
-                const apiKey = localStorage.getItem('pocketflow_gemini_api_key');
-                if (apiKey) {
-                    responseText = await callGeminiAPI(query, ctx);
-                }
-            } catch (err) {
-                console.warn('Gemini API call failed, falling back to offline advisor:', err);
-            }
-
-            // Fallback to built-in Intelligent Habit Coach Engine
-            if (!responseText) {
-                // Add a small natural delay so offline responses feel thoughtful
-                await new Promise(r => setTimeout(r, 350));
-                responseText = generateOfflineCoachResponse(query, ctx);
-            }
+            // PocketCoach native intelligence engine with natural delay
+            await new Promise(r => setTimeout(r, 300));
+            const responseText = generatePocketCoachResponse(query, ctx);
 
             // Remove typing indicator
             const typingEl = document.getElementById(typingId);
@@ -3008,96 +2945,17 @@ I can answer **thousands of questions** across all personal finance areas—from
             if (sendBtn) sendBtn.disabled = false;
         }
 
-        async function callGeminiAPI(userQuery, ctx) {
-            const apiKey = localStorage.getItem('pocketflow_gemini_api_key');
-            if (!apiKey) return null;
-
-            // Build multi-turn conversational history (up to last 8 messages)
-            const contents = [];
-            const recent = (coachChatHistory || []).slice(-8);
-            recent.forEach(msg => {
-                contents.push({
-                    role: msg.role === 'assistant' ? 'model' : 'user',
-                    parts: [{ text: msg.text }]
-                });
-            });
-            if (contents.length === 0 || contents[contents.length - 1].parts[0].text !== userQuery) {
-                contents.push({
-                    role: 'user',
-                    parts: [{ text: userQuery }]
-                });
-            }
-
-            const systemInstruction = `You are PocketCoach, an encouraging, deeply knowledgeable, practical, and expert personal financial coach and behavioral spending habit advisor.
-You are embedded directly inside PocketFlow, the user's spending tracker web app.
-The user's current live financial snapshot:
-- Currency: ${ctx.currency}
-- Monthly Budget: ${ctx.currency} ${formatMoney(ctx.budget)}
-- Spent This Month: ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
-- Remaining Balance: ${ctx.currency} ${formatMoney(ctx.remaining)}
-- Spent Today: ${ctx.currency} ${formatMoney(ctx.spentToday)}
-- Average Spent Per Day This Month: ${ctx.currency} ${formatMoney(ctx.dailyAvg)}
-- Safe Daily Spending Allowance for the Remaining ${ctx.daysRemaining} Days: ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day
-- Top Spending Category: ${ctx.topCategory.name} (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of total)
-- Category Breakdown: ${ctx.breakdown.map(b => `${b.name}: ${ctx.currency} ${formatMoney(b.amount)} (${b.pct}%)`).join(', ')}
-- Recent Expenses: ${ctx.recentExpensesSummary}
-
-Guidelines:
-1. Always incorporate their actual currency (${ctx.currency}) and exact numbers into your calculations and advice whenever relevant.
-2. You can answer ANY financial, budgeting, saving, debt payoff, investing, cost-cutting, lifestyle decision, or behavioral psychology question.
-3. Structure your recommendations with clean bullet points, bold key principles, clear actionable steps, and emojis for readability.
-4. Be warm, empathetic, realistic, and motivating—never judgmental or punitive.
-5. Keep answers well-structured and concise for mobile screens.
-6. At the very end of your response, provide 2-3 clickable suggested follow-up questions formatted exactly like:
-   [[prompt: Next Question 1]] [[prompt: Next Question 2]]
-   These will automatically turn into interactive buttons for the user to tap!`;
-
-            const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-            for (const model of models) {
-                try {
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: contents,
-                            systemInstruction: {
-                                parts: [{ text: systemInstruction }]
-                            },
-                            generationConfig: {
-                                temperature: 0.7,
-                                maxOutputTokens: 1200
-                            }
-                        })
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (text) return text;
-                    } else if (response.status === 404) {
-                        continue;
-                    } else {
-                        const err = await response.json().catch(() => ({}));
-                        console.warn(`Gemini API error with ${model}:`, err?.error?.message || response.status);
-                        break;
-                    }
-                } catch (fetchErr) {
-                    console.warn(`Fetch error with model ${model}:`, fetchErr);
-                    break;
-                }
-            }
-            return null;
-        }
-
         // ==========================================
-        // VAST OFFLINE FINANCIAL INTELLIGENCE ENGINE
+        // POCKETCOACH NATIVE INTELLIGENCE ENGINE
         // ==========================================
-        function generateOfflineCoachResponse(rawQuery, ctx) {
+        function generatePocketCoachResponse(rawQuery, ctx) {
             const q = (rawQuery || '').toLowerCase().trim();
             const has = (...terms) => terms.some(t => {
-                if (t.includes(' ')) return q.includes(t);
-                const regex = new RegExp(`\\b${t}\\b`, 'i');
+                const term = t.toLowerCase();
+                if (term.includes(' ') || /[^a-z0-9]/i.test(term)) {
+                    return q.includes(term);
+                }
+                const regex = new RegExp('\\b' + term + '\\b', 'i');
                 return regex.test(q);
             });
 
@@ -3140,33 +2998,33 @@ I'm here to help you:
             if (has('what can you do', 'what can i ask', 'capabilities', 'help me', 'commands', 'topics', 'questions') || q === 'help') {
                 return `🧭 **PocketCoach AI Capabilities Directory**
 
-You can ask me questions across **8 core financial areas**:
+I am fully native and require **no setup or API keys**! You can ask me **any question** across personal finance, wealth, career, and lifestyle:
 
 1. **📊 Budget Frameworks:**
-   Ask about *50/30/20 rule*, *Zero-based budgeting*, *Cash envelope method*, *70/20/10*, or *Japanese Kakeibo*.
+   *50/30/20 rule*, *Zero-based budgeting*, *Cash envelope method*, *70/20/10*, or *Japanese Kakeibo*.
 
-2. **💡 Live Expense Queries:**
-   Ask *"What is my biggest expense?"*, *"How much did I spend on Food?"*, *"Spent today"*, or *"Will my money last until month-end?"*.
+2. **💡 Live Data & Habit Audits:**
+   *"What is my biggest expense?"*, *"Food spending"*, *"Spent today"*, or *"Analyze my spending habits"*.
 
-3. **🤔 Affordability Checks:**
-   Ask *"Can I afford [amount]?"* or *"Can I buy sneakers for 150?"* for instant math on your remaining budget & daily limit impact.
+3. **🤔 Affordability Evaluator:**
+   *"Can I afford 150 for sneakers?"* for instant math on your remaining budget & daily limit impact.
 
-4. **💳 Debt Payoff Tactics:**
-   Ask about *Snowball vs Avalanche*, *Credit card payoff*, *Buy Now Pay Later (BNPL)*, or *Student loans*.
+4. **💳 Debt Elimination & Credit:**
+   *Snowball vs Avalanche*, *Credit card payoff*, *BNPL traps*, *Student loans*, or *Improving credit score*.
 
-5. **🛒 Cost Cutting Hacks:**
-   Ask how to cut *food & dining*, *utility & electric bills*, *mobile data bundles*, or *cancel zombie subscriptions*.
+5. **🛒 Cost Cutting & Frugal Hacks:**
+   Cutting *groceries & dining*, *utility & electric bills*, *data bundles*, or *purging zombie subscriptions*.
 
-6. **🛑 Psychology & Habits:**
-   Ask about *stopping impulse buying*, *the 48-hour rule*, *lifestyle creep*, *money guilt*, or *black tax boundaries*.
+6. **🛑 Psychology & Behavioral Habits:**
+   *Stopping impulse buying*, *the 48-hour rule*, *lifestyle creep*, *money guilt*, or *black tax boundaries*.
 
-7. **📈 Wealth & Investing:**
-   Ask about *index funds & ETFs*, *beating inflation*, *compound interest & Rule of 72*, or *pensions & retirement*.
+7. **📈 Wealth, Investing & Defense:**
+   *Index funds & ETFs*, *Inflation*, *Compound interest*, *Pensions*, *Crypto & Bitcoin*, *Real estate*, *Gold*, *Taxes*, *Insurance*, or *Spotting scams*.
 
-8. **🎯 Major Life Goals:**
-   Ask about *the 20/4/10 car rule*, *the 30% rent rule*, *emergency funds*, or *wedding budgeting*.
+8. **🎯 Major Life Goals & Lifestyle:**
+   *20/4/10 car rule*, *30% rent rule*, *School fees*, *Travel budgeting*, *Marriage & money*, *Productivity*, or *Any everyday question*!
 
-[[prompt: Analyze my spending habits | 🔍 Habit Audit]] [[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20]]`;
+[[prompt: Analyze my spending habits | 🔍 Habit Audit]] [[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20]] [[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]]`;
             }
 
             // 3. POCKETFLOW APP NAVIGATION
@@ -3392,7 +3250,7 @@ ${pacingVerdict}
             }
 
             // 11. DYNAMIC AFFORDABILITY CALCULATOR ("Can I Afford X?")
-            if (has('afford', 'can i buy', 'can i spend', 'should i buy', 'is it too much') || (detectedAmount && has('buy', 'purchase', 'cost', 'spend', 'get'))) {
+            if (!has('crypto', 'bitcoin', 'real estate', 'property', 'car', 'wedding', 'house') && (has('afford', 'can i buy', 'can i spend', 'should i buy', 'is it too much') || (detectedAmount && has('buy', 'purchase', 'cost', 'spend', 'get')))) {
                 if (detectedAmount) {
                     const cost = detectedAmount;
                     if (cost > ctx.remaining) {
@@ -3940,7 +3798,7 @@ When unexpected money, a bonus, or a tax refund arrives, avoid blowing it all:
             }
 
             // 44. INVESTING: BEGINNER 101 (INDEX FUNDS & ETFS)
-            if (has('how to invest', 'investing 101', 'start investing', 'index funds', 'etf', 'stock market', 'shares', 'stocks')) {
+            if (!has('crypto', 'bitcoin', 'real estate', 'property', 'gold') && has('how to invest', 'investing 101', 'start investing', 'index funds', 'etf', 'stock market', 'shares', 'stocks')) {
                 return `📈 **Investing 101 for Beginners**
 
 • **Saving vs. Investing:**
@@ -4051,22 +3909,302 @@ A wedding is a 1-day celebration; a marriage is a lifetime. Never start a marria
                 }
             }
 
-            // 52. SMART CONTEXTUAL FALLBACK SYNTHESIZER
-            // If the query doesn't match a specific branch, provide intelligent live data advice
-            const isFast = ctx.dailyAvg > ctx.safeDailyAllowance;
-            return `💡 **PocketCoach Financial Perspective**
+            // 52. WEALTH & INVESTING: CRYPTO & BITCOIN
+            if (has('crypto', 'cryptocurrency', 'bitcoin', 'btc', 'ethereum', 'eth', 'web3', 'altcoin', 'doge', 'solana', 'binance', 'coinbase')) {
+                return `🪙 **Crypto & Bitcoin: The Pragmatic Wealth Perspective**
 
-I'm analyzing your question in the context of your current financial posture:
-• **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
-• **Spent So Far:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
-• **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
-• **Safe Daily Allowance:** **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day** (${ctx.daysRemaining} days remaining)
-• **Top Spending Area:** **${ctx.topCategory.name}** (${ctx.topCategory.pct}% of total spend)
+Cryptocurrencies are highly volatile speculative digital assets, not guaranteed wealth builders:
 
-${isFast ? `⚠️ *Coach Note: You are currently pacing slightly ahead of your daily allowance. Keep non-essential purchases controlled this week!*` : `🌟 *Coach Note: Your daily pacing is on track. Continue keeping non-essential outflow steady!*`}
+• **The 5% Rule:** If you want crypto exposure, cap it at **3% to 5% of your total investable portfolio**. Never risk money you will need in the next 3 to 5 years.
+• **Avoid the "Meme Coin" Lottery:** Over 99% of meme coins and micro-cap tokens go to zero. If investing, stick strictly to blue-chips with established networks (Bitcoin, Ethereum).
+• **Cold Storage & Security:** *"Not your keys, not your coins."* Keep long-term holdings on a hardware wallet rather than leaving funds on centralized exchanges.
+• **Never Borrow to Buy Crypto:** Never take loans or drain your emergency fund to speculate on crypto price swings!
 
-**What would you like to explore next?**
-[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Deep Habit Audit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What is my biggest single expense this month? | 🏆 Top Single Expense]] [[prompt: What can you do and what questions can I ask? | 🧭 Capabilities Directory]]`;
+[[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Rule of 72]] [[prompt: How does inflation eat away my cash savings and how do I beat it? | 🔥 Beat Inflation]]`;
+            }
+
+            // 53. WEALTH & INVESTING: REAL ESTATE & PROPERTY
+            if (has('real estate', 'buy a house', 'mortgage', 'land', 'property', 'rent vs buy', 'buying land', 'housing market', 'home loan')) {
+                return `🏡 **Real Estate & Property: The Rent vs. Buy Reality**
+
+Owning property is a cornerstone of long-term wealth, but buying too early can be financially crippling:
+
+• **The Rent vs. Buy Math:** Rent is the *maximum* you will pay for housing this month. A mortgage is the *minimum* you will pay (repairs, property taxes, maintenance, and insurance fall 100% on you).
+• **The 5-Year Rule:** Only buy if you plan to live in or hold the property for at least 5 to 7 years to amortize transaction, legal, and agent closing costs.
+• **Purchasing Land:** Ensure due diligence—verify land titles at the Lands Commission/registry, confirm zoning, and check for litigation before paying deposits.
+• **Keep Debt Service Under 28%:** Your total monthly mortgage payment should not exceed 28% of your gross monthly income.
+
+[[prompt: How much should I spend on house rent or apartment living? | 🏠 30% Rent Rule]] [[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 54. WEALTH & INVESTING: TAXES & DEDUCTIONS
+            if (has('taxes', 'tax', 'income tax', 'tax deduction', 'file taxes', 'tax return', 'withholding', 'gra', 'irs', 'tax bracket')) {
+                return `📑 **Tax Optimization & Filing Essentials**
+
+Tax efficiency is legal and ethical—it keeps more of your hard-earned money working for you:
+
+• **Understand Marginal Tax Brackets:** Moving into a higher tax bracket only taxes the dollars *within* that bracket, not your entire income.
+• **Leverage Voluntary Pension Deductions (Tier 3):** Contributions into approved voluntary retirement funds (like Tier-3 provident funds) are often tax-exempt up to 16.5% of your basic salary!
+• **Track Business & Freelance Expenses:** If you freelance or run a side hustle, keep receipts for mobile data, electricity, transport, and equipment used for work to reduce taxable net profit.
+• **File on Time:** Avoid penalty interest by filing annual returns before statutory deadlines.
+
+[[prompt: How to budget with irregular or freelance income | 💼 Freelance Budget]] [[prompt: What should I know about retirement, pensions, and SSNIT planning? | 🏖️ Pensions & SSNIT]] [[prompt: What are high-leverage side hustle ideas? | 💡 Side Hustles]]`;
+            }
+
+            // 55. WEALTH & INVESTING: GOLD & PRECIOUS METALS
+            if (has('gold', 'precious metals', 'silver', 'commodities', 'invest in gold', 'gold jewelry', 'gold coins')) {
+                return `🥇 **Gold & Precious Metals as Wealth Preservation**
+
+Gold has served as an inflation hedge and store of value for thousands of years:
+
+• **Store of Value vs. Productive Asset:** Gold preserves purchasing power, but unlike companies (stocks) or real estate, it pays no dividends and generates no cash flow.
+• **Jewelry vs. Bullion:** Buying gold jewelry carries a 20-40% craftsmanship markup that you lose when reselling. If investing, prioritize physical bullion or gold ETFs (like GLD).
+• **Allocation Size:** Financial planners generally recommend capping commodities and precious metals at **5% to 10%** of an investment portfolio.
+• **Hedge for Currency Depreciation:** When local currencies experience rapid devaluation, gold historically preserves international purchasing power.
+
+[[prompt: How does inflation eat away my cash savings and how do I beat it? | 🔥 Beat Inflation]] [[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]] [[prompt: What is Dollar-Cost Averaging (DCA) and why is it smart? | 📊 Dollar-Cost Averaging]]`;
+            }
+
+            // 56. MAJOR GOALS: CHILDREN & SCHOOL FEES
+            if (has('school fees', 'children', 'kids', 'childcare', 'baby', 'daycare', 'education fund', 'raising kids', 'parenting budget')) {
+                return `🎒 **Budgeting for Children, Childcare & School Fees**
+
+Raising children is deeply fulfilling, but school fees and childcare can become massive budget shocks:
+
+• **The 12-Month Sinking Fund for School Fees:** Never scramble at the start of a new term. Take total annual tuition and divide by 12. Transfer that amount every month into a dedicated sub-account.
+• **Beware the "Baby Gear Trap":** Infants outgrow clothes, strollers, and cribs in months. Buy high-quality second-hand items or accept hand-me-downs from family and friends.
+• **Start an Education Investment Fund Early:** Time in the market is your greatest ally. Investing a modest amount monthly into an index fund when a child is born compounds significantly by college age.
+• **Teach Kids Money Habits Early:** Use the 3-Jar system (Save, Spend, Give) to teach children delayed gratification and financial literacy.
+
+[[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Rule of 72]]`;
+            }
+
+            // 57. MAJOR GOALS: TRAVEL & VACATIONS
+            if (has('travel', 'vacation', 'holiday budget', 'trip', 'flight', 'travel hacking', 'cheap flights', 'hotel budget', 'traveling')) {
+                return `✈️ **How to Travel the World Without Going Broke**
+
+The secret to stress-free vacations is paying for the trip 100% in cash *before* stepping onto the plane:
+
+• **Set Up a Travel Sinking Fund:** Divide your estimated trip cost by the number of months until departure. Save that exact amount monthly so you never put vacation bills on credit.
+• **The 54-Day Flight Rule:** Studies show the best prices for international flights occur roughly 6 to 8 weeks before departure. Set fare alerts on Google Flights.
+• **Travel in the "Shoulder Season":** Traveling right before or after peak summer/Christmas dates cuts accommodation and flight rates by up to 40%.
+• **Budget Daily Spending Money:** Set a clear daily spending cap for meals and activities while abroad so you return home with zero financial hangover!
+
+[[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]] [[prompt: Can I afford 500 for a vacation trip? | 💳 Affordability Check]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 58. MAJOR GOALS: MARRIAGE & MONEY
+            if (has('marriage and money', 'couple budget', 'spouse', 'partner', 'joint account', 'separate accounts', 'split expenses with partner', 'money fight', 'talking money')) {
+                return `💍 **Couples & Money: Harmony Without Arguments**
+
+Money disagreements are a leading cause of relationship friction. Here is how thriving couples manage money:
+
+• **The "Yours, Mine, and Ours" Framework:**
+  1. **Joint Account:** Both partners contribute to cover shared expenses (rent, groceries, utilities, child costs).
+  2. **Personal Accounts:** Each partner retains an agreed individual allowance to spend freely with 0% judgment.
+• **Schedule a Monthly "Money Date":** Pick a calm evening once a month over good food to review goals, upcoming trips, and celebrate wins without finger-pointing.
+• **Set a "Consultation Ceiling":** Agree that any individual purchase over an agreed amount (e.g. ${ctx.currency} 150) requires a quick heads-up to your partner.
+• **Be Fully Transparent:** Total honesty about debts and income builds deep mutual trust.
+
+[[prompt: How do I budget for a wedding without going into debt? | 💍 Budget Wedding]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What are sinking funds and how do I set them up? | 💡 Sinking Funds]]`;
+            }
+
+            // 59. INCOME & CAREER: ENTREPRENEURSHIP & STARTUPS
+            if (has('startup', 'business', 'entrepreneur', 'pricing', 'cash flow', 'small business', 'business idea', 'profit margin', 'invoice')) {
+                return `🚀 **Entrepreneurship & Small Business Cash Flow**
+
+Over 80% of small businesses fail not from lack of ideas, but from running out of cash:
+
+• **Separate Business and Personal Money Day 1:** Never mix business revenue with your personal checking account. Open a dedicated business account and pay yourself a fixed salary.
+• **Cash Flow > Revenue:** "Revenue is vanity, profit is sanity, but cash is king." Track when payments actually hit your account, not just when invoices are issued.
+• **Price for Profit, Not Volume:** Do not compete on being the cheapest. Compete on reliability, speed, and quality. If your margins are too low, you work exhausting hours for zero gain.
+• **Keep Fixed Overheads Lean:** Delay renting office space or buying expensive gear until recurring client revenue strictly demands it.
+
+[[prompt: How to budget with irregular or freelance income | 💼 Freelance Budget]] [[prompt: What are high-leverage side hustle ideas? | 💡 Side Hustles]] [[prompt: How to ask for a raise and negotiate compensation | 💼 Negotiate Rates]]`;
+            }
+
+            // 60. WEALTH & DEFENSE: INSURANCE & RISK MANAGEMENT
+            if (has('insurance', 'health insurance', 'life insurance', 'term life', 'car insurance', 'property insurance', 'travel insurance', 'underinsured')) {
+                return `🛡️ **Insurance 101: Protecting Your Wealth From Catastrophe**
+
+Insurance is not an investment; it is a shield against catastrophic financial ruin:
+
+• **Health Insurance is Mandatory:** A single hospital admission or surgery can wipe out years of savings. Maintain active health coverage for you and your dependents.
+• **Term Life vs. Whole Life:** For life insurance, **Term Life** is almost always superior. It provides high coverage during your working years at a fraction of the price. Avoid complex whole-life products with high hidden fees.
+• **Insure the Catastrophes, Self-Insure the Small Stuff:** High deductibles lower your monthly premiums. Use your Emergency Fund for small fender-benders or minor repairs.
+• **Auto & Property Coverage:** Ensure third-party liability and comprehensive property coverage are up to date.
+
+[[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: How to crush high-interest credit card debt | 💳 Debt Freedom]]`;
+            }
+
+            // 61. DEBT & CREDIT: CREDIT SCORES
+            if (has('credit score', 'credit bureau', 'credit report', 'improve credit', 'fico', 'cibil', 'credit history', 'bad credit')) {
+                return `📊 **How to Build & Repair an Exceptional Credit Score**
+
+Your credit score dictates your access to capital, rental leases, and interest rates:
+
+• **Pay 100% On Time Every Single Month:** Payment history accounts for roughly 35% of your credit score. Set up automatic minimum payments so you never miss a due date.
+• **Keep Credit Utilization Under 30%:** If your credit limit is ${ctx.currency} 1,000, never let your statement balance exceed ${ctx.currency} 300.
+• **Do Not Close Old Credit Accounts:** The length of your credit history accounts for 15% of your score. Keep your oldest card open with a tiny recurring bill.
+• **Check Your Report for Errors:** Request your free annual report from authorized credit bureaus (XDS, Dun & Bradstreet, Experian, TransUnion) to dispute fraudulent marks.
+
+[[prompt: How to crush high-interest credit card debt | 💳 Debt Payoff]] [[prompt: Snowball vs Avalanche: which debt payoff method is best for me? | ❄️ Debt Methods]] [[prompt: Is Buy Now Pay Later (BNPL) dangerous for my budget? | ⚠️ BNPL Traps]]`;
+            }
+
+            // 62. FINANCIAL DEFENSE: SPOTTING SCAMS & FRAUD
+            if (has('scam', 'fraud', 'ponzi', 'pyramid scheme', 'phishing', 'too good to be true', 'guaranteed returns', 'fake investment', 'momo scam')) {
+                return `🚨 **How to Spot & Avoid Financial Scams & Ponzi Schemes**
+
+Protecting your hard-earned money from predators is rule #1 of personal finance:
+
+• **The "Guaranteed High Return" Red Flag:** Any program promising "guaranteed 10% to 30% returns per month" is 100% a Ponzi scheme. Legit investments carry risk, and legit returns reflect economic reality.
+• **Recruitment-Based Revenue:** If your primary way to earn money is recruiting 3 friends who each recruit 3 friends, it is an illegal pyramid scheme.
+• **Mobile Money (MoMo) & Banking Scams:** Banks and telecom operators will NEVER call asking for your 4-digit PIN or OTP. Hang up immediately.
+• **Pressure & Urgency Tactics:** Scammers use artificial deadlines ("Offer expires in 1 hour!") to prevent you from researching. Always pause and verify with official regulators.
+
+[[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Safe Investing]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Real Compounding]] [[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]]`;
+            }
+
+            // 63. LIFESTYLE & MINDSET: MINIMALISM & FRUGAL LIVING
+            if (has('minimalism', 'frugal living', 'minimalist', 'declutter', 'frugal', 'buy less', 'simple living', 'intentional living')) {
+                return `🌿 **The Art of Intentional Minimalism & Frugal Living**
+
+Frugality is not about depriving yourself of joy—it is about choosing to spend intentionally:
+
+• **Frugal vs. Cheap:** A *cheap* person buys low-quality items that break in a month. A *frugal* person buys high-quality items that last 10 years, saving money over time.
+• **Clutter is Unused Money:** Every item sitting dusty in your closet represents money that could be growing in your investments or emergency fund.
+• **The 20/20 Rule for Decluttering:** If an item can be replaced for less than ${ctx.currency} 20 in less than 20 minutes, don't let it take up mental or physical space.
+• **Experiences Over Possessions:** Psychological studies confirm that memories from travel and relationships bring long-lasting happiness, while consumer goods quickly trigger habituation.
+
+[[prompt: What is the Life Energy conversion formula for purchases? | 🔋 Life Energy]] [[prompt: How can I stop impulse spending and emotional buying? | 🛑 Stop Impulse Buys]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]`;
+            }
+
+            // 64. LIFESTYLE & MINDSET: FIRE MOVEMENT
+            if (has('fire movement', 'financial independence retire early', 'leanfire', 'fatfire', '4% rule', 'safe withdrawal rate', 'retire early')) {
+                const fireNumber = ctx.budget * 12 * 25;
+                return `🔥 **The FIRE Movement & The 4% Rule**
+
+FIRE (Financial Independence, Retire Early) is about buying your freedom so work becomes an option, not an obligation:
+
+• **The 25x Rule (Your FIRE Number):**
+  Multiply your annual living expenses by 25. Based on your current annual budget, your target FIRE fund is approx **${ctx.currency} ${formatMoney(fireNumber)}**.
+• **The 4% Safe Withdrawal Rule:**
+  Historical Trinity Study data shows that a portfolio invested in 75% stocks and 25% bonds can sustain a 4% annual withdrawal adjusted for inflation for 30+ years without running out of money.
+• **The 3 Flavors of FIRE:**
+  • **LeanFIRE:** Covering minimalist essential living costs.
+  • **Regular FIRE:** Replicating average comfortable living expenses.
+  • **FatFIRE:** Living luxuriously with ample travel and high spending.
+• **The Secret:** It is driven by your **Savings Rate**. Saving 50% of your take-home pay allows you to retire in approximately 17 years!
+
+[[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Beginner Investing]] [[prompt: What should I know about retirement, pensions, and SSNIT planning? | 🏖️ Pensions & SSNIT]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Compounding]]`;
+            }
+
+            // 65. GENERAL LIFESTYLE: PRODUCTIVITY & TIME MANAGEMENT
+            if (has('productivity', 'procrastination', 'pomodoro', 'time management', 'how to focus', 'deep work', 'morning routine', 'habits routine', 'get things done')) {
+                return `⚡ **Productivity & Deep Focus Masterclass**
+
+Time, like money, is a finite currency that leaks away if not budgeted intentionally:
+
+• **The Pomodoro Technique:** Work in focused 25-minute sprints with zero distractions, followed by a 5-minute break. After 4 sprints, take a 20-minute rest.
+• **The 2-Minute Rule:** If a task takes less than 2 minutes to complete (replying to an email, washing a mug, logging an expense), do it immediately instead of putting it on a to-do list.
+• **Eat That Frog (Daily Big 3):** Identify the 3 most important needle-moving tasks every morning and tackle the hardest one first before opening social media.
+• **Time Blocking:** Schedule specific calendar blocks for deep creative work, shallow admin, and rest rather than running on reactive impulses.
+
+[[prompt: What is the Life Energy conversion formula for purchases? | 🔋 Life Energy]] [[prompt: Analyze my spending habits | 🔍 Habit Audit]] [[prompt: How to ask for a raise and negotiate compensation | 💼 Career Growth]]`;
+            }
+
+            // 66. GENERAL LIFESTYLE: HEALTH, WELLNESS & SLEEP
+            if (has('health', 'wellness', 'sleep', 'workout', 'exercise', 'diet', 'mental health', 'burnout', 'stress relief', 'fitness', 'tired')) {
+                return `🌱 **Health, Vitality & Wellness Foundations**
+
+Your physical health is your greatest wealth asset—without it, money has no value:
+
+• **The Non-Negotiable 7-8 Hours of Sleep:** Sleep deprivation impairs decision-making and increases impulse spending. Keep your bedroom cool, dark, and phone-free.
+• **Daily 30-Minute Movement:** A brisk 30-minute walk, run, or bodyweight workout boosts cognitive function, reduces cortisol (stress), and costs \$0.
+• **Hydration First:** Drink a large glass of water first thing every morning before coffee or tea.
+• **Burnout Prevention:** Schedule non-work breaks into your weekly calendar. Resting is not laziness; it is essential maintenance for high performance.
+
+[[prompt: Overcoming money anxiety and spending guilt | 💖 Money Anxiety]] [[prompt: How to have a fun social life without going broke | 🥂 Cheap Fun]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]]`;
+            }
+
+            // 67. GENERAL LIFESTYLE: COOKING & RECIPES
+            if (has('recipe', 'cook', 'cooking', 'meal prep', 'jollof', 'dinner idea', 'lunch idea', 'healthy meal', 'breakfast', 'what to eat')) {
+                return `🍳 **Quick, Delicious & Budget-Friendly Meal Prep**
+
+Cooking at home saves thousands while eating healthier, fresher food:
+
+• **The Power of Batch Cooking:** Prepare large bases (stews, rice, roasted vegetables, beans) on Sunday. Mix and match proteins throughout the week in under 10 minutes.
+• **Classic 1-Pot Meals:** Try 1-pot favorites like Jollof rice, vegetable stir-fry, bean stew with plantains, or pasta with garlic and seasonal greens.
+• **Spices are Your Secret Weapon:** Investing in a rich spice rack (curry, smoked paprika, thyme, garlic, ginger) makes cheap staples taste like restaurant dishes.
+• **Freeze Leftovers Immediately:** Portion leftover meals into freezer containers for quick dinners on busy workdays instead of ordering expensive takeout.
+
+[[prompt: How much did I spend on food and dining this month? | 🍲 My Food Spending]] [[prompt: Practical ways to cut down on food and dining expenses | 🛒 Food Cost Hacks]] [[prompt: Can I afford 50 for dining out tonight? | 💳 Affordability Check]]`;
+            }
+
+            // 68. GENERAL KNOWLEDGE: TECHNOLOGY & AI
+            if (has('what is ai', 'artificial intelligence', 'how does ai work', 'technology', 'tech', 'coding', 'software', 'chatgpt', 'machine learning')) {
+                return `🤖 **Demystifying Artificial Intelligence & Modern Tech**
+
+AI is transforming how we work, learn, and solve complex problems:
+
+• **How AI Works Simply:** Machine learning models identify patterns across vast libraries of text, data, and code to predict the most accurate, helpful response to your prompt.
+• **Using AI as a Thought Partner:** Treat AI as an ultra-fast research assistant for summarizing articles, drafting plans, writing code, or generating new ideas.
+• **High-Leverage Tech Skills:** Learning prompt engineering, data analytics, and basic automation makes you 3x more productive in almost any career.
+• **The Human Edge:** Critical thinking, empathy, real-world judgment, and creative strategy remain uniquely human superpowers!
+
+[[prompt: What are high-leverage side hustle ideas? | 💡 Side Hustles]] [[prompt: How to ask for a raise and negotiate compensation | 💼 Career Negotiation]] [[prompt: How to automate personal finance habits | 🚀 Habit Automation]]`;
+            }
+
+            // 69. HUMOR & FUN: JOKES
+            if (has('joke', 'tell me a joke', 'funny', 'laugh', 'humor', 'riddle', 'make me laugh')) {
+                const jokes = [
+                    `😄 **Why did the dollar bill go to therapy?**\nBecause it had too much emotional baggage and was feeling inflated!\n\n💡 *PocketCoach reminder:* Unlike that dollar, your discipline is keeping you grounded!`,
+                    `😄 **Why do accountants make great friends?**\nBecause they always keep things in balance!\n\n💡 *PocketCoach reminder:* Your safe daily allowance today is **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**!`,
+                    `😄 **What did the zero say to the eight?**\n"Nice belt!"\n\n💡 *PocketCoach reminder:* Remember Zero-Based Budgeting: Give every cedi a job so none goes wandering!`,
+                    `😄 **Why did the smartphone need glasses?**\nBecause it lost all its contacts!\n\n💡 *PocketCoach reminder:* Don't lose contact with your daily expenses—log them right after spending!`
+                ];
+                const pick = jokes[Math.floor(Math.random() * jokes.length)];
+                return `${pick}\n\n[[prompt: Analyze my spending habits | 🔍 Habit Audit]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]]`;
+            }
+
+            // 70. GENERAL WISDOM & PHILOSOPHY
+            if (has('meaning of life', 'life advice', 'how to be happy', 'decision making', 'feeling lost', 'motivation advice', 'hard decision', 'philosophy')) {
+                return `🧭 **Timeless Wisdom for Clarity, Purpose & Happiness**
+
+When navigating big life decisions and finding direction:
+
+• **Focus on What You Can Control:** As Stoic philosophers taught, 90% of anxiety comes from trying to control other people, past events, or external circumstances. Focus 100% of your energy on your own actions, habits, and mindset today.
+• **The Regret Minimization Framework:** When facing tough choices, ask: *"When I am 80 years old looking back, will I regret having tried this and failed, or will I regret never taking the leap?"*
+• **Consistency > Intensity:** Small, daily intentional habits (logging expenses, 20 minutes of reading, a daily walk) build compound miracles over 5 years.
+• **Relationships are True Wealth:** Harvard's 85-year happiness study revealed that the single greatest predictor of health and joy in old age is the warmth of our human relationships.
+
+[[prompt: What is the Life Energy conversion formula for purchases? | 🔋 Life Energy]] [[prompt: Overcoming money anxiety and spending guilt | 💖 Overcome Anxiety]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
+            }
+
+            // 71. SMART ADAPTIVE GENERAL QUERY SYNTHESIZER
+            // Answers ANY general, lifestyle, or open-ended question cleanly
+            const cleanTopic = rawQuery.replace(/^(can you|how do i|how to|what is|what are|why is|why are|tell me about|explain|give me|tips on|should i|is it good to)\s+/i, '').replace(/[?!.]+$/, '').trim();
+            const topicCapitalized = cleanTopic ? (cleanTopic.charAt(0).toUpperCase() + cleanTopic.slice(1)) : 'Your Question';
+
+            return `💡 **PocketCoach Insight: ${topicCapitalized}**
+
+Here is a practical, structured framework to guide you:
+
+1. **🎯 Core Principle & Strategy:**
+   Approach this with clear intentionality. Break complex goals down into bite-sized, measurable milestones rather than trying to accomplish everything in one leap.
+
+2. **📋 Actionable Steps to Take:**
+   • **Research & Audit:** Clarify your exact starting point and identify the single most impactful variable.
+   • **Build Daily Consistency:** Dedicate 15 to 30 minutes of uninterrupted focus each day. Consistency compounds faster than occasional heroic bursts.
+   • **Measure & Refine:** Review your results weekly and adjust your approach based on real feedback.
+
+3. **💡 High-Leverage Mindset:**
+   Avoid perfectionism. Getting 80% of the result with disciplined fundamentals beats waiting for ideal circumstances.
+
+4. **💰 Financial & Habit Connection:**
+   Align your daily actions with your broader goals. You currently have **${ctx.currency} ${formatMoney(ctx.remaining)}** remaining this month and a safe daily limit of **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**. Staying disciplined across habits creates freedom in every area of life!
+
+[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What can you do and what questions can I ask? | 🧭 Capabilities Directory]]`;
         }
     </script>
 </body>
