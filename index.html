@@ -1469,9 +1469,9 @@
             lastDailyBreachDate: '',
             lastPaceNotifiedDay: 0,
             expenses: [
-                { id: 'exp-1', amount: 120, category: 'food', note: 'Waakye & Juice', date: getLocalDateStr() },
-                { id: 'exp-2', amount: 45, category: 'transport', note: 'Bolt ride', date: getLocalDateStr() },
-                { id: 'exp-3', amount: 200, category: 'bills', note: 'MTN 15GB Data Bundle', date: getLocalDateStr(new Date(Date.now() - 86400000)) }
+                { id: 'exp-1', amount: 120, category: 'food', note: 'Waakye & Juice', date: getLocalDateStr(new Date(Date.now() - 3 * 86400000)), isPreloaded: true },
+                { id: 'exp-2', amount: 45, category: 'transport', note: 'Bolt ride', date: getLocalDateStr(new Date(Date.now() - 4 * 86400000)), isPreloaded: true },
+                { id: 'exp-3', amount: 200, category: 'bills', note: 'MTN 15GB Data Bundle', date: getLocalDateStr(new Date(Date.now() - 5 * 86400000)), isPreloaded: true }
             ],
             notifications: [
                 {
@@ -1778,6 +1778,24 @@
                         }
                         if (parsed.lastNotifiedTier !== undefined) {
                             state.lastNotifiedTier = parsed.lastNotifiedTier;
+                        }
+
+                        // Ensure preloaded sample expenses are flagged and never count towards today's ceiling
+                        if (Array.isArray(state.expenses)) {
+                            state.expenses.forEach(exp => {
+                                if (exp.id === 'exp-1' || exp.id === 'exp-2' || exp.id === 'exp-3') {
+                                    exp.isPreloaded = true;
+                                    const todayStr = getLocalDateStr();
+                                    if ((exp.date || '').startsWith(todayStr)) {
+                                        if (exp.id === 'exp-1') exp.date = getLocalDateStr(new Date(Date.now() - 3 * 86400000));
+                                        if (exp.id === 'exp-2') exp.date = getLocalDateStr(new Date(Date.now() - 4 * 86400000));
+                                        if (exp.id === 'exp-3') exp.date = getLocalDateStr(new Date(Date.now() - 5 * 86400000));
+                                    }
+                                }
+                            });
+                        }
+                        if (!state.expenses.some(e => !e.isPreloaded)) {
+                            state.notifications = (state.notifications || []).filter(n => n.category !== 'daily');
                         }
                     }
                 }
@@ -2339,6 +2357,11 @@
             const spentToday = todayExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
             const dailyAvg = totalSpent / todayDate;
 
+            const hasUserExpenses = state.expenses && state.expenses.some(e => !e.isPreloaded);
+            const userSpentToday = state.expenses
+                .filter(e => !e.isPreloaded && (e.date || '').startsWith(todayStr))
+                .reduce((sum, item) => sum + Number(item.amount), 0);
+
             const strictness = state.coachStrictness || 'balanced';
             const dailyBreachMultiplier = strictness === 'strict' ? 1.05 : (strictness === 'balanced' ? 1.25 : 1.50);
             const paceBuffer = strictness === 'strict' ? 10 : (strictness === 'balanced' ? 20 : 30);
@@ -2368,8 +2391,8 @@
                     sendBrowserPush(bannerTitle, bannerMsg);
                 }
             }
-            // 2. DAILY CEILING BREACHED TODAY
-            else if (spentToday > (safeDailyAllowance * dailyBreachMultiplier) && spentToday >= 25 && safeDailyAllowance > 0) {
+            // 2. DAILY CEILING BREACHED TODAY (Never on initial load or from preloaded sample items)
+            else if (!isInitialLoad && hasUserExpenses && userSpentToday > 0 && spentToday > (safeDailyAllowance * dailyBreachMultiplier) && spentToday >= 25 && safeDailyAllowance > 0) {
                 const overDaily = spentToday - safeDailyAllowance;
                 activeBannerType = 'daily';
                 bannerTitle = '🛑 Daily Spending Ceiling Exceeded!';
@@ -2377,7 +2400,7 @@
                 bannerTip = `Deficit Recovery: Enforce a Zero-Spend day tomorrow or reduce daily spending by 35% for the next 3 days to balance your pacing.`;
                 bannerPrompt = `🛑 Daily Allowance Blown: I spent ${state.currency} ${formatMoney(spentToday)} today against my safe daily limit of ${state.currency} ${formatMoney(safeDailyAllowance)}. Give me strict coaching, a 3-day recovery plan to curb my spending, and better alternatives.`;
 
-                if (!isInitialLoad && state.lastDailyBreachDate !== todayStr) {
+                if (state.lastDailyBreachDate !== todayStr) {
                     state.lastDailyBreachDate = todayStr;
                     addNotificationItem(bannerTitle, bannerMsg, 'danger', {
                         strictTip: bannerTip,
