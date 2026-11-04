@@ -231,12 +231,35 @@
 
             <!-- LEFT COLUMN: Summary Card & Category Breakdown -->
             <div class="lg:col-span-5 space-y-5 sm:space-y-6">
-                <!-- Live Alert Banner -->
-                <div id="liveAlertBanner" class="hidden bg-rose-500/10 border border-rose-500/30 rounded-2xl p-3.5 sm:p-4 flex items-start gap-3 text-rose-300 shadow-lg">
-                    <i class="fa-solid fa-triangle-exclamation text-base mt-0.5 shrink-0"></i>
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-xs uppercase tracking-wider text-rose-200">Budget Warning</h4>
-                        <p id="liveAlertText" class="text-xs mt-1 leading-relaxed">You have crossed 80% of your monthly limit.</p>
+                <!-- Live Alert Banner (Strict Overspending & Pacing Sentinel) -->
+                <div id="liveAlertBanner" class="hidden rounded-2xl p-3.5 sm:p-4 border transition-all duration-300 shadow-xl">
+                    <div class="flex items-start gap-3">
+                        <div id="liveAlertIconBox" class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                            <i id="liveAlertIcon" class="fa-solid fa-triangle-exclamation text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2 flex-wrap">
+                                <h4 id="liveAlertTitle" class="font-bold text-xs uppercase tracking-wider text-rose-200">Budget Warning</h4>
+                                <span id="liveAlertBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">STRICT ACTION</span>
+                            </div>
+                            <p id="liveAlertText" class="text-xs text-rose-100/90 mt-1 leading-relaxed">You have crossed 80% of your monthly limit.</p>
+                            <div id="liveAlertStrictTipBox" class="mt-2 text-[11px] p-2 sm:p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-300 flex items-start gap-2">
+                                <i class="fa-solid fa-scale-balanced text-amber-400 mt-0.5 shrink-0 text-xs"></i>
+                                <div class="flex-1">
+                                    <span class="font-bold text-amber-300">Strict Curb:</span> <span id="liveAlertStrictTip" class="leading-tight text-slate-300">Tighten daily spending immediately.</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-center gap-2 flex-wrap">
+                                <button id="liveAlertCoachBtn" onclick="consultPocketCoachFromBanner()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                                    <span id="liveAlertCoachBtnText">Connect to PocketCoach for Advice</span>
+                                </button>
+                                <button onclick="openModal('notificationsModal')" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition border border-slate-700/60 flex items-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-bell text-[10px]"></i>
+                                    <span>All Alerts</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -554,6 +577,15 @@
                                 </div>
                                 <p class="text-slate-400 text-[11px] leading-relaxed">
                                     Use the currency menu at the top to switch between <strong>GH₵ (Cedis)</strong>, <strong>$ USD</strong>, <strong>€ EUR</strong>, <strong>£ GBP</strong>, or <strong>₦ NGN</strong>.
+                                </p>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3 sm:col-span-2">
+                                <div class="flex items-center gap-2 font-semibold text-white mb-1">
+                                    <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                                    <span>Strict Spending Guard & AI Curbs</span>
+                                </div>
+                                <p class="text-slate-400 text-[11px] leading-relaxed">
+                                    PocketFlow continuously monitors your daily allowance and burn rate. If you spend too fast, it alerts you with strict rules and directly connects you to <strong>PocketCoach AI</strong> for actionable advice!
                                 </p>
                             </div>
                         </div>
@@ -1071,39 +1103,169 @@
         </div>
     </div>
 
-    <!-- MODAL 5: NOTIFICATIONS & ALERTS CENTER -->
+    <!-- MODAL 5: NOTIFICATIONS & SPENDING CURBS CENTER -->
     <div id="notificationsModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[85vh] flex flex-col">
-            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[88vh] flex flex-col">
+            <!-- Mobile grab handle -->
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden shrink-0"></div>
+            
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                        <i class="fa-solid fa-bell"></i>
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-bold text-sm shadow-md shadow-emerald-500/20">
+                        <i class="fa-solid fa-shield-halved"></i>
                     </div>
-                    <h3 class="text-base sm:text-lg font-bold text-white">Notifications & Alerts</h3>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-base sm:text-lg font-bold text-white">Notifications & Spending Curbs</h3>
+                            <span id="notifCenterUnreadPill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 hidden">0 new</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Strict alerts, daily limits & coach guidance</p>
+                    </div>
                 </div>
-                <button onclick="closeModal('notificationsModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
+                <button onclick="closeModal('notificationsModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition shrink-0 cursor-pointer" aria-label="Close">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-4 flex items-center justify-between gap-3">
-                <div class="min-w-0 flex-1">
-                    <h4 class="font-bold text-xs text-white">Device Push Notifications</h4>
-                    <p id="pushPermissionNote" class="text-[11px] text-slate-400 mt-0.5">Receive browser & system alerts for budget limits</p>
+            <!-- Scrollable content wrapper for settings & summary -->
+            <div class="space-y-3 overflow-y-auto flex-1 pr-1 -mr-1">
+                
+                <!-- Coach Strictness Mode Selector -->
+                <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-gavel text-amber-400 text-xs"></i>
+                            <span>Coach Strictness Level</span>
+                        </span>
+                        <span id="coachStrictnessLabel" class="text-[10px] font-bold uppercase tracking-wider text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded-full">
+                            Strict Disciplinarian
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-900 rounded-xl border border-slate-800/80">
+                        <button type="button" onclick="setCoachStrictness('strict')" id="strictBtn-strict" class="py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-shield-halved text-[10px]"></i>
+                            <span>Strict</span>
+                        </button>
+                        <button type="button" onclick="setCoachStrictness('balanced')" id="strictBtn-balanced" class="py-1.5 px-2 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-scale-balanced text-[10px]"></i>
+                            <span>Balanced</span>
+                        </button>
+                        <button type="button" onclick="setCoachStrictness('gentle')" id="strictBtn-gentle" class="py-1.5 px-2 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-seedling text-[10px]"></i>
+                            <span>Gentle</span>
+                        </button>
+                    </div>
+                    <p id="coachStrictnessDesc" class="text-[11px] text-slate-400 mt-2 leading-relaxed">
+                        Zero tolerance for overspending: triggers tight daily limits, fast burn rate warnings, and disciplined coaching.
+                    </p>
                 </div>
-                <button id="pushPermissionBtn" onclick="requestPushPermission()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition shrink-0">
-                    Enable
-                </button>
-            </div>
 
-            <div class="flex items-center justify-between mb-2 px-1">
-                <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Recent Alerts Feed</h4>
-                <button onclick="clearAllNotifications()" class="text-[11px] text-slate-400 hover:text-rose-400 transition font-medium">Clear All</button>
-            </div>
+                <!-- Live Spending Health Status Card -->
+                <div id="notifHealthCard" class="bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-3.5">
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <div class="flex items-center gap-2">
+                            <span id="notifHealthIndicator" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span id="notifHealthStatusText" class="text-xs font-bold text-white">Spending Pace: Within Safe Limits</span>
+                        </div>
+                        <button onclick="consultPocketCoachFromAlert('Analyze my spending habits, audit my pacing, and tell me if I am on track.')" class="text-[11px] text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1 cursor-pointer transition">
+                            <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+                            <span>Audit Pace</span>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-center">
+                        <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800/40">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider block truncate">Spent Today</span>
+                            <span id="notifSpentToday" class="font-bold text-xs sm:text-sm text-slate-200">GH₵ 0.00</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800/40">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider block truncate">Safe Daily Cap</span>
+                            <span id="notifDailyCap" class="font-bold text-xs sm:text-sm text-emerald-400">GH₵ 0.00</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800/40">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider block truncate">Days Remaining</span>
+                            <span id="notifDaysRemaining" class="font-bold text-xs sm:text-sm text-slate-200">0 days</span>
+                        </div>
+                    </div>
+                </div>
 
-            <div id="notificationsList" class="space-y-2.5 overflow-y-auto flex-1 pr-1">
-                <!-- Populated via JS -->
+                <!-- Quick Curbs & Smarter Alternatives Carousel -->
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-lightbulb text-yellow-400 text-xs"></i>
+                            <span>Quick Spending Curbs & Rules</span>
+                        </span>
+                        <span class="text-[10px] text-slate-500">Tap to get AI plan</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                        <button type="button" onclick="consultPocketCoachFromAlert('What is the 48-Hour cooling rule and how does it prevent impulse buying?')" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-slate-800 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-hourglass-half text-teal-400 text-[10px]"></i>
+                            <span>48h Pause Rule</span>
+                        </button>
+                        <button type="button" onclick="consultPocketCoachFromAlert('Give me a strict 7-day no-spend challenge to curb my overspending.')" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-rose-300 border border-slate-800 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-ban text-rose-400 text-[10px]"></i>
+                            <span>Zero-Spend Day</span>
+                        </button>
+                        <button type="button" onclick="consultPocketCoachFromAlert('Give me practical ways to cut down on food and dining expenses and cook at home.')" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-slate-800 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-utensils text-emerald-400 text-[10px]"></i>
+                            <span>Meal Prep Swap</span>
+                        </button>
+                        <button type="button" onclick="consultPocketCoachFromAlert('What are better ways to go about my spending and cheaper alternatives for everyday purchases?')" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-yellow-300 border border-slate-800 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-tags text-yellow-400 text-[10px]"></i>
+                            <span>Better Ways to Spend</span>
+                        </button>
+                        <button type="button" onclick="consultPocketCoachFromAlert('How do I strictly reset and lock down my daily spending limit?')" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-sky-300 border border-slate-800 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-lock text-sky-400 text-[10px]"></i>
+                            <span>Lock Daily Cap</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Device Push Notifications Card -->
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between gap-3">
+                    <div class="min-w-0 flex-1">
+                        <h4 class="font-bold text-xs text-white flex items-center gap-1.5">
+                            <i class="fa-solid fa-mobile-screen text-slate-400 text-[11px]"></i>
+                            <span>Device Push Notifications</span>
+                        </h4>
+                        <p id="pushPermissionNote" class="text-[11px] text-slate-400 mt-0.5">Receive instant system alerts when approaching limits</p>
+                    </div>
+                    <button id="pushPermissionBtn" onclick="requestPushPermission()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition shrink-0 cursor-pointer">
+                        Enable
+                    </button>
+                </div>
+
+                <!-- Feed Header & Filter Tabs -->
+                <div class="pt-2">
+                    <div class="flex items-center justify-between mb-2 px-1">
+                        <div class="flex items-center gap-2">
+                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Alerts & Guidance Feed</h4>
+                            <span id="notifTotalCount" class="text-[11px] text-slate-400 font-semibold">(0)</span>
+                        </div>
+                        <button onclick="clearAllNotifications()" class="text-[11px] text-slate-400 hover:text-rose-400 transition font-medium cursor-pointer">Clear All</button>
+                    </div>
+
+                    <!-- Filter pills -->
+                    <div class="flex items-center gap-1.5 mb-3 px-1 overflow-x-auto no-scrollbar">
+                        <button type="button" onclick="setNotificationsFilter('all')" id="notifFilter-all" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-slate-950 transition cursor-pointer">
+                            All
+                        </button>
+                        <button type="button" onclick="setNotificationsFilter('strict')" id="notifFilter-strict" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-slate-200 transition cursor-pointer flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation text-[10px] text-rose-400"></i>
+                            <span>Strict Warnings</span>
+                        </button>
+                        <button type="button" onclick="setNotificationsFilter('curbs')" id="notifFilter-curbs" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-slate-200 transition cursor-pointer flex items-center gap-1">
+                            <i class="fa-solid fa-lightbulb text-[10px] text-amber-400"></i>
+                            <span>Tips & Curbs</span>
+                        </button>
+                    </div>
+
+                    <!-- Notifications List -->
+                    <div id="notificationsList" class="space-y-3 pb-2">
+                        <!-- Populated via renderNotificationsUI() -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1166,6 +1328,9 @@
                 <div class="px-3 pt-2 pb-1 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
                     <button type="button" onclick="switchCoachTopic('popular')" id="coachTopicTab-popular" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold whitespace-nowrap transition cursor-pointer shadow-sm">
                         🔥 Popular
+                    </button>
+                    <button type="button" onclick="switchCoachTopic('strictCurbs')" id="coachTopicTab-strictCurbs" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-rose-400 hover:text-rose-300 border border-rose-500/40 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                        🛡️ Strict Curbs
                     </button>
                     <button type="button" onclick="switchCoachTopic('budget')" id="coachTopicTab-budget" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
                         📊 Budgeting
@@ -1257,13 +1422,28 @@
         let state = {
             currency: 'GH₵',
             budget: 2500,
+            coachStrictness: 'strict',
+            notificationsFilter: 'all',
+            lastDailyBreachDate: '',
+            lastPaceNotifiedDay: 0,
             expenses: [
                 { id: 'exp-1', amount: 120, category: 'food', note: 'Waakye & Juice', date: getLocalDateStr() },
                 { id: 'exp-2', amount: 45, category: 'transport', note: 'Bolt ride', date: getLocalDateStr() },
                 { id: 'exp-3', amount: 200, category: 'bills', note: 'MTN 15GB Data Bundle', date: getLocalDateStr(new Date(Date.now() - 86400000)) }
             ],
             notifications: [
-                { id: 'notif-1', title: 'Welcome to PocketFlow', body: 'Start logging expenses to monitor your budget alerts.', time: 'Just now', type: 'info', read: false }
+                {
+                    id: 'notif-strict-intro',
+                    title: '🛡️ PocketCoach Strict Spending Guard Active',
+                    body: 'PocketFlow is actively monitoring your daily pacing, burn rate, and category limits to curb overspending.',
+                    strictTip: 'Discipline Rule: Never buy non-essentials when your daily allowance is depleted. Use the 48-hour cooling-off rule on impulse buys.',
+                    coachPrompt: 'Explain how the PocketCoach Strict Spending Guard works, what rules I must follow to curb overspending, and better ways to manage my money.',
+                    category: 'curb',
+                    type: 'curb',
+                    time: 'Just now',
+                    timestamp: Date.now(),
+                    read: false
+                }
             ],
             lastNotifiedTier: 0,
             selectedModalCategory: 'food',
@@ -1482,6 +1662,15 @@
                         if (Array.isArray(parsed.notifications)) {
                             state.notifications = parsed.notifications;
                         }
+                        if (parsed.coachStrictness) {
+                            state.coachStrictness = parsed.coachStrictness;
+                        }
+                        if (parsed.lastDailyBreachDate) {
+                            state.lastDailyBreachDate = parsed.lastDailyBreachDate;
+                        }
+                        if (parsed.lastPaceNotifiedDay) {
+                            state.lastPaceNotifiedDay = parsed.lastPaceNotifiedDay;
+                        }
                         if (parsed.lastNotifiedTier !== undefined) {
                             state.lastNotifiedTier = parsed.lastNotifiedTier;
                         }
@@ -1497,9 +1686,12 @@
                 const payloadObj = {
                     currency: state.currency,
                     budget: state.budget,
+                    coachStrictness: state.coachStrictness || 'strict',
                     expenses: state.expenses,
                     notifications: state.notifications,
                     lastNotifiedTier: state.lastNotifiedTier || 0,
+                    lastDailyBreachDate: state.lastDailyBreachDate || '',
+                    lastPaceNotifiedDay: state.lastPaceNotifiedDay || 0,
                     savedAt: new Date().toISOString()
                 };
                 const payload = JSON.stringify(payloadObj);
@@ -2010,63 +2202,217 @@
         }
 
         // ==========================================
-        // ROBUST NOTIFICATION & ALERT SYSTEM
+        // ROBUST NOTIFICATION & STRICT SPENDING CURB SYSTEM
         // ==========================================
+        window.activeBannerCoachPrompt = '';
+
         function evaluateSpendingAlerts(totalSpent, budget, isInitialLoad = false) {
             if (!budget || budget <= 0) return;
             const ratio = totalSpent / budget;
-            let currentTier = 0;
-            let alertMsg = '';
-            let alertTitle = '';
+            const actualPercentage = Math.round(ratio * 100);
+            const remaining = budget - totalSpent;
 
+            const now = new Date();
+            const todayDate = Math.max(1, now.getDate());
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const daysRemaining = Math.max(1, daysInMonth - todayDate + 1);
+            const safeDailyAllowance = remaining > 0 ? (remaining / daysRemaining) : 0;
+
+            const todayStr = getLocalDateStr();
+            const todayExpenses = state.expenses.filter(e => (e.date || '').startsWith(todayStr));
+            const spentToday = todayExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
+            const dailyAvg = totalSpent / todayDate;
+
+            const strictness = state.coachStrictness || 'strict';
+            const dailyBreachMultiplier = strictness === 'strict' ? 1.05 : (strictness === 'balanced' ? 1.25 : 1.50);
+            const paceBuffer = strictness === 'strict' ? 10 : (strictness === 'balanced' ? 20 : 30);
+
+            let activeBannerType = null;
+            let bannerTitle = '';
+            let bannerMsg = '';
+            let bannerTip = '';
+            let bannerPrompt = '';
+
+            // 1. CRITICAL OVERSPEND (>= 100%)
             if (ratio >= 1.0) {
-                currentTier = 100;
-                alertTitle = '🚨 Monthly Budget Exceeded!';
-                alertMsg = `You have spent ${state.currency} ${formatMoney(totalSpent)}, exceeding your ${state.currency} ${formatMoney(budget)} monthly limit!`;
-            } else if (ratio >= 0.8) {
-                currentTier = 80;
-                alertTitle = '⚠️ Budget Warning (80% Reached)';
-                alertMsg = `You have used ${Math.round(ratio * 100)}% of your monthly budget. Only ${state.currency} ${formatMoney(budget - totalSpent)} left.`;
-            } else if (ratio >= 0.5) {
-                currentTier = 50;
-                alertTitle = 'ℹ️ Budget Milestone (50%)';
-                alertMsg = `You have reached half of your monthly budget (${Math.round(ratio * 100)}% spent).`;
-            }
+                const overAmt = totalSpent - budget;
+                activeBannerType = 'danger';
+                bannerTitle = '🚨 Monthly Budget Blown!';
+                bannerMsg = `You have spent ${state.currency} ${formatMoney(totalSpent)}, exceeding your ${state.currency} ${formatMoney(budget)} limit by ${state.currency} ${formatMoney(overAmt)}!`;
+                bannerTip = 'Emergency Lockdown: Halt all non-essential spending. Cook at home, freeze subscriptions, and survive strictly on necessities.';
+                bannerPrompt = `🚨 Emergency Overspend Recovery: I have exceeded my monthly budget of ${state.currency} ${formatMoney(budget)} by ${state.currency} ${formatMoney(overAmt)}. Give me a strict recovery plan, curb my non-essential spending, and teach me better ways to spend for the remaining ${daysRemaining} days.`;
 
-            // Update live banner UI
-            const banner = document.getElementById('liveAlertBanner');
-            const bannerText = document.getElementById('liveAlertText');
-            if (banner && bannerText) {
-                if (currentTier >= 80) {
-                    banner.classList.remove('hidden');
-                    bannerText.textContent = alertMsg;
-                } else {
-                    banner.classList.add('hidden');
+                if (!isInitialLoad && (state.lastNotifiedTier || 0) < 100) {
+                    state.lastNotifiedTier = 100;
+                    addNotificationItem(bannerTitle, bannerMsg, 'danger', {
+                        strictTip: bannerTip,
+                        coachPrompt: bannerPrompt,
+                        category: 'overspend'
+                    });
+                    sendBrowserPush(bannerTitle, bannerMsg);
+                }
+            }
+            // 2. DAILY CEILING BREACHED TODAY
+            else if (spentToday > (safeDailyAllowance * dailyBreachMultiplier) && spentToday >= 25 && safeDailyAllowance > 0) {
+                const overDaily = spentToday - safeDailyAllowance;
+                activeBannerType = 'daily';
+                bannerTitle = '🛑 Daily Spending Ceiling Exceeded!';
+                bannerMsg = `You spent ${state.currency} ${formatMoney(spentToday)} today, surpassing your safe allowance of ${state.currency} ${formatMoney(safeDailyAllowance)}/day by ${state.currency} ${formatMoney(overDaily)}.`;
+                bannerTip = `Deficit Recovery: Enforce a Zero-Spend day tomorrow or reduce daily spending by 35% for the next 3 days to balance your pacing.`;
+                bannerPrompt = `🛑 Daily Allowance Blown: I spent ${state.currency} ${formatMoney(spentToday)} today against my safe daily limit of ${state.currency} ${formatMoney(safeDailyAllowance)}. Give me strict coaching, a 3-day recovery plan to curb my spending, and better alternatives.`;
+
+                if (!isInitialLoad && state.lastDailyBreachDate !== todayStr) {
+                    state.lastDailyBreachDate = todayStr;
+                    addNotificationItem(bannerTitle, bannerMsg, 'danger', {
+                        strictTip: bannerTip,
+                        coachPrompt: bannerPrompt,
+                        category: 'daily'
+                    });
+                    sendBrowserPush(bannerTitle, bannerMsg);
+                }
+            }
+            // 3. FAST BURN RATE (Mid-Month Pacing Ahead of Schedule)
+            else if (todayDate <= 22 && actualPercentage > ((todayDate / daysInMonth * 100) + paceBuffer) && totalSpent >= budget * 0.20) {
+                activeBannerType = 'pace';
+                bannerTitle = '⚡ High-Velocity Burn Rate Warning';
+                bannerMsg = `Day ${todayDate} of ${daysInMonth} (${Math.round((todayDate / daysInMonth) * 100)}% through month), but you've already burned ${actualPercentage}% of your total budget!`;
+                bannerTip = `Pace Brake: At this burn rate, your balance will expire prematurely. Freeze dining out and lock non-essential spending.`;
+                bannerPrompt = `⚡ Fast Burn Rate Warning: I've burned through ${actualPercentage}% of my budget only ${todayDate} days into the month. Give me strict instructions on how to put the brakes on my spending and guide me on better habits.`;
+
+                if (!isInitialLoad && state.lastPaceNotifiedDay !== todayDate) {
+                    state.lastPaceNotifiedDay = todayDate;
+                    addNotificationItem(bannerTitle, bannerMsg, 'warning', {
+                        strictTip: bannerTip,
+                        coachPrompt: bannerPrompt,
+                        category: 'pace'
+                    });
+                    sendBrowserPush(bannerTitle, bannerMsg);
+                }
+            }
+            // 4. CRITICAL BUDGET WARNING (>= 80%)
+            else if (ratio >= 0.8) {
+                activeBannerType = 'warning';
+                bannerTitle = `⚠️ Budget Warning (${actualPercentage}% Reached)`;
+                bannerMsg = `You have used ${actualPercentage}% of your monthly budget. Only ${state.currency} ${formatMoney(remaining)} remains for ${daysRemaining} days (${state.currency} ${formatMoney(safeDailyAllowance)}/day).`;
+                bannerTip = `Strict Cap: Keep all daily spending under ${state.currency} ${formatMoney(safeDailyAllowance)}/day. Cancel leisure shopping and curb dining out.`;
+                bannerPrompt = `⚠️ Budget Warning (80% Reached): I have used ${actualPercentage}% of my budget with ${daysRemaining} days left. Give me strict advice and actionable ways to curb my expenses so I finish on budget.`;
+
+                if (!isInitialLoad && (state.lastNotifiedTier || 0) < 80) {
+                    state.lastNotifiedTier = 80;
+                    addNotificationItem(bannerTitle, bannerMsg, 'warning', {
+                        strictTip: bannerTip,
+                        coachPrompt: bannerPrompt,
+                        category: 'warning'
+                    });
+                    sendBrowserPush(bannerTitle, bannerMsg);
+                }
+            }
+            // 5. 50% MILESTONE
+            else if (ratio >= 0.5 && (state.lastNotifiedTier || 0) < 50) {
+                if (!isInitialLoad) {
+                    state.lastNotifiedTier = 50;
+                    const mTitle = 'ℹ️ Budget Milestone (50% Spent)';
+                    const mMsg = `You have reached half of your monthly budget (${actualPercentage}% spent). ${state.currency} ${formatMoney(remaining)} remains for ${daysRemaining} days.`;
+                    const mTip = `Pacing Check: Your safe daily limit is ${state.currency} ${formatMoney(safeDailyAllowance)}/day. Review daily expenses to maintain a healthy month-end buffer.`;
+                    const mPrompt = `I have reached 50% of my monthly budget. Give me a habit audit and tips to keep my spending disciplined for the second half of the month.`;
+                    addNotificationItem(mTitle, mMsg, 'info', {
+                        strictTip: mTip,
+                        coachPrompt: mPrompt,
+                        category: 'milestone'
+                    });
+                    sendBrowserPush(mTitle, mMsg);
                 }
             }
 
-            // On initial page load, do not create duplicate notifications or blast alerts
+            // Reset tiers when spending is reduced
+            if (ratio < 0.8 && state.lastNotifiedTier >= 80) state.lastNotifiedTier = 0;
+            if (ratio < 0.5 && state.lastNotifiedTier >= 50) state.lastNotifiedTier = 0;
             if (isInitialLoad) {
-                state.lastNotifiedTier = currentTier;
+                state.lastNotifiedTier = ratio >= 1.0 ? 100 : (ratio >= 0.8 ? 80 : (ratio >= 0.5 ? 50 : 0));
+            }
+
+            // Update live dashboard banner UI
+            updateLiveAlertBannerUI(activeBannerType, bannerTitle, bannerMsg, bannerTip, bannerPrompt);
+        }
+
+        function updateLiveAlertBannerUI(type, title, msg, strictTip, coachPrompt) {
+            const banner = document.getElementById('liveAlertBanner');
+            if (!banner) return;
+
+            if (!type) {
+                banner.classList.add('hidden');
+                window.activeBannerCoachPrompt = '';
                 return;
             }
 
-            // Trigger notification only if tier increased during active usage
-            if (currentTier > (state.lastNotifiedTier || 0)) {
-                state.lastNotifiedTier = currentTier;
-                addNotificationItem(alertTitle, alertMsg, currentTier === 100 ? 'danger' : 'warning');
-                sendBrowserPush(alertTitle, alertMsg);
-            } else if (currentTier < (state.lastNotifiedTier || 0)) {
-                state.lastNotifiedTier = currentTier;
+            banner.classList.remove('hidden');
+            window.activeBannerCoachPrompt = coachPrompt;
+
+            const iconBox = document.getElementById('liveAlertIconBox');
+            const icon = document.getElementById('liveAlertIcon');
+            const titleEl = document.getElementById('liveAlertTitle');
+            const badgeEl = document.getElementById('liveAlertBadge');
+            const textEl = document.getElementById('liveAlertText');
+            const tipEl = document.getElementById('liveAlertStrictTip');
+            const btnTextEl = document.getElementById('liveAlertCoachBtnText');
+
+            if (type === 'danger') {
+                banner.className = 'rounded-2xl p-3.5 sm:p-4 border bg-gradient-to-r from-rose-950/80 via-slate-900 to-slate-900 border-rose-500/40 text-rose-200 shadow-xl';
+                if (iconBox) iconBox.className = 'w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-0.5';
+                if (icon) icon.className = 'fa-solid fa-circle-exclamation text-sm';
+                if (badgeEl) {
+                    badgeEl.textContent = 'STRICT EMERGENCY';
+                    badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+                }
+                if (btnTextEl) btnTextEl.textContent = 'Ask PocketCoach for Emergency Recovery';
+            } else if (type === 'daily') {
+                banner.className = 'rounded-2xl p-3.5 sm:p-4 border bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-900 border-amber-500/40 text-amber-200 shadow-xl';
+                if (iconBox) iconBox.className = 'w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5';
+                if (icon) icon.className = 'fa-solid fa-hand text-sm';
+                if (badgeEl) {
+                    badgeEl.textContent = 'DAILY CEILING BLOWN';
+                    badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                }
+                if (btnTextEl) btnTextEl.textContent = 'Get PocketCoach Daily Recovery Plan';
+            } else if (type === 'pace') {
+                banner.className = 'rounded-2xl p-3.5 sm:p-4 border bg-gradient-to-r from-indigo-950/80 via-slate-900 to-slate-900 border-indigo-500/40 text-indigo-200 shadow-xl';
+                if (iconBox) iconBox.className = 'w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 mt-0.5';
+                if (icon) icon.className = 'fa-solid fa-bolt text-sm';
+                if (badgeEl) {
+                    badgeEl.textContent = 'FAST BURN RATE';
+                    badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+                }
+                if (btnTextEl) btnTextEl.textContent = 'Curb My Spending with PocketCoach';
+            } else {
+                banner.className = 'rounded-2xl p-3.5 sm:p-4 border bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-900 border-amber-500/30 text-amber-200 shadow-xl';
+                if (iconBox) iconBox.className = 'w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5';
+                if (icon) icon.className = 'fa-solid fa-triangle-exclamation text-sm';
+                if (badgeEl) {
+                    badgeEl.textContent = 'STRICT WARNING';
+                    badgeEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                }
+                if (btnTextEl) btnTextEl.textContent = 'Connect to PocketCoach for Advice';
             }
+
+            if (titleEl) titleEl.textContent = title;
+            if (textEl) textEl.textContent = msg;
+            if (tipEl) tipEl.textContent = strictTip;
         }
 
-        function addNotificationItem(title, body, type = 'info') {
+        function addNotificationItem(title, body, type = 'info', extra = {}) {
+            const strictTip = extra.strictTip || 'Cut non-essential expenses to protect your monthly financial peace.';
+            const coachPrompt = extra.coachPrompt || `Explain this spending alert: "${title} - ${body}". Give me strict advice, show me how to curb my spending, and guide me on better alternatives.`;
+            const category = extra.category || 'info';
+
             const newNotif = {
-                id: 'notif-' + Date.now(),
+                id: 'notif-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
                 title,
                 body,
+                strictTip,
+                coachPrompt,
+                category,
                 time: 'Just now',
+                timestamp: Date.now(),
                 type,
                 read: false
             };
@@ -2075,47 +2421,168 @@
             renderNotificationsUI();
         }
 
+        function getRelativeTimeStr(timestampOrStr) {
+            if (!timestampOrStr) return 'Just now';
+            if (typeof timestampOrStr === 'string' && isNaN(Date.parse(timestampOrStr)) && !/^\d+$/.test(timestampOrStr)) {
+                return timestampOrStr;
+            }
+            const timeNum = typeof timestampOrStr === 'number' ? timestampOrStr : (parseInt(timestampOrStr, 10) || Date.parse(timestampOrStr));
+            if (isNaN(timeNum)) return 'Just now';
+            const diffSec = Math.floor((Date.now() - timeNum) / 1000);
+            if (diffSec < 60) return 'Just now';
+            if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
+            if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`;
+            return `${Math.floor(diffSec / 86400)}d ago`;
+        }
+
         function renderNotificationsUI() {
             const listContainer = document.getElementById('notificationsList');
             const badge = document.getElementById('notificationBadgeCount');
-            if (!listContainer || !badge) return;
+            const notifCenterPill = document.getElementById('notifCenterUnreadPill');
+            const totalCountEl = document.getElementById('notifTotalCount');
+            if (!listContainer) return;
 
-            const unreadCount = state.notifications.filter(n => !n.read).length;
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount;
-                badge.classList.remove('hidden');
-                badge.classList.add('flex');
-            } else {
-                badge.classList.add('hidden');
-                badge.classList.remove('flex');
+            renderCoachStrictnessUI();
+
+            // Refresh Live Health Widget
+            const ctx = getSpendingContext();
+            const spentTodayEl = document.getElementById('notifSpentToday');
+            const dailyCapEl = document.getElementById('notifDailyCap');
+            const daysLeftEl = document.getElementById('notifDaysRemaining');
+            const healthIndicator = document.getElementById('notifHealthIndicator');
+            const healthStatusText = document.getElementById('notifHealthStatusText');
+
+            if (spentTodayEl) spentTodayEl.textContent = `${ctx.currency} ${formatMoney(ctx.spentToday)}`;
+            if (dailyCapEl) dailyCapEl.textContent = `${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day`;
+            if (daysLeftEl) daysLeftEl.textContent = `${ctx.daysRemaining} days`;
+
+            if (healthIndicator && healthStatusText) {
+                if (ctx.remaining < 0) {
+                    healthIndicator.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping';
+                    healthStatusText.textContent = `🚨 Over Budget by ${ctx.currency} ${formatMoney(Math.abs(ctx.remaining))}!`;
+                    healthStatusText.className = 'text-xs font-bold text-rose-300';
+                } else if (ctx.spentToday > ctx.safeDailyAllowance && ctx.safeDailyAllowance > 0) {
+                    healthIndicator.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+                    healthStatusText.textContent = `🛑 Daily Limit Blown: ${ctx.currency} ${formatMoney(ctx.spentToday - ctx.safeDailyAllowance)} over limit`;
+                    healthStatusText.className = 'text-xs font-bold text-amber-300';
+                } else if (ctx.pctUsed >= 80) {
+                    healthIndicator.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+                    healthStatusText.textContent = `⚠️ Critical: ${ctx.pctUsed}% of Budget Used`;
+                    healthStatusText.className = 'text-xs font-bold text-amber-300';
+                } else {
+                    healthIndicator.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+                    healthStatusText.textContent = `✅ Spending Safe (${ctx.pctUsed}% used, ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day safe)`;
+                    healthStatusText.className = 'text-xs font-bold text-emerald-300';
+                }
             }
 
-            if (state.notifications.length === 0) {
+            const unreadCount = state.notifications.filter(n => !n.read).length;
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                } else {
+                    badge.classList.add('hidden');
+                    badge.classList.remove('flex');
+                }
+            }
+            if (notifCenterPill) {
+                if (unreadCount > 0) {
+                    notifCenterPill.textContent = `${unreadCount} new`;
+                    notifCenterPill.classList.remove('hidden');
+                } else {
+                    notifCenterPill.classList.add('hidden');
+                }
+            }
+            if (totalCountEl) {
+                totalCountEl.textContent = `(${state.notifications.length})`;
+            }
+
+            // Filter notifications
+            const filter = state.notificationsFilter || 'all';
+            let filteredList = state.notifications;
+            if (filter === 'strict') {
+                filteredList = state.notifications.filter(n => n.type === 'danger' || n.type === 'warning' || n.category === 'daily' || n.category === 'overspend' || n.category === 'pace' || n.category === 'large_expense');
+            } else if (filter === 'curbs') {
+                filteredList = state.notifications.filter(n => n.type === 'curb' || n.category === 'curb' || Boolean(n.strictTip));
+            }
+
+            if (filteredList.length === 0) {
                 listContainer.innerHTML = `
-                    <div class="text-center py-10 text-slate-500 text-xs">
-                        <i class="fa-solid fa-bell-slash text-2xl mb-2"></i>
-                        <p>No recent alerts or notifications.</p>
+                    <div class="text-center py-8 text-slate-500 text-xs bg-slate-950/40 rounded-2xl border border-slate-800/60 p-4">
+                        <i class="fa-solid fa-bell-slash text-2xl mb-2 text-slate-600 block"></i>
+                        <p class="font-medium text-slate-400">No alerts matching this filter.</p>
+                        <p class="text-[11px] text-slate-500 mt-1">PocketCoach will alert you immediately if your spending breaches safe pacing or budget limits.</p>
                     </div>
                 `;
                 return;
             }
 
-            listContainer.innerHTML = state.notifications.map(n => {
-                let iconClass = 'fa-circle-info text-sky-400 bg-sky-500/15';
-                if (n.type === 'warning') iconClass = 'fa-triangle-exclamation text-amber-400 bg-amber-500/15';
-                if (n.type === 'danger') iconClass = 'fa-circle-exclamation text-rose-400 bg-rose-500/15';
+            listContainer.innerHTML = filteredList.map(n => {
+                let severityBadge = '';
+                let iconClass = 'fa-circle-info text-sky-400 bg-sky-500/15 border-sky-500/30';
+                let cardBorder = n.read ? 'border-slate-800/60 bg-slate-950/70' : 'border-slate-800 bg-slate-950';
+
+                if (n.type === 'danger') {
+                    severityBadge = '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/30">STRICT CRITICAL</span>';
+                    iconClass = 'fa-circle-exclamation text-rose-400 bg-rose-500/15 border-rose-500/30';
+                    if (!n.read) cardBorder = 'border-rose-500/30 bg-slate-950/90 shadow-md shadow-rose-950/20';
+                } else if (n.type === 'warning') {
+                    severityBadge = '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30">STRICT WARNING</span>';
+                    iconClass = 'fa-triangle-exclamation text-amber-400 bg-amber-500/15 border-amber-500/30';
+                    if (!n.read) cardBorder = 'border-amber-500/30 bg-slate-950/90 shadow-md shadow-amber-950/20';
+                } else if (n.type === 'curb') {
+                    severityBadge = '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">COACH CURB</span>';
+                    iconClass = 'fa-shield-halved text-emerald-400 bg-emerald-500/15 border-emerald-500/30';
+                    if (!n.read) cardBorder = 'border-emerald-500/30 bg-slate-950/90';
+                } else {
+                    severityBadge = '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/30">INFO</span>';
+                }
+
+                const relativeTime = getRelativeTimeStr(n.timestamp || n.time);
+                const encodedPrompt = encodeURIComponent(n.coachPrompt || `Explain this spending notification: "${n.title}". Give me strict advice, how to curb my spending, and better ways to spend.`);
 
                 return `
-                    <div onclick="markNotificationRead('${n.id}')" class="bg-slate-950 border ${n.read ? 'border-slate-800/60 opacity-75' : 'border-slate-800'} rounded-2xl p-3.5 flex items-start gap-3 cursor-pointer transition hover:border-slate-700">
-                        <div class="w-8 h-8 rounded-xl ${iconClass} flex items-center justify-center shrink-0 mt-0.5">
-                            <i class="fa-solid ${iconClass.split(' ')[0]} text-xs"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between">
-                                <h5 class="font-bold text-xs text-white truncate">${escapeHtml(n.title)}</h5>
-                                <span class="text-[10px] text-slate-500 ml-2">${n.time}</span>
+                    <div onclick="markNotificationRead('${n.id}')" class="border ${cardBorder} rounded-2xl p-3.5 transition hover:border-slate-700 cursor-pointer group">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-xl ${iconClass} border flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fa-solid ${iconClass.split(' ')[0]} text-xs"></i>
                             </div>
-                            <p class="text-xs text-slate-300 mt-1 leading-relaxed">${escapeHtml(n.body)}</p>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-1 mb-1">
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        ${severityBadge}
+                                        <h5 class="font-bold text-xs text-white truncate max-w-[200px] sm:max-w-xs">${escapeHtml(n.title)}</h5>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        <span class="text-[10px] text-slate-500">${relativeTime}</span>
+                                        ${!n.read ? '<span class="w-2 h-2 rounded-full bg-emerald-400"></span>' : ''}
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">${escapeHtml(n.body)}</p>
+
+                                ${n.strictTip ? `
+                                    <div class="mt-2.5 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800/80 text-[11px] text-slate-300 flex items-start gap-2">
+                                        <i class="fa-solid fa-scale-balanced text-amber-400 mt-0.5 shrink-0 text-xs"></i>
+                                        <div class="flex-1">
+                                            <span class="font-bold text-amber-300">Coach's Strict Rule:</span> ${escapeHtml(n.strictTip)}
+                                        </div>
+                                    </div>
+                                ` : ''}
+
+                                <div class="mt-2.5 flex items-center gap-2 pt-1">
+                                    <button onclick="event.stopPropagation(); consultPocketCoachFromAlert('${encodedPrompt}', true)"
+                                        class="flex-1 py-1.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-sm active:scale-95 cursor-pointer">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                                        <span>Connect to PocketCoach for Advice</span>
+                                    </button>
+                                    <button onclick="event.stopPropagation(); deleteNotificationItem('${n.id}')"
+                                        class="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-500 hover:text-rose-400 flex items-center justify-center transition text-xs shrink-0 cursor-pointer" title="Delete notification">
+                                        <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -2131,11 +2598,99 @@
             }
         }
 
+        function deleteNotificationItem(id) {
+            state.notifications = state.notifications.filter(n => n.id !== id);
+            saveState();
+            renderNotificationsUI();
+        }
+
         function clearAllNotifications() {
             state.notifications = [];
             saveState();
             renderNotificationsUI();
             showToast('All notifications cleared');
+        }
+
+        function setCoachStrictness(level) {
+            state.coachStrictness = level;
+            saveState();
+            renderCoachStrictnessUI();
+            renderAll();
+            const label = level === 'strict' ? 'Strict Disciplinarian' : (level === 'balanced' ? 'Balanced Guardian' : 'Gentle Guide');
+            showToast(`Coach Mode: ${label}`);
+        }
+
+        function renderCoachStrictnessUI() {
+            const level = state.coachStrictness || 'strict';
+            const labelEl = document.getElementById('coachStrictnessLabel');
+            const descEl = document.getElementById('coachStrictnessDesc');
+
+            ['strict', 'balanced', 'gentle'].forEach(lvl => {
+                const btn = document.getElementById(`strictBtn-${lvl}`);
+                if (btn) {
+                    if (lvl === level) {
+                        btn.className = 'py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 bg-emerald-500 text-slate-950 shadow-sm cursor-pointer';
+                    } else {
+                        btn.className = 'py-1.5 px-2 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1 bg-transparent text-slate-400 hover:text-slate-200 cursor-pointer';
+                    }
+                }
+            });
+
+            if (labelEl) {
+                if (level === 'strict') {
+                    labelEl.textContent = 'Strict Disciplinarian';
+                    labelEl.className = 'text-[10px] font-bold uppercase tracking-wider text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded-full';
+                } else if (level === 'balanced') {
+                    labelEl.textContent = 'Balanced Guardian';
+                    labelEl.className = 'text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full';
+                } else {
+                    labelEl.textContent = 'Gentle Guide';
+                    labelEl.className = 'text-[10px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full';
+                }
+            }
+
+            if (descEl) {
+                if (level === 'strict') {
+                    descEl.textContent = 'Zero tolerance for overspending: triggers tight daily limits, fast burn rate warnings, and disciplined coaching.';
+                } else if (level === 'balanced') {
+                    descEl.textContent = 'Standard safeguards: notifies at 80% and 100% budget thresholds with pragmatic spending advice.';
+                } else {
+                    descEl.textContent = 'Gentle reminders: soft pacing nudges and encouraging coaching tips.';
+                }
+            }
+        }
+
+        function setNotificationsFilter(filter) {
+            state.notificationsFilter = filter;
+            ['all', 'strict', 'curbs'].forEach(f => {
+                const btn = document.getElementById(`notifFilter-${f}`);
+                if (btn) {
+                    if (f === filter) {
+                        btn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-slate-950 transition cursor-pointer';
+                    } else {
+                        btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-slate-200 transition cursor-pointer flex items-center gap-1';
+                    }
+                }
+            });
+            renderNotificationsUI();
+        }
+
+        function consultPocketCoachFromAlert(rawPrompt, isEncoded = false) {
+            const promptText = isEncoded ? decodeURIComponent(rawPrompt) : rawPrompt;
+            closeModal('notificationsModal');
+            openModal('aiCoachModal');
+            setTimeout(() => {
+                const input = document.getElementById('coachUserInput');
+                if (input) {
+                    input.value = promptText;
+                }
+                handleCoachSubmit(new Event('submit'));
+            }, 120);
+        }
+
+        function consultPocketCoachFromBanner() {
+            const prompt = window.activeBannerCoachPrompt || 'Analyze my current spending habits, curb my overspending, and give me better ways to go about my spending.';
+            consultPocketCoachFromAlert(prompt);
         }
 
         function checkPushPermissionUI() {
@@ -2252,6 +2807,7 @@
 
             if (!amount || amount <= 0 || !note) return;
 
+            const ctxBefore = getSpendingContext();
             const newExpense = {
                 id: 'exp-' + Date.now(),
                 amount,
@@ -2262,9 +2818,18 @@
 
             state.expenses.unshift(newExpense);
 
-            // Check if single expense is unusually large (> 25% of monthly budget)
-            if (amount >= state.budget * 0.25) {
-                addNotificationItem('💸 Large Expense Logged', `You recorded "${note}" for ${state.currency} ${formatMoney(amount)}, which is a significant portion of your budget.`, 'warning');
+            // Check if single expense is unusually large (>= 20% of monthly budget or >= 2x safe allowance)
+            if (amount >= state.budget * 0.20 || (ctxBefore.safeDailyAllowance > 0 && amount >= ctxBefore.safeDailyAllowance * 2)) {
+                addNotificationItem(
+                    '💸 High-Impact Expense Recorded',
+                    `You recorded "${note}" for ${state.currency} ${formatMoney(amount)}, taking ${Math.round((amount / state.budget) * 100)}% of your monthly budget.`,
+                    'warning',
+                    {
+                        strictTip: 'Discipline Guard: Compensate with a 48-hour spending freeze on dining and non-essentials.',
+                        coachPrompt: `I just spent ${state.currency} ${formatMoney(amount)} on "${note}". Give me strict guidance on how to adjust my budget and curb other expenses to absorb this shock.`,
+                        category: 'large_expense'
+                    }
+                );
             }
 
             saveState();
@@ -2273,7 +2838,20 @@
             document.getElementById('expenseAmount').value = '';
             document.getElementById('expenseNote').value = '';
             closeModal('addExpenseModal');
-            showToast('Expense added successfully!');
+
+            // Evaluate post-expense state for immediate interactive toast feedback
+            const ctxAfter = getSpendingContext();
+            if (ctxAfter.remaining < 0) {
+                showStrictToast(`🚨 Over budget by ${state.currency} ${formatMoney(Math.abs(ctxAfter.remaining))}! Tap for coach advice`, () => {
+                    consultPocketCoachFromAlert(`🚨 Over Budget Alert: I just logged "${note}" for ${state.currency} ${formatMoney(amount)} and my total spending has exceeded my budget by ${state.currency} ${formatMoney(Math.abs(ctxAfter.remaining))}. Give me a strict emergency recovery plan!`);
+                });
+            } else if (ctxAfter.spentToday > ctxAfter.safeDailyAllowance && ctxAfter.safeDailyAllowance > 0) {
+                showStrictToast(`🛑 Daily allowance exceeded! Tap for coach correction`, () => {
+                    consultPocketCoachFromAlert(`🛑 Daily Limit Blown: I spent ${state.currency} ${formatMoney(ctxAfter.spentToday)} today against my safe allowance of ${state.currency} ${formatMoney(ctxAfter.safeDailyAllowance)}. Give me a strict recovery plan to curb spending over the next 3 days!`);
+                });
+            } else {
+                showToast('Expense added successfully!');
+            }
         }
 
         function deleteExpense(id) {
@@ -2453,6 +3031,9 @@
                 updateCoachFloatBtnState(true);
             } else if (id === 'helpGuideModal') {
                 switchGuideTab('overview');
+            } else if (id === 'notificationsModal') {
+                renderNotificationsUI();
+                checkPushPermissionUI();
             }
             const modalEl = document.getElementById(id);
             if (modalEl) {
@@ -2517,11 +3098,48 @@
             }, 100);
         }
 
+        function showStrictToast(msg, onActionClick) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+
+            toast.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm shrink-0"></i>
+                    <span class="flex-1 text-[11px] leading-tight text-white">${escapeHtml(msg)}</span>
+                    <button id="toastActionBtn" class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 text-[11px] font-bold shrink-0 ml-1 shadow-sm active:scale-95 transition cursor-pointer">
+                        Ask Coach
+                    </button>
+                </div>
+            `;
+            toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-500/50 text-white px-3.5 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold opacity-100 pointer-events-auto transition-opacity duration-300 max-w-[92vw] sm:max-w-md';
+
+            const btn = document.getElementById('toastActionBtn');
+            if (btn && onActionClick) {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    toast.classList.add('opacity-0');
+                    toast.classList.add('pointer-events-none');
+                    onActionClick();
+                };
+            }
+
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.add('opacity-0');
+                toast.classList.add('pointer-events-none');
+            }, 5000);
+        }
+
         function showToast(msg) {
             const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = msg;
-            toast.classList.remove('opacity-0');
-            setTimeout(() => {
+            if (!toast) return;
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                <span id="toastMessage">${escapeHtml(msg)}</span>
+            `;
+            toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-800 border border-emerald-500/40 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2 opacity-100 pointer-events-none transition-opacity duration-300';
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
                 toast.classList.add('opacity-0');
             }, 2200);
         }
@@ -2639,6 +3257,14 @@
                 { label: 'Stop Impulse Buys', query: 'How can I stop impulse spending and emotional buying?', icon: 'fa-shield-halved', color: 'text-rose-400' },
                 { label: 'Cut Food Costs', query: 'Give me practical ways to cut down on food and dining expenses.', icon: 'fa-utensils', color: 'text-emerald-400' },
                 { label: 'Emergency Fund', query: 'How do I build an emergency fund step by step?', icon: 'fa-piggy-bank', color: 'text-teal-400' }
+            ],
+            strictCurbs: [
+                { label: '🚨 Overspend Recovery', query: 'I overspent my budget. Give me a strict emergency recovery plan, curb my expenses, and show me better ways to spend.', icon: 'fa-shield-halved', color: 'text-rose-400' },
+                { label: '🛑 Fix Daily Breach', query: 'I exceeded my safe daily spending limit today. Give me strict instructions to recover this deficit over the next 3 days.', icon: 'fa-triangle-exclamation', color: 'text-amber-400' },
+                { label: '⚡ Slow Fast Burn Rate', query: 'My spending burn rate is too fast. Give me strict instructions to put the brakes on my spending.', icon: 'fa-bolt', color: 'text-red-400' },
+                { label: '💡 Better Ways to Spend', query: 'What are better ways to go about my everyday spending and cheaper alternatives for food, transport, and bills?', icon: 'fa-lightbulb', color: 'text-yellow-400' },
+                { label: '⏳ 48-Hour Pause Rule', query: 'What is the 48-Hour cooling rule and how does it prevent impulse buying?', icon: 'fa-hourglass-half', color: 'text-teal-400' },
+                { label: '🚫 7-Day No-Spend Challenge', query: 'Give me a strict 7-day no-spend challenge to get my finances back on track.', icon: 'fa-ban', color: 'text-purple-400' }
             ],
             budget: [
                 { label: '50/30/20 Rule', query: 'How should I structure my budget using the 50/30/20 rule?', icon: 'fa-chart-pie', color: 'text-emerald-400' },
@@ -2992,6 +3618,169 @@ I'm here to help you:
 
             if (has('thank', 'thanks', 'awesome', 'great job', 'helpful', 'love you')) {
                 return `😊 You are very welcome! Financial consistency is like a muscle—every day you log your spending and make intentional decisions, you get stronger.\n\nKeep up the great discipline! If there is anything else you need help with, I'm right here.\n\n[[prompt: What is my safe daily limit? | 🎯 Daily Target]] [[prompt: What is my biggest expense this month? | 🏆 Top Expense]]`;
+            }
+
+            // 1.5 STRICT SPENDING CURBS, RECOVERY & BETTER WAYS TO SPEND
+            // A. Strict Emergency Overspend Recovery
+            if (has('emergency overspend', 'overspend recovery', 'curb spending', 'curb my spending', 'curb expenses', 'over budget', 'blown budget', 'budget blown', 'exceeded budget', 'recovery plan', 'stop overspending', 'spending diet', 'freeze spending', 'overspent', 'strict recovery', 'strict advice', 'emergency budget', 'curb overspending')) {
+                const overspendAmt = Math.max(0, ctx.totalSpent - ctx.budget);
+                const isOver = ctx.remaining < 0;
+                const strictness = state.coachStrictness || 'strict';
+                let modeIntro = '';
+                if (strictness === 'strict') {
+                    modeIntro = `🛡️ **Strict Disciplinarian Assessment Active**\nNo sugarcoating here: overshooting budget boundaries causes stress, drains savings, and forces debt. You need an immediate, strict regimen to freeze leaks and recover.`;
+                } else if (strictness === 'balanced') {
+                    modeIntro = `⚖️ **Balanced Guardian Assessment Active**\nYour budget is under strain. Let's take decisive, structured steps to stop non-essential leaks and rebalance your pacing.`;
+                } else {
+                    modeIntro = `🌱 **Gentle Guide Assessment Active**\nSetbacks happen. Don't be discouraged—let's make a few smart, practical adjustments so you finish the month safely.`;
+                }
+
+                return `🛡️ **PocketCoach Strict Spending Intervention & Recovery Plan**
+
+${modeIntro}
+
+📊 **Live Budget Damage Report:**
+• **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
+• **Total Spent So Far:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}%)
+• **Current Status:** ${isOver ? `🔴 **Exceeded by ${ctx.currency} ${formatMoney(overspendAmt)}**` : `🟡 **Remaining: ${ctx.currency} ${formatMoney(ctx.remaining)}**`}
+• **Days Remaining:** ${ctx.daysRemaining} days
+• **Strict Safe Daily Cap:** **${ctx.currency} ${formatMoney(Math.max(0, ctx.safeDailyAllowance))}/day**
+• **Top Spending Category:** **${ctx.topCategory.name}** (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of all outflows)
+
+🛑 **4 Non-Negotiable Strict Rules to Enforce Today:**
+1. **72-Hour Discretionary Freeze:** Zero spending on eating out, drinks, deliveries, and online shopping for the next 3 days. Every single cedi must be defended.
+2. **The "Survival Needs Only" Protocol:** For the next ${Math.min(7, ctx.daysRemaining)} days, authorize spending ONLY for survival necessities: groceries for home cooking, work transit, critical electricity tokens.
+3. **Respect the Recalculated Daily Ceiling:** Cap daily spend strictly to **${ctx.currency} ${formatMoney(Math.max(0, ctx.safeDailyAllowance))}/day**. Any day you spend 0 cedis, that money rolls over to heal your deficit!
+4. **Attack the #1 Drain (${ctx.topCategory.name}):** Your biggest cost driver is **${ctx.topCategory.name}**. Target an immediate 40-50% cut in this category by substituting with home alternatives.
+
+💡 **Better Ways to Go About Your Spending (Practical Alternatives):**
+• 🍲 **Food Swap:** Batch-cook meals (waakye, jollof, rice & stew) for 3-4 days. Saves 60-75% vs restaurant orders.
+• 🚗 **Transport Swap:** Leave 15 mins before peak rideshare surges, chain errands into one trip, or take public transit for long stretches.
+• 📱 **Bills & Data Swap:** Switch from daily micro-bundles to a single structured monthly plan and turn on phone Data Saver.
+• ⏳ **The 48-Hour Pause:** Never buy discretionary items on the same day you think of them.
+
+[[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 New Daily Limit]] [[prompt: Give me a strict 7-day no-spend challenge | 🛑 7-Day No-Spend]] [[prompt: What are better ways to go about my everyday spending and cheaper alternatives? | 💡 Smarter Alternatives]] [[prompt: How can I stop impulse spending and emotional buying? | 🛡️ Stop Impulse Buys]]`;
+            }
+
+            // B. Daily Spending Ceiling Breach Recovery
+            if (has('daily allowance blown', 'exceeded daily', 'blew daily limit', 'spent too much today', 'daily limit breach', 'over daily', 'daily ceiling', 'daily breach')) {
+                const spentToday = ctx.spentToday;
+                const safeDaily = ctx.safeDailyAllowance;
+                const excess = Math.max(0, spentToday - safeDaily);
+                const adjustedAllowance = Math.max(0, (ctx.remaining) / Math.max(1, ctx.daysRemaining - 1));
+
+                return `🛑 **Strict Daily Cap Breach Correction**
+
+You spent **${ctx.currency} ${formatMoney(spentToday)}** today, blasting past your safe daily allowance of **${ctx.currency} ${formatMoney(safeDaily)}** by **${ctx.currency} ${formatMoney(excess)}**!
+
+⚠️ **The Math Reality:**
+If you repeat today's spending velocity for 3 more days, your monthly budget will collapse before the next week ends.
+
+🎯 **Your 2 Strict Recovery Options:**
+• **Option A (Recommended): Tomorrow is a Zero-Spend Day.** Spend literally **${ctx.currency} 0.00** on anything discretionary. Pack food from home, brew your own tea, and avoid shops. This instantly recovers the deficit!
+• **Option B (Gradual Tightening):** Tighten your daily spending limit from **${ctx.currency} ${formatMoney(safeDaily)}/day** down to **${ctx.currency} ${formatMoney(adjustedAllowance)}/day** for the next 3 days.
+
+🛡️ **Strict Habit Curb:**
+Put your payment cards away and delete food delivery apps for 48 hours. When you feel the urge to spend, ask yourself: *"Does this purchase keep me fed, healthy, or employed?"* If not, wait 48 hours!
+
+[[prompt: What is my safe daily limit? | 🎯 Daily Limit]] [[prompt: What are better ways to go about my spending? | 💡 Smarter Ways to Spend]] [[prompt: Give me a strict 7-day no-spend challenge | 🛑 No-Spend Challenge]]`;
+            }
+
+            // C. Fast Burn Rate & Pacing Brake
+            if (has('burn rate', 'pacing too fast', 'spending too fast', 'fast burn', 'spending velocity', 'spending ahead of schedule', 'slow down spending')) {
+                const pctMonth = Math.round((ctx.todayDate / ctx.daysInMonth) * 100);
+                const pctUsed = ctx.pctUsed;
+                const daysUntilZero = ctx.dailyAvg > 0 ? Math.floor(ctx.remaining / ctx.dailyAvg) : 0;
+
+                return `⚡ **High-Velocity Burn Rate Alert & Pacing Brake**
+
+You are currently on Day **${ctx.todayDate} of ${ctx.daysInMonth}** (${pctMonth}% into the month), but you have consumed **${pctUsed}% of your total budget**!
+
+🚨 **The Forecast:**
+At your current burn rate of **${ctx.currency} ${formatMoney(ctx.dailyAvg)}/day**, your remaining balance of **${ctx.currency} ${formatMoney(ctx.remaining)}** will be completely gone in approximately **${daysUntilZero} days** (around Day ${ctx.todayDate + daysUntilZero} of the month)!
+
+🛡️ **The 3-Step Emergency Brake System:**
+1. **Immediate Discretionary Freeze:** Pause all non-essential shopping, entertainment, and restaurant outings for 5 days.
+2. **Move Remaining Cash into a Lockdown Envelope:** You have **${ctx.currency} ${formatMoney(ctx.remaining)}** left for ${ctx.daysRemaining} days. Divide this into **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance * 7)} per week**. Never borrow from next week!
+3. **Daily Cap Lock:** Stick strictly to **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day** starting tomorrow morning.
+
+[[prompt: What is my safe daily limit? | 🎯 Safe Daily Cap]] [[prompt: Give me a strict 7-day no-spend challenge | 🛑 7-Day No-Spend Challenge]] [[prompt: What are better ways to go about my everyday spending and cheaper alternatives? | 💡 Smarter Alternatives]]`;
+            }
+
+            // D. Better Ways to Go About Your Spending (Smart & Cheaper Alternatives)
+            if (has('better ways', 'better ways to go about', 'smarter spending', 'spending alternatives', 'cheaper alternatives', 'how to spend better', 'smart ways to spend', 'frugal alternatives', 'curb rules', 'smarter alternatives')) {
+                return `💡 **Better Ways to Go About Your Spending: Smart Alternatives & Frugal Swaps**
+
+Discipline isn't about deprivation—it's about getting 3x more value out of every single cedi you spend! Here are high-impact category alternatives:
+
+🍲 **1. Food & Dining Swaps (Biggest Money Saver):**
+• *Instead of:* Daily lunchtime restaurant takeout (${ctx.currency} 30-50/day = ~${ctx.currency} 800/month)
+• *Do this:* The **3-Dinner Batch Cooking Method**. Cook large pots of waakye, jollof, or beans stew on Sunday and Wednesday nights. Pack containers for work lunch.
+• *Estimated Monthly Savings:* **${ctx.currency} 400 - 600**!
+
+🚗 **2. Transport & Commute Swaps:**
+• *Instead of:* Ordering rideshares during morning surge pricing.
+• *Do this:* Leave 15-20 minutes earlier before surge kicks in, or take public transit (trotro/bus) for the bulk distance and a short ride for the last mile. Combine 3 errands into one loop instead of separate trips.
+• *Estimated Monthly Savings:* **${ctx.currency} 150 - 300**!
+
+📱 **3. Bills & Mobile Data Swaps:**
+• *Instead of:* Buying daily micro data bundles (e.g. 5-10 cedis daily), which cost 30-50% more per gigabyte.
+• *Do this:* Buy one single structured monthly bundle. Enable **Data Saver** mode on your smartphone and turn off video auto-play on Instagram, TikTok, and YouTube.
+• *Estimated Monthly Savings:* **${ctx.currency} 80 - 150**!
+
+🛍️ **4. The 3 Golden Spending Curbs:**
+1. **The 48-Hour Pause:** For any non-essential item over ${ctx.currency} 50, wait 48 hours. If the urge passes, you just saved that money!
+2. **The "Work Hours" Conversion:** Divide the price tag by your hourly income. Ask: *"Is this pair of shoes really worth 12 hours of sitting at my desk working?"*
+3. **Cash Envelope for Weekend Fun:** Withdraw a set amount of cash for Friday-Sunday leisure. When the physical cash is gone, the weekend spending ends!
+
+[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]] [[prompt: Give me a strict 7-day no-spend challenge | 🛑 No-Spend Challenge]]`;
+            }
+
+            // E. Strict 7-Day No-Spend Challenge
+            if (has('no-spend challenge', 'no spend challenge', '7-day no-spend', 'zero-spend day', 'no spend')) {
+                return `🛑 **The Strict 7-Day No-Spend Challenge**
+
+This challenge is a financial dopamine reset. For 7 days, you spend **${ctx.currency} 0.00** on anything that isn't required for biological survival or your primary job!
+
+📋 **The 7-Day Battle Plan:**
+• **Day 1 (Pantry Raid):** Eat strictly from your fridge and cupboards. No grocery shopping, no takeout.
+• **Day 2 (Subscription Purge):** Open your bank alerts and app stores. Cancel at least 1 recurring membership or subscription you haven't used this month.
+• **Day 3 (Free Entertainment):** Zero cedis on leisure. Read a book, go for a walk, or watch downloaded movies at home.
+• **Day 4 (Commute Optimization):** Walk shorter distances, ride share with a colleague, or take the cheapest public route.
+• **Day 5 (Zero-Spend Friday Night):** Host a potluck game night or movie night at home instead of hitting bars or expensive spots.
+• **Day 6 (Batch Prep Weekend):** Cook your meals for the coming week using basic staples.
+• **Day 7 (Tally Your Victory):** Count the money you saved, calculate your new safe daily limit, and celebrate your discipline!
+
+💡 **Result:** Most people recover between **${ctx.currency} 200 - 500** in a single week on this challenge!
+
+[[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Safe Daily Cap]] [[prompt: Analyze my spending habits | 🔍 Habit Audit]] [[prompt: What are better ways to go about my everyday spending and cheaper alternatives? | 💡 Smarter Alternatives]]`;
+            }
+
+            // F. Coach Strictness Mode Guidance
+            if (has('coach strictness', 'strictness mode', 'strict mode', 'disciplinarian', 'balanced guardian', 'gentle guide', 'how strict')) {
+                const currentMode = state.coachStrictness || 'strict';
+                return `🛡️ **PocketCoach Strictness & Discipline System**
+
+Your current Coach Strictness Level is: **${currentMode === 'strict' ? 'Strict Disciplinarian 🛡️' : (currentMode === 'balanced' ? 'Balanced Guardian ⚖️' : 'Gentle Guide 🌱')}**
+
+Here is how each mode works:
+1. **🛡️ Strict Disciplinarian (Default & Recommended):**
+   • Zero excuses: alerts you immediately if your daily spending breaches your safe daily allowance by even 5%!
+   • Warns you aggressively if mid-month burn rate exceeds healthy pacing.
+   • Delivers direct, tough-love coaching and actionable spending freezes to curb leaks.
+
+2. **⚖️ Balanced Guardian:**
+   • Standard safeguards: notifies at 80% and 100% budget thresholds.
+   • Allows a 25% buffer on daily spending before triggering alerts.
+   • Delivers pragmatic, balanced coaching.
+
+3. **🌱 Gentle Guide:**
+   • Softer nudges with higher thresholds (50% daily buffer).
+   • Encouraging, supportive coaching tone.
+
+⚙️ **To change your mode:** Open the **Notifications & Spending Curbs Center** (bell icon in header) and tap your preferred setting in the **Coach Strictness Level** selector!
+
+[[prompt: What is my safe daily limit? | 🎯 Daily Target]] [[prompt: I overspent my budget. Give me a strict emergency recovery plan. | 🚨 Overspend Recovery]]`;
             }
 
             // 2. HELP & CAPABILITIES DIRECTORY
