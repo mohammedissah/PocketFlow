@@ -1,40 +1,107 @@
-// PocketFlow Automatic Cache Killer & Service Worker Reset
-// Wipes all cached versions and unregisters from all devices
+// PocketFlow Service Worker v3.3 (WebAPK PWA for Android & iOS)
+const CACHE_NAME = 'pocketflow-cache-v3.3';
+const ASSETS_TO_CACHE = [
+    './',
+    './index.html',
+    './pocketflow_spending_tracker.html',
+    './manifest.json',
+    './manifest.webmanifest',
+    './logo.png',
+    './logo.jpg',
+    './logo-512.png',
+    './icon-192.png',
+    './icon-512.png',
+    './icon-maskable-192.png',
+    './icon-maskable-512.png',
+    './apple-touch-icon.png',
+    './apple-touch-icon-180x180.png',
+    './apple-touch-icon-152x152.png',
+    './apple-touch-icon-167x167.png',
+    './apple-touch-icon-120x120.png',
+    './favicon.png',
+    './favicon.ico'
+];
 
 self.addEventListener('install', (event) => {
-    // Force immediate takeover
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
+        })
+    );
     self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        // 1. Delete EVERY cache in CacheStorage
         caches.keys().then((keys) => {
             return Promise.all(
-                keys.map((key) => {
-                    return caches.delete(key);
-                })
+                keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
             );
-        }).then(() => {
-            // 2. Claim all open browser windows / tabs
-            return self.clients.claim();
-        }).then(() => {
-            // 3. Unregister this service worker registration so it never runs again
-            return self.registration.unregister();
-        }).then(() => {
-            // 4. Force all open clients to reload fresh from the network
-            return self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-        }).then((clients) => {
-            for (const client of clients) {
-                if (client.url && 'navigate' in client) {
-                    client.navigate(client.url);
-                }
-            }
+        }).then(() => self.clients.claim())
+    );
+});
+
+self.addEventListener('fetch', (event) => {
+    if (event.request.method !== 'GET') return;
+
+    const isNavigation = event.request.mode === 'navigate' || 
+                         (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'));
+
+    // 1. Navigation / HTML Document requests: Network-First (Allows live refresh in browser & offline fallback in PWA)
+    if (isNavigation) {
+        event.respondWith(
+            fetch(event.request)
+                .then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const responseToCache = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, responseToCache);
+                        });
+                    }
+                    return networkResponse;
+                })
+                .catch(() => {
+                    return caches.match(event.request).then((cachedResponse) => {
+                        return cachedResponse || caches.match('./index.html') || caches.match('./');
+                    });
+                })
+        );
+        return;
+    }
+
+    // 2. Static Assets: Stale-While-Revalidate
+    event.respondWith(
+        caches.match(event.request).then((cachedResponse) => {
+            const fetchPromise = fetch(event.request)
+                .then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
+                        const responseToCache = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, responseToCache);
+                        });
+                    }
+                    return networkResponse;
+                })
+                .catch(() => cachedResponse);
+
+            return cachedResponse || fetchPromise;
         })
     );
 });
 
-// Network-only fallback: never intercept or serve stale cache during shutdown
-self.addEventListener('fetch', (event) => {
-    event.respondWith(fetch(event.request));
+// Native Push / System Notifications (Required on iOS 16.4+ and Android)
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if (client.url && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow('./');
+            }
+        })
+    );
 });

@@ -9,14 +9,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="PocketFlow">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="application-name" content="PocketFlow">
+    <meta name="theme-color" content="#020617">
+    
+    <!-- PWA Web App Manifest (Mandatory for Android WebAPK without Chrome badge) -->
+    <link rel="manifest" href="./manifest.json">
+    
     <!-- App Icons (Web, Favicon & Apple Touch) -->
     <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
-    <link rel="icon" type="image/png" sizes="204x204" href="logo.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="logo-512.png">
-    <link rel="apple-touch-icon" href="logo.png">
-    <link id="appleTouchIconLink" rel="apple-touch-icon" href="logo.png">
-    <link id="pwaManifestLink" rel="manifest">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1499,55 +1503,6 @@
         let deferredInstallPrompt = null;
 
         function setupWebAppManifest() {
-            const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <defs>
-                    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#34d399"/>
-                        <stop offset="100%" stop-color="#0d9488"/>
-                    </linearGradient>
-                </defs>
-                <rect width="512" height="512" rx="120" fill="url(#g)"/>
-                <path d="M133 213h246c22.7 0 41 18.3 41 41v143c0 22.7-18.3 41-41 41H133c-22.7 0-41-18.3-41-41V254c0-22.7 18.3-41 41-41zm0-61h205c11.3 0 20.5 9.2 20.5 20.5s-9.2 20.5-20.5 20.5H133c-11.3 0-20.5-9.2-20.5-20.5S121.7 152 133 152zm215 164a31 31 0 1 0 0-62 31 31 0 0 0 0 62z" fill="#0f172a"/>
-            </svg>`;
-            const iconDataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgIcon);
-
-            const appleIcon = document.getElementById('appleTouchIconLink');
-            if (appleIcon) appleIcon.href = 'logo.png';
-
-            const manifest = {
-                name: 'PocketFlow Spending Tracker',
-                short_name: 'PocketFlow',
-                description: 'Track your daily expenses, monthly budget, and spending breakdown.',
-                start_url: '.',
-                display: 'standalone',
-                background_color: '#0f172a',
-                theme_color: '#0f172a',
-                icons: [
-                    {
-                        src: 'logo.png',
-                        sizes: '256x256',
-                        type: 'image/png',
-                        purpose: 'any'
-                    },
-                    {
-                        src: 'logo-512.png',
-                        sizes: '512x512',
-                        type: 'image/png',
-                        purpose: 'any maskable'
-                    },
-                    {
-                        src: iconDataUrl,
-                        sizes: '512x512',
-                        type: 'image/svg+xml',
-                        purpose: 'any maskable'
-                    }
-                ]
-            };
-
-            const manifestDataUrl = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
-            const manifestLink = document.getElementById('pwaManifestLink');
-            if (manifestLink) manifestLink.href = manifestDataUrl;
-
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
             if (isStandalone) {
                 document.documentElement.classList.add('is-standalone');
@@ -1862,27 +1817,18 @@
             showToast('Ready! Now tap Safari Share -> "Add to Home Screen" to transfer your data');
         }
 
-        function killServiceWorkersAndCaches() {
-            // 1. Unregister all active Service Workers across scopes
+        function registerServiceWorker() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(regs => {
-                    for (let reg of regs) {
-                        reg.unregister().catch(() => {});
-                    }
-                }).catch(() => {});
-            }
-            // 2. Wipe all CacheStorage entries
-            if ('caches' in window) {
-                caches.keys().then(keys => {
-                    for (let key of keys) {
-                        caches.delete(key).catch(() => {});
-                    }
-                }).catch(() => {});
+                navigator.serviceWorker.register('./sw.js', { scope: './' }).then((reg) => {
+                    reg.update().catch(() => {});
+                }).catch(err => {
+                    console.log('SW registration error:', err);
+                });
             }
         }
 
         // Run immediate initialization
-        killServiceWorkersAndCaches();
+        registerServiceWorker();
         loadState();
         checkUrlDataImport();
         restoreStateFromIDB();
