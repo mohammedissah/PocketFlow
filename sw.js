@@ -1,69 +1,40 @@
-// PocketFlow Service Worker v2.6
-const CACHE_NAME = 'pocketflow-cache-v2.6';
-const ASSETS_TO_CACHE = [
-    './',
-    './index.html',
-    './pocketflow_spending_tracker.html',
-    './logo.png',
-    './logo.jpg',
-    './logo-512.png',
-    './favicon.png',
-    './favicon.ico'
-];
+// PocketFlow Automatic Cache Killer & Service Worker Reset
+// Wipes all cached versions and unregisters from all devices
 
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
-        })
-    );
+    // Force immediate takeover
     self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
     event.waitUntil(
+        // 1. Delete EVERY cache in CacheStorage
         caches.keys().then((keys) => {
             return Promise.all(
-                keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+                keys.map((key) => {
+                    return caches.delete(key);
+                })
             );
-        }).then(() => self.clients.claim())
+        }).then(() => {
+            // 2. Claim all open browser windows / tabs
+            return self.clients.claim();
+        }).then(() => {
+            // 3. Unregister this service worker registration so it never runs again
+            return self.registration.unregister();
+        }).then(() => {
+            // 4. Force all open clients to reload fresh from the network
+            return self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        }).then((clients) => {
+            for (const client of clients) {
+                if (client.url && 'navigate' in client) {
+                    client.navigate(client.url);
+                }
+            }
+        })
     );
 });
 
+// Network-only fallback: never intercept or serve stale cache during shutdown
 self.addEventListener('fetch', (event) => {
-    // Only cache GET requests
-    if (event.request.method !== 'GET') return;
-
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            const fetchPromise = fetch(event.request).then((networkResponse) => {
-                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-                    const responseToCache = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseToCache);
-                    });
-                }
-                return networkResponse;
-            }).catch(() => cachedResponse);
-
-            return cachedResponse || fetchPromise;
-        })
-    );
-});
-
-// Native Push / System Notifications (Required on iOS 16.4+ and Android)
-self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-            for (const client of clientList) {
-                if (client.url && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow('./');
-            }
-        })
-    );
+    event.respondWith(fetch(event.request));
 });

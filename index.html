@@ -1844,19 +1844,30 @@
             showToast('Ready! Now tap Safari Share -> "Add to Home Screen" to transfer your data');
         }
 
-        function registerServiceWorker() {
+        function killServiceWorkersAndCaches() {
+            // 1. Unregister all active Service Workers across scopes
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(err => {
-                    console.log('SW registration error:', err);
-                });
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    for (let reg of regs) {
+                        reg.unregister().catch(() => {});
+                    }
+                }).catch(() => {});
+            }
+            // 2. Wipe all CacheStorage entries
+            if ('caches' in window) {
+                caches.keys().then(keys => {
+                    for (let key of keys) {
+                        caches.delete(key).catch(() => {});
+                    }
+                }).catch(() => {});
             }
         }
 
         // Run immediate initialization
+        killServiceWorkersAndCaches();
         loadState();
         checkUrlDataImport();
         restoreStateFromIDB();
-        registerServiceWorker();
         if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
             document.documentElement.classList.add('is-standalone');
         }
