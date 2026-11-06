@@ -1,5 +1,5 @@
-// PocketFlow Service Worker v3.4 (WebAPK PWA for Android & iOS)
-const CACHE_NAME = 'pocketflow-cache-v3.4';
+// PocketFlow Service Worker v3.5 (WebAPK PWA for Android & iOS)
+const CACHE_NAME = 'pocketflow-cache-v3.5';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

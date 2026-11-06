@@ -32,11 +32,40 @@
     <!-- Analytics (Umami) -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="1e5edb92-211c-4872-b26c-35b2599d6efe"></script>
 
-    <!-- Early Standalone Detection for iOS Home Screen PWAs -->
+    <!-- Early Standalone Detection & Umami App Mode Tracking -->
     <script>
-        if (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches) {
-            document.documentElement.classList.add('is-standalone');
-        }
+        (function() {
+            var isStandalone = window.navigator.standalone === true || 
+                               window.matchMedia('(display-mode: standalone)').matches ||
+                               window.matchMedia('(display-mode: fullscreen)').matches ||
+                               window.matchMedia('(display-mode: minimal-ui)').matches;
+            
+            if (isStandalone) {
+                document.documentElement.classList.add('is-standalone');
+            }
+
+            function trackLaunch() {
+                var eventName = isStandalone ? 'PWA Launch' : 'Browser Visit';
+                var attempts = 0;
+                var timer = setInterval(function() {
+                    attempts++;
+                    if (window.umami && typeof window.umami.track === 'function') {
+                        clearInterval(timer);
+                        window.umami.track(eventName, {
+                            mode: isStandalone ? 'standalone_pwa' : 'browser_tab'
+                        });
+                    } else if (attempts >= 10) {
+                        clearInterval(timer);
+                    }
+                }, 500);
+            }
+
+            if (document.readyState === 'complete') {
+                trackLaunch();
+            } else {
+                window.addEventListener('load', trackLaunch);
+            }
+        })();
     </script>
 
     <script>
