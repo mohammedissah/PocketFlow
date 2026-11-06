@@ -1,11 +1,12 @@
-// PocketFlow Service Worker v3.5 (WebAPK PWA for Android & iOS)
-const CACHE_NAME = 'pocketflow-cache-v3.5';
+// PocketFlow Service Worker v3.6 (WebAPK PWA for Android & iOS)
+const CACHE_NAME = 'pocketflow-cache-v3.6';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './pocketflow_spending_tracker.html',
     './manifest.json',
     './manifest.webmanifest',
+    './og-image.png',
     './logo.png',
     './logo.jpg',
     './logo-512.png',
