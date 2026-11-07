@@ -74,6 +74,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client v2 (for Multi-Device Cloud Sync) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- Analytics (Umami) -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="1e5edb92-211c-4872-b26c-35b2599d6efe"></script>
@@ -278,6 +280,13 @@
                     <span id="notificationBadgeCount" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-bold items-center justify-center">0</span>
                 </button>
 
+                <!-- Cloud Sync Multi-Device Button (Visible on all screen sizes) -->
+                <button onclick="openModal('cloudSyncModal')" id="cloudSyncHeaderBtn" class="relative w-8 h-8 sm:w-auto sm:px-2.5 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs font-semibold shrink-0" title="Cloud Sync & Multi-Device" aria-label="Cloud Sync">
+                    <i id="cloudSyncHeaderIcon" class="fa-solid fa-cloud text-slate-400 text-xs sm:text-sm"></i>
+                    <span id="cloudSyncHeaderLabel" class="hidden md:inline">Sync</span>
+                    <span id="cloudSyncHeaderDot" class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                </button>
+
                 <!-- Currency Selector (Visible on all screen sizes) -->
                 <select id="currencySelect" aria-label="Currency" class="h-8 bg-slate-800 hover:bg-slate-700 text-[11px] sm:text-xs font-semibold text-emerald-400 rounded-xl px-2 sm:px-2.5 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer shrink-0">
                     <option value="GH₵">GH₵</option>
@@ -294,6 +303,13 @@
                     </button>
                     <!-- Mobile Dropdown Menu -->
                     <div id="mobileHeaderDropdown" class="hidden absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl py-1.5 z-50 text-xs text-slate-200 divide-y divide-slate-800/80">
+                        <button onclick="closeMobileHeaderMenu(); openModal('cloudSyncModal');" class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-cloud text-sky-400 text-sm w-4 text-center"></i>
+                            <div>
+                                <div class="font-bold text-white text-xs">Cloud Sync</div>
+                                <div id="mobileCloudSyncSubtext" class="text-[10px] text-slate-400">Sync across devices</div>
+                            </div>
+                        </button>
                         <button onclick="closeMobileHeaderMenu(); openModal('helpGuideModal');" class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition">
                             <i class="fa-solid fa-circle-question text-emerald-400 text-sm w-4 text-center"></i>
                             <div>
@@ -526,7 +542,25 @@
                                 Reset All
                             </button>
                         </div>
-                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80">
+
+                        <!-- Multi-Device Cloud Sync Banner -->
+                        <div class="p-3 bg-slate-900/90 border border-slate-700/80 rounded-xl space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span id="cloudSyncCardDot" class="w-2 h-2 rounded-full bg-slate-500 shrink-0"></span>
+                                    <span id="cloudSyncCardStatus" class="text-xs font-semibold text-slate-200">Local Only (Offline)</span>
+                                </div>
+                                <button onclick="openModal('cloudSyncModal')" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold transition flex items-center gap-1">
+                                    <i class="fa-solid fa-cloud text-[10px]"></i>
+                                    <span id="cloudSyncCardBtnLabel">Connect</span>
+                                </button>
+                            </div>
+                            <p id="cloudSyncCardDesc" class="text-[10px] text-slate-400 leading-snug">
+                                Sign in to automatically sync your spending across your phone, tablet, and laptop.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
                             <button onclick="backupJSON()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 border border-slate-700 transition">
                                 <i class="fa-solid fa-cloud-arrow-down text-emerald-400"></i>
                                 <span>Backup JSON</span>
@@ -1227,6 +1261,161 @@
         </div>
     </div>
 
+    <!-- MODAL: SUPABASE CLOUD SYNC & MULTI-DEVICE -->
+    <div id="cloudSyncModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[88vh] overflow-y-auto flex flex-col">
+            <!-- Mobile grab handle -->
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden shrink-0"></div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-400 text-slate-950 flex items-center justify-center font-bold text-sm shadow-md shadow-sky-500/20">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white leading-tight">Cloud Sync</h3>
+                        <p class="text-[11px] text-slate-400">Multi-device sync & automatic cloud backup</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('cloudSyncModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Status Card -->
+            <div class="p-3.5 bg-slate-950/70 border border-slate-800 rounded-2xl mb-4 space-y-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span id="modalCloudStatusDot" class="w-2.5 h-2.5 rounded-full bg-slate-500 shrink-0"></span>
+                        <span id="modalCloudStatusTitle" class="text-xs font-bold text-slate-200">Local Only (Offline)</span>
+                    </div>
+                    <span id="modalCloudLastSync" class="text-[10px] text-slate-500">Not synced</span>
+                </div>
+                <p id="modalCloudStatusDesc" class="text-[11px] text-slate-400 leading-relaxed">
+                    Your spending data is stored safely on this device. Sign in to automatically sync across all your phones, tablets, and computers.
+                </p>
+            </div>
+
+            <!-- VIEW A: SIGNED-IN STATE -->
+            <div id="cloudSyncSignedInView" class="hidden space-y-4">
+                <div class="bg-slate-800/40 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-sky-500/20 border border-sky-500/30 text-sky-400 flex items-center justify-center font-bold text-sm shrink-0">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="text-[11px] text-slate-400">Connected Account</div>
+                            <div id="modalUserEmail" class="text-xs font-bold text-white truncate">user@example.com</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+                        <button onclick="triggerManualSync()" id="manualSyncBtn" class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/10 transition">
+                            <i id="manualSyncIcon" class="fa-solid fa-arrows-rotate"></i>
+                            <span>Sync Now</span>
+                        </button>
+                        <button onclick="handleCloudSignOut()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-400 border border-slate-700 text-xs font-bold transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span>Sign Out</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-3 flex items-start gap-2.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 shrink-0"></i>
+                    <div class="text-[11px] text-slate-300 leading-relaxed">
+                        <strong>Real-Time Sync is Active:</strong> Any expense you log here or on your other devices will stay automatically up to date.
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW B: NOT SIGNED-IN / AUTH FORM -->
+            <div id="cloudSyncAuthView" class="space-y-4">
+                <!-- Google Sign In Button -->
+                <button onclick="handleGoogleSignIn()" type="button" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 shadow transition">
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
+                        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"/>
+                        <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.97 0 12s.45 3.84 1.25 5.42l4.03-3.15z"/>
+                        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                    </svg>
+                    <span>Continue with Google</span>
+                </button>
+
+                <!-- Divider -->
+                <div class="flex items-center gap-3">
+                    <div class="h-px bg-slate-800 flex-1"></div>
+                    <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">or with email</span>
+                    <div class="h-px bg-slate-800 flex-1"></div>
+                </div>
+
+                <!-- Email & Password Form -->
+                <form onsubmit="handleEmailAuth(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-400 mb-1">Email address</label>
+                        <input type="email" id="cloudAuthEmail" required placeholder="you@example.com"
+                            class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl py-2 px-3 text-xs text-white placeholder-slate-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-[11px] font-semibold text-slate-400">Password</label>
+                            <button type="button" onclick="handleSendMagicLink()" class="text-[10px] text-sky-400 hover:text-sky-300 font-medium">
+                                Email magic link instead
+                            </button>
+                        </div>
+                        <input type="password" id="cloudAuthPassword" placeholder="••••••••"
+                            class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl py-2 px-3 text-xs text-white placeholder-slate-500 focus:outline-none transition">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <button type="submit" name="action" value="signin" class="py-2.5 px-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition text-center">
+                            Sign In
+                        </button>
+                        <button type="submit" name="action" value="signup" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition text-center">
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- COLLAPSIBLE: SUPABASE SETTINGS (Self-Hosters & Custom Project) -->
+            <div class="mt-4 pt-3 border-t border-slate-800/80">
+                <button type="button" onclick="toggleSupabaseConfigPanel()" class="w-full flex items-center justify-between text-[11px] text-slate-400 hover:text-slate-200 transition py-1">
+                    <span class="flex items-center gap-1.5 font-semibold">
+                        <i class="fa-solid fa-sliders text-emerald-400 text-[10px]"></i>
+                        <span>Supabase Project Configuration</span>
+                    </span>
+                    <i id="supabaseConfigToggleIcon" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+                </button>
+
+                <div id="supabaseConfigPanel" class="hidden mt-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl space-y-2.5 text-xs">
+                    <p class="text-[11px] text-slate-400 leading-snug">
+                        Connect to your own Supabase project (Free at <a href="https://supabase.com" target="_blank" rel="noopener" class="text-sky-400 underline">supabase.com</a>). Run the SQL in <code class="text-emerald-400 bg-slate-900 px-1 py-0.5 rounded">supabase-schema.sql</code> once in your SQL Editor.
+                    </p>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Project URL</label>
+                        <input type="text" id="supabaseUrlInput" placeholder="https://your-project.supabase.co"
+                            class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-lg py-1.5 px-2.5 text-[11px] text-white placeholder-slate-600 focus:outline-none font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Anon / Public API Key</label>
+                        <input type="password" id="supabaseKeyInput" placeholder="eyJhbGciOiJIUzI1NiIsIn..."
+                            class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-lg py-1.5 px-2.5 text-[11px] text-white placeholder-slate-600 focus:outline-none font-mono">
+                    </div>
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" onclick="copySupabaseSqlInstructions()" class="text-[10px] text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-copy"></i> Copy SQL Setup
+                        </button>
+                        <button type="button" onclick="saveCustomSupabaseConfig()" class="py-1 px-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-lg font-bold text-[11px] transition">
+                            Save & Connect
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL 5: NOTIFICATIONS & SPENDING CURBS CENTER -->
     <div id="notificationsModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[88vh] flex flex-col">
@@ -1793,7 +1982,7 @@
                             state.budget = Number(parsed.budget);
                         }
                         if (parsed.currency) {
-                            state.currency = parsed.currency;
+                            state.currency = String(parsed.currency).trim().slice(0, 8).replace(/[<>'"]/g, '') || '$';
                         }
                         if (Array.isArray(parsed.notifications)) {
                             state.notifications = parsed.notifications;
@@ -1837,7 +2026,7 @@
             }
         }
 
-        function saveState() {
+        function saveState(shouldSync = true) {
             try {
                 const payloadObj = {
                     currency: state.currency,
@@ -1856,26 +2045,625 @@
                 localStorage.setItem('pocketflow_backup', payload);
                 sessionStorage.setItem(STORAGE_KEY, payload);
                 saveStateToIDB(payloadObj);
+
+                if (shouldSync && typeof scheduleCloudSync === 'function') {
+                    scheduleCloudSync();
+                }
             } catch (e) {
                 console.error('Could not save state to storage', e);
             }
         }
 
+        // ==========================================
+        // SUPABASE MULTI-DEVICE CLOUD SYNC ENGINE
+        // ==========================================
+        const DEFAULT_SUPABASE_URL = 'https://erfqhxmofsepklrioctv.supabase.co';
+        const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_1JdCku5fDSA7c_D0GnrUBA_iUbPHIOw';
+
+        let supabaseClient = null;
+        let currentCloudUser = null;
+        let cloudRealtimeChannel = null;
+        let cloudSyncTimeout = null;
+        let isCloudSyncing = false;
+        let lastSyncedTime = null;
+
+        function cleanSupabaseUrl(rawUrl) {
+            if (!rawUrl) return '';
+            let cleaned = String(rawUrl).trim();
+            cleaned = cleaned.replace(/\/rest\/v1\/?$/i, '');
+            cleaned = cleaned.replace(/\/auth\/v1\/?$/i, '');
+            cleaned = cleaned.replace(/\/+$/, '');
+            return cleaned;
+        }
+
+        function getSupabaseConfig() {
+            const customUrl = localStorage.getItem('pocketflow_supabase_url');
+            const customKey = localStorage.getItem('pocketflow_supabase_anon_key');
+            const rawUrl = (customUrl && customUrl.trim()) || DEFAULT_SUPABASE_URL;
+            return {
+                url: cleanSupabaseUrl(rawUrl),
+                anonKey: (customKey && customKey.trim()) || DEFAULT_SUPABASE_ANON_KEY
+            };
+        }
+
+        function initSupabaseSync() {
+            try {
+                const config = getSupabaseConfig();
+                if (!window.supabase || !config.url || !config.anonKey) {
+                    updateCloudSyncUI('guest');
+                    return;
+                }
+
+                supabaseClient = window.supabase.createClient(config.url, config.anonKey, {
+                    auth: {
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                });
+
+                // Listen for Auth changes (login, logout, token refresh)
+                supabaseClient.auth.onAuthStateChange(async (event, session) => {
+                    if (session && session.user) {
+                        currentCloudUser = session.user;
+                        updateCloudSyncUI('synced');
+                        setupRealtimeSync();
+                        await pullFromCloud(true);
+                    } else {
+                        currentCloudUser = null;
+                        if (cloudRealtimeChannel) {
+                            try { cloudRealtimeChannel.unsubscribe(); } catch (e) {}
+                            cloudRealtimeChannel = null;
+                        }
+                        updateCloudSyncUI('guest');
+                    }
+                });
+
+                // Auto-sync when reconnecting to internet
+                window.addEventListener('online', () => {
+                    if (currentCloudUser) {
+                        scheduleCloudSync(300);
+                    }
+                });
+
+            } catch (err) {
+                console.error('Supabase init error:', err);
+                updateCloudSyncUI('guest');
+            }
+        }
+
+        function scheduleCloudSync(delayMs = 1000) {
+            if (!supabaseClient || !currentCloudUser) return;
+            if (cloudSyncTimeout) clearTimeout(cloudSyncTimeout);
+            updateCloudSyncUI('syncing');
+            cloudSyncTimeout = setTimeout(() => {
+                pushToCloud();
+            }, delayMs);
+        }
+
+        async function pushToCloud() {
+            if (!supabaseClient || !currentCloudUser || isCloudSyncing) return;
+            isCloudSyncing = true;
+            updateCloudSyncUI('syncing');
+
+            try {
+                const payload = {
+                    user_id: currentCloudUser.id,
+                    expenses: state.expenses,
+                    budget: state.budget,
+                    currency: state.currency,
+                    coach_strictness: state.coachStrictness || 'balanced',
+                    updated_at: new Date().toISOString()
+                };
+
+                const { error } = await supabaseClient
+                    .from('pocketflow_sync')
+                    .upsert(payload, { onConflict: 'user_id' });
+
+                if (error) throw error;
+
+                lastSyncedTime = new Date();
+                localStorage.setItem('pocketflow_last_cloud_sync', lastSyncedTime.toISOString());
+                updateCloudSyncUI('synced');
+            } catch (err) {
+                console.error('Cloud push failed:', err);
+                updateCloudSyncUI('offline');
+            } finally {
+                isCloudSyncing = false;
+            }
+        }
+
+        async function pullFromCloud(isInitial = false) {
+            if (!supabaseClient || !currentCloudUser || isCloudSyncing) return;
+            isCloudSyncing = true;
+            updateCloudSyncUI('syncing');
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('pocketflow_sync')
+                    .select('*')
+                    .eq('user_id', currentCloudUser.id)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (data) {
+                    const localExpenses = state.expenses || [];
+                    const remoteExpenses = Array.isArray(data.expenses) ? data.expenses : [];
+
+                    // Two-way merge: combine unique expenses by id
+                    const expenseMap = new Map();
+                    remoteExpenses.forEach(exp => {
+                        if (exp && exp.id) expenseMap.set(exp.id, exp);
+                    });
+
+                    let hasNewLocalExpenses = false;
+                    localExpenses.forEach(exp => {
+                        if (exp && exp.id) {
+                            if (!expenseMap.has(exp.id)) {
+                                expenseMap.set(exp.id, exp);
+                                hasNewLocalExpenses = true;
+                            } else {
+                                const remoteExp = expenseMap.get(exp.id);
+                                if (remoteExp.isPreloaded && !exp.isPreloaded) {
+                                    expenseMap.set(exp.id, exp);
+                                }
+                            }
+                        }
+                    });
+
+                    state.expenses = Array.from(expenseMap.values());
+                    if (data.budget) state.budget = Number(data.budget);
+                    if (data.currency) {
+                        state.currency = data.currency;
+                        const currencySelect = document.getElementById('currencySelect');
+                        if (currencySelect) currencySelect.value = state.currency;
+                    }
+                    if (data.coach_strictness) state.coachStrictness = data.coach_strictness;
+
+                    // Save locally without triggering a circular sync push
+                    saveState(false);
+                    renderAll(true);
+
+                    if (hasNewLocalExpenses) {
+                        pushToCloud();
+                    }
+
+                    lastSyncedTime = new Date(data.updated_at || Date.now());
+                    localStorage.setItem('pocketflow_last_cloud_sync', lastSyncedTime.toISOString());
+                    updateCloudSyncUI('synced');
+                    if (isInitial) {
+                        showToast('Cloud data synced successfully!');
+                    }
+                } else {
+                    // First time login: push local data to initialize the cloud vault
+                    await pushToCloud();
+                    if (isInitial) {
+                        showToast('Local spending saved to Cloud Vault!');
+                    }
+                }
+            } catch (err) {
+                console.error('Cloud pull failed:', err);
+                updateCloudSyncUI('offline');
+            } finally {
+                isCloudSyncing = false;
+            }
+        }
+
+        function setupRealtimeSync() {
+            if (!supabaseClient || !currentCloudUser) return;
+            try {
+                if (cloudRealtimeChannel) {
+                    cloudRealtimeChannel.unsubscribe();
+                }
+                cloudRealtimeChannel = supabaseClient
+                    .channel('pocketflow_sync_channel_' + currentCloudUser.id)
+                    .on('postgres_changes', {
+                        event: '*',
+                        schema: 'public',
+                        table: 'pocketflow_sync',
+                        filter: `user_id=eq.${currentCloudUser.id}`
+                    }, (payload) => {
+                        if (payload.new && !isCloudSyncing) {
+                            const remote = payload.new;
+                            const remoteTime = new Date(remote.updated_at).getTime();
+                            const localTime = lastSyncedTime ? lastSyncedTime.getTime() : 0;
+                            if (remoteTime > localTime + 1500) {
+                                pullFromCloud(false);
+                            }
+                        }
+                    })
+                    .subscribe();
+            } catch (err) {
+                console.log('Realtime setup skipped:', err);
+            }
+        }
+
+        function updateCloudSyncUI(status) {
+            const headerDot = document.getElementById('cloudSyncHeaderDot');
+            const headerIcon = document.getElementById('cloudSyncHeaderIcon');
+            const cardDot = document.getElementById('cloudSyncCardDot');
+            const cardStatus = document.getElementById('cloudSyncCardStatus');
+            const cardBtnLabel = document.getElementById('cloudSyncCardBtnLabel');
+            const cardDesc = document.getElementById('cloudSyncCardDesc');
+            const modalDot = document.getElementById('modalCloudStatusDot');
+            const modalTitle = document.getElementById('modalCloudStatusTitle');
+            const modalDesc = document.getElementById('modalCloudStatusDesc');
+            const modalLastSync = document.getElementById('modalCloudLastSync');
+            const modalEmail = document.getElementById('modalUserEmail');
+            const signedInView = document.getElementById('cloudSyncSignedInView');
+            const authView = document.getElementById('cloudSyncAuthView');
+            const mobileSubtext = document.getElementById('mobileCloudSyncSubtext');
+
+            const isOnline = navigator.onLine;
+
+            if (currentCloudUser) {
+                if (signedInView) signedInView.classList.remove('hidden');
+                if (authView) authView.classList.add('hidden');
+                if (modalEmail) modalEmail.textContent = currentCloudUser.email || 'Google User';
+
+                if (cardBtnLabel) cardBtnLabel.textContent = 'Manage';
+                if (cardDesc) cardDesc.textContent = `Syncing automatically with ${currentCloudUser.email || 'cloud account'}.`;
+                if (mobileSubtext) mobileSubtext.textContent = 'Connected: In Sync';
+
+                let timeStr = 'Just now';
+                if (lastSyncedTime) {
+                    timeStr = lastSyncedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
+                if (modalLastSync) modalLastSync.textContent = `Synced: ${timeStr}`;
+
+                if (status === 'syncing') {
+                    if (headerDot) headerDot.className = 'w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse';
+                    if (headerIcon) headerIcon.className = 'fa-solid fa-arrows-rotate text-sky-400 text-xs sm:text-sm animate-spin';
+                    if (cardDot) cardDot.className = 'w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0';
+                    if (cardStatus) cardStatus.textContent = 'Syncing...';
+                    if (modalDot) modalDot.className = 'w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0';
+                    if (modalTitle) modalTitle.textContent = 'Syncing with Cloud...';
+                } else if (!isOnline || status === 'offline') {
+                    if (headerDot) headerDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400';
+                    if (headerIcon) headerIcon.className = 'fa-solid fa-cloud text-amber-400 text-xs sm:text-sm';
+                    if (cardDot) cardDot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
+                    if (cardStatus) cardStatus.textContent = 'Offline (Saved Locally)';
+                    if (modalDot) modalDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0';
+                    if (modalTitle) modalTitle.textContent = 'Offline – Changes saved locally';
+                    if (modalDesc) modalDesc.textContent = 'No internet connection. Changes will upload automatically once you reconnect.';
+                } else {
+                    if (headerDot) headerDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+                    if (headerIcon) headerIcon.className = 'fa-solid fa-cloud text-emerald-400 text-xs sm:text-sm';
+                    if (cardDot) cardDot.className = 'w-2 h-2 rounded-full bg-emerald-400 shrink-0';
+                    if (cardStatus) cardStatus.textContent = 'Cloud Connected (In Sync)';
+                    if (modalDot) modalDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0';
+                    if (modalTitle) modalTitle.textContent = 'Cloud Connected & In Sync';
+                    if (modalDesc) modalDesc.textContent = 'Your spending data is synced in real time across all logged-in devices.';
+                }
+            } else {
+                if (signedInView) signedInView.classList.add('hidden');
+                if (authView) authView.classList.remove('hidden');
+
+                if (headerDot) headerDot.className = 'w-1.5 h-1.5 rounded-full bg-slate-500';
+                if (headerIcon) headerIcon.className = 'fa-solid fa-cloud text-slate-400 text-xs sm:text-sm';
+                if (cardDot) cardDot.className = 'w-2 h-2 rounded-full bg-slate-500 shrink-0';
+                if (cardStatus) cardStatus.textContent = 'Local Only (Offline)';
+                if (cardBtnLabel) cardBtnLabel.textContent = 'Connect';
+                if (cardDesc) cardDesc.textContent = 'Sign in to automatically sync your spending across your phone, tablet, and laptop.';
+                if (mobileSubtext) mobileSubtext.textContent = 'Multi-device sync & backup';
+
+                if (modalDot) modalDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-500 shrink-0';
+                if (modalTitle) modalTitle.textContent = 'Local Only (Guest)';
+                if (modalLastSync) modalLastSync.textContent = 'Not synced';
+                if (modalDesc) modalDesc.textContent = 'Your data is currently stored only in this browser. Sign in below to access it from any device or recover if your phone is lost.';
+            }
+        }
+
+        function refreshCloudSyncModalUI() {
+            const config = getSupabaseConfig();
+            const urlInput = document.getElementById('supabaseUrlInput');
+            const keyInput = document.getElementById('supabaseKeyInput');
+            if (urlInput) urlInput.value = config.url;
+            if (keyInput) keyInput.value = config.anonKey;
+            updateCloudSyncUI(currentCloudUser ? 'synced' : 'guest');
+        }
+
+        async function triggerManualSync() {
+            if (!currentCloudUser) {
+                showToast('Please sign in first');
+                return;
+            }
+            const icon = document.getElementById('manualSyncIcon');
+            if (icon) icon.classList.add('animate-spin');
+            try {
+                await pullFromCloud(false);
+                await pushToCloud();
+                showToast('Sync complete! All devices up to date.');
+            } catch (e) {
+                showToast('Sync error: ' + (e.message || 'Check connection'));
+            } finally {
+                if (icon) icon.classList.remove('animate-spin');
+            }
+        }
+
+        async function handleGoogleSignIn() {
+            const config = getSupabaseConfig();
+            if (!config.url || !config.anonKey) {
+                toggleSupabaseConfigPanel(true);
+                showToast('Please set your Supabase Project URL & Key first!');
+                return;
+            }
+            if (!supabaseClient) initSupabaseSync();
+            try {
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + window.location.pathname
+                    }
+                });
+                if (error) throw error;
+            } catch (err) {
+                const msg = String(err.message || '');
+                if (msg.includes('not enabled') || msg.includes('validation_failed')) {
+                    showToast('Google OAuth is not enabled in Supabase. Use Email & Password below!');
+                } else {
+                    showToast('Google Sign-In: ' + msg);
+                }
+            }
+        }
+
+        async function handleEmailAuth(event) {
+            event.preventDefault();
+            const config = getSupabaseConfig();
+            if (!config.url || !config.anonKey) {
+                toggleSupabaseConfigPanel(true);
+                showToast('Please set your Supabase Project URL & Key first!');
+                return;
+            }
+            if (!supabaseClient) initSupabaseSync();
+
+            const email = (document.getElementById('cloudAuthEmail').value || '').trim();
+            const password = (document.getElementById('cloudAuthPassword').value || '').trim();
+            const action = event.submitter ? event.submitter.value : 'signin';
+
+            if (!email) {
+                showToast('Please enter an email address');
+                return;
+            }
+            if (!password || password.length < 6) {
+                showToast('Password must be at least 6 characters');
+                return;
+            }
+
+            try {
+                if (action === 'signup') {
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email: email,
+                        password: password
+                    });
+                    if (error) throw error;
+                    if (data && data.user && data.session) {
+                        showToast('Account created & connected!');
+                    } else {
+                        showToast('Check your email to confirm registration!');
+                    }
+                } else {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+                    if (error) throw error;
+                    showToast('Welcome back! Syncing your data...');
+                }
+            } catch (err) {
+                showToast('Auth error: ' + err.message);
+            }
+        }
+
+        async function handleSendMagicLink() {
+            const email = (document.getElementById('cloudAuthEmail').value || '').trim();
+            if (!email) {
+                showToast('Please enter your email above first');
+                return;
+            }
+            const config = getSupabaseConfig();
+            if (!config.url || !config.anonKey) {
+                toggleSupabaseConfigPanel(true);
+                showToast('Please set your Supabase Project URL & Key first!');
+                return;
+            }
+            if (!supabaseClient) initSupabaseSync();
+
+            try {
+                const { error } = await supabaseClient.auth.signInWithOtp({
+                    email: email,
+                    options: {
+                        emailRedirectTo: window.location.origin + window.location.pathname
+                    }
+                });
+                if (error) throw error;
+                showToast('Magic login link sent to ' + email + '!');
+            } catch (err) {
+                showToast('Magic link error: ' + err.message);
+            }
+        }
+
+        async function handleCloudSignOut() {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.auth.signOut();
+                currentCloudUser = null;
+                updateCloudSyncUI('guest');
+                showToast('Signed out from Cloud. Data remains safely on device.');
+            } catch (err) {
+                showToast('Sign out error: ' + err.message);
+            }
+        }
+
+        function toggleSupabaseConfigPanel(forceOpen = false) {
+            const panel = document.getElementById('supabaseConfigPanel');
+            const icon = document.getElementById('supabaseConfigToggleIcon');
+            if (!panel) return;
+            const willOpen = forceOpen ? true : panel.classList.contains('hidden');
+            if (willOpen) {
+                panel.classList.remove('hidden');
+                if (icon) icon.classList.add('rotate-180');
+            } else {
+                panel.classList.add('hidden');
+                if (icon) icon.classList.remove('rotate-180');
+            }
+        }
+
+        function saveCustomSupabaseConfig() {
+            let url = (document.getElementById('supabaseUrlInput').value || '').trim();
+            const key = (document.getElementById('supabaseKeyInput').value || '').trim();
+
+            if (!url || !key) {
+                showToast('Please enter both Supabase URL and Key');
+                return;
+            }
+
+            url = cleanSupabaseUrl(url);
+            localStorage.setItem('pocketflow_supabase_url', url);
+            localStorage.setItem('pocketflow_supabase_anon_key', key);
+            initSupabaseSync();
+            showToast('Supabase configured & connected!');
+            toggleSupabaseConfigPanel(false);
+        }
+
+        function copySupabaseSqlInstructions() {
+            const sqlText = `-- PocketFlow Supabase Table Setup
+create table if not exists public.pocketflow_sync (
+    user_id uuid primary key references auth.users(id) on delete cascade,
+    expenses jsonb default '[]'::jsonb not null,
+    budget numeric default 2500 not null,
+    currency text default 'GH₵' not null,
+    coach_strictness text default 'balanced',
+    updated_at timestamptz default timezone('utc'::text, now()) not null
+);
+
+alter table public.pocketflow_sync enable row level security;
+
+create policy "Users can read own pocketflow data"
+    on public.pocketflow_sync for select to authenticated using (auth.uid() = user_id);
+
+create policy "Users can insert own pocketflow data"
+    on public.pocketflow_sync for insert to authenticated with check (auth.uid() = user_id);
+
+create policy "Users can update own pocketflow data"
+    on public.pocketflow_sync for update to authenticated using (auth.uid() = user_id);
+
+do $$
+begin
+    if not exists (
+        select 1 from pg_publication_rel
+        where prrelid = 'public.pocketflow_sync'::regclass
+        and prpubid = (select oid from pg_publication where pubname = 'supabase_realtime')
+    ) then
+        alter publication supabase_realtime add table public.pocketflow_sync;
+    end if;
+end
+$$;`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(sqlText).then(() => {
+                    showToast('SQL script copied! Paste into Supabase SQL Editor.');
+                }).catch(() => {
+                    showToast('Check supabase-schema.sql in project root');
+                });
+            } else {
+                showToast('Check supabase-schema.sql in project root');
+            }
+        }
+
+        // ==========================================
+        // SECURITY & SANITIZATION HELPERS
+        // ==========================================
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function escapeJsStr(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '\\"')
+                .replace(/\n/g, '\\n')
+                .replace(/\r/g, '\\r')
+                .replace(/</g, '\\x3c')
+                .replace(/>/g, '\\x3e');
+        }
+
+        function safeEncodeURIComponent(str) {
+            return encodeURIComponent(str || '').replace(/'/g, '%27');
+        }
+
+        function sanitizeImportedState(imported) {
+            if (!imported || typeof imported !== 'object') return null;
+            if (!Array.isArray(imported.expenses)) return null;
+
+            const validCategories = new Set(CATEGORIES.map(c => c.id));
+            const cleanExpenses = imported.expenses.map((exp, index) => {
+                if (!exp || typeof exp !== 'object') return null;
+                const rawId = String(exp.id || ('exp-' + Date.now() + '-' + index));
+                const cleanId = rawId.replace(/[^a-zA-Z0-9_\-]/g, '').slice(0, 60) || ('exp-' + index);
+                const cleanAmount = Math.max(0, Number(exp.amount) || 0);
+                const cleanNote = String(exp.note || '').slice(0, 300);
+                const cat = validCategories.has(exp.category) ? exp.category : 'other';
+                const cleanDate = String(exp.date || getLocalDateStr()).slice(0, 10);
+                return {
+                    id: cleanId,
+                    amount: cleanAmount,
+                    category: cat,
+                    note: cleanNote,
+                    date: cleanDate,
+                    isPreloaded: Boolean(exp.isPreloaded)
+                };
+            }).filter(Boolean);
+
+            let cleanCurrency = state.currency || '$';
+            if (imported.currency) {
+                cleanCurrency = String(imported.currency).trim().slice(0, 8).replace(/[<>'"]/g, '') || '$';
+            }
+
+            const cleanBudget = imported.budget !== undefined && imported.budget !== null
+                ? Math.max(0, Number(imported.budget) || 0)
+                : state.budget;
+
+            return {
+                expenses: cleanExpenses,
+                currency: cleanCurrency,
+                budget: cleanBudget
+            };
+        }
+
         function checkUrlDataImport() {
             try {
                 if (window.location.hash && window.location.hash.startsWith('#data=')) {
-                    const raw = decodeURIComponent(window.location.hash.slice(6));
+                    const hashData = window.location.hash.slice(6);
+                    try {
+                        history.replaceState(null, '', window.location.pathname + window.location.search);
+                    } catch (e) {}
+
+                    const raw = decodeURIComponent(hashData);
                     const imported = JSON.parse(raw);
-                    if (imported && Array.isArray(imported.expenses)) {
-                        state.expenses = imported.expenses;
-                        if (imported.budget) state.budget = Number(imported.budget);
-                        if (imported.currency) state.currency = imported.currency;
-                        saveState();
-                        try {
-                            history.replaceState(null, '', window.location.pathname);
-                        } catch (e) {}
-                        showToast('Expenses successfully transferred to Home Screen!');
+                    const clean = sanitizeImportedState(imported);
+                    if (!clean) return;
+
+                    // If user already has existing expenses, prompt for confirmation to prevent zero-click overwrite
+                    if (state.expenses && state.expenses.length > 0) {
+                        const confirmImport = confirm('PocketFlow detected expense data in the opened link.\n\nDo you want to import this data? (Note: this will replace your currently loaded expenses and budget)');
+                        if (!confirmImport) return;
                     }
+
+                    state.expenses = clean.expenses;
+                    state.budget = clean.budget;
+                    state.currency = clean.currency;
+                    saveState();
+                    showToast('Expenses successfully transferred to Home Screen!');
                 }
             } catch (e) {
                 console.log('URL data import skipped', e);
@@ -1910,6 +2698,7 @@
         loadState();
         checkUrlDataImport();
         restoreStateFromIDB();
+        initSupabaseSync();
         if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
             document.documentElement.classList.add('is-standalone');
         }
@@ -1926,6 +2715,7 @@
             checkPushPermissionUI();
             setupModalBackdrops();
             checkWelcomeBanner();
+            updateCloudSyncUI(currentCloudUser ? 'synced' : 'guest');
 
             const now = new Date();
             document.getElementById('currentMonthDisplay').textContent =
@@ -1937,10 +2727,10 @@
             const currencySelect = document.getElementById('currencySelect');
             currencySelect.value = state.currency;
             currencySelect.addEventListener('change', (e) => {
-                state.currency = e.target.value;
+                state.currency = String(e.target.value || '$').trim().slice(0, 8).replace(/[<>'"]/g, '') || '$';
                 saveState();
                 renderAll();
-                showToast(`Currency updated to ${state.currency}`);
+                showToast(`Currency updated to ${escapeHtml(state.currency)}`);
             });
 
             renderModalCategories();
@@ -2194,9 +2984,9 @@
 
                             <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
                                 <span class="font-bold text-xs sm:text-sm text-slate-100 whitespace-nowrap">
-                                    -${state.currency} ${formatMoney(item.amount)}
+                                    -${escapeHtml(state.currency)} ${formatMoney(item.amount)}
                                 </span>
-                                <button onclick="deleteExpense('${escapeHtml(item.id)}')" class="w-8 h-8 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/15 active:bg-rose-500/25 flex items-center justify-center transition active:scale-90" title="Delete expense" aria-label="Delete expense">
+                                <button onclick="deleteExpense('${escapeJsStr(item.id)}')" class="w-8 h-8 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/15 active:bg-rose-500/25 flex items-center justify-center transition active:scale-90" title="Delete expense" aria-label="Delete expense">
                                     <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
                             </div>
@@ -2214,7 +3004,7 @@
                             </div>
                             <div class="text-right">
                                 <span class="text-[10px] text-slate-400 font-medium">Day Total: </span>
-                                <span class="font-bold text-xs text-rose-400">-${state.currency} ${formatMoney(group.total)}</span>
+                                <span class="font-bold text-xs text-rose-400">-${escapeHtml(state.currency)} ${formatMoney(group.total)}</span>
                             </div>
                         </div>
                         <div class="space-y-2">
@@ -2295,7 +3085,7 @@
                                 <span class="text-[10px] text-slate-500 shrink-0">(${d.count} ${d.count === 1 ? 'item' : 'items'})</span>
                             </div>
                             <span class="font-bold text-slate-100 shrink-0">
-                                -${state.currency} ${formatMoney(d.total)}
+                                -${escapeHtml(state.currency)} ${formatMoney(d.total)}
                             </span>
                         </div>
                     `;
@@ -2347,7 +3137,7 @@
                                 <span class="text-slate-300 font-medium">${cat.name}</span>
                             </div>
                             <div class="text-right">
-                                <span class="font-bold text-slate-200">${state.currency} ${formatMoney(amount)}</span>
+                                <span class="font-bold text-slate-200">${escapeHtml(state.currency)} ${formatMoney(amount)}</span>
                                 <span class="text-slate-500 text-[10px] ml-1">(${pct}%)</span>
                             </div>
                         </div>
@@ -2704,10 +3494,10 @@
                 }
 
                 const relativeTime = getRelativeTimeStr(n.timestamp || n.time);
-                const encodedPrompt = encodeURIComponent(n.coachPrompt || `Explain this spending notification: "${n.title}". Give me strict advice, how to curb my spending, and better ways to spend.`);
+                const encodedPrompt = safeEncodeURIComponent(n.coachPrompt || `Explain this spending notification: "${n.title || ''}". Give me strict advice, how to curb my spending, and better ways to spend.`);
 
                 return `
-                    <div onclick="markNotificationRead('${n.id}')" class="border ${cardBorder} rounded-2xl p-3.5 transition hover:border-slate-700 cursor-pointer group">
+                    <div onclick="markNotificationRead('${escapeJsStr(n.id)}')" class="border ${cardBorder} rounded-2xl p-3.5 transition hover:border-slate-700 cursor-pointer group">
                         <div class="flex items-start gap-3">
                             <div class="w-8 h-8 rounded-xl ${iconClass} border flex items-center justify-center shrink-0 mt-0.5">
                                 <i class="fa-solid ${iconClass.split(' ')[0]} text-xs"></i>
@@ -2740,7 +3530,7 @@
                                         <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
                                         <span>Connect to PocketCoach for Advice</span>
                                     </button>
-                                    <button onclick="event.stopPropagation(); deleteNotificationItem('${n.id}')"
+                                    <button onclick="event.stopPropagation(); deleteNotificationItem('${escapeJsStr(n.id)}')"
                                         class="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-500 hover:text-rose-400 flex items-center justify-center transition text-xs shrink-0 cursor-pointer" title="Delete notification">
                                         <i class="fa-solid fa-trash-can text-[11px]"></i>
                                     </button>
@@ -3116,18 +3906,42 @@
             }
         }
 
-        function backupJSON() {
+        async function backupJSON() {
             const dataStr = JSON.stringify({
                 currency: state.currency,
                 budget: state.budget,
+                coachStrictness: state.coachStrictness || 'balanced',
                 expenses: state.expenses,
-                exportedAt: new Date().toISOString()
+                exportedAt: new Date().toISOString(),
+                version: '2.0'
             }, null, 2);
+            const filename = `PocketFlow_Backup_${getLocalDateStr()}.json`;
             const blob = new Blob([dataStr], { type: 'application/json' });
+
+            // Mobile Web Share: direct 1-tap share to Google Drive, iCloud, WhatsApp, etc.
+            if (navigator.share && navigator.canShare && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                try {
+                    const file = new File([blob], filename, { type: 'application/json' });
+                    if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            title: 'PocketFlow Backup',
+                            text: `PocketFlow backup with ${state.expenses.length} expenses (${getLocalDateStr()})`,
+                            files: [file]
+                        });
+                        showToast('Backup shared successfully!');
+                        return;
+                    }
+                } catch (err) {
+                    if (err.name === 'AbortError') return;
+                    console.log('Mobile share fallback:', err);
+                }
+            }
+
+            // Desktop / Standard fallback download
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `PocketFlow_Backup_${getLocalDateStr()}.json`;
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -3143,19 +3957,18 @@
             reader.onload = function (e) {
                 try {
                     const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported.expenses)) {
-                        state.expenses = imported.expenses;
-                        if (imported.budget) state.budget = Number(imported.budget);
-                        if (imported.currency) {
-                            state.currency = imported.currency;
-                            const currencySelect = document.getElementById('currencySelect');
-                            if (currencySelect) currencySelect.value = state.currency;
-                        }
+                    const clean = sanitizeImportedState(imported);
+                    if (clean && Array.isArray(clean.expenses)) {
+                        state.expenses = clean.expenses;
+                        state.budget = clean.budget;
+                        state.currency = clean.currency;
+                        const currencySelect = document.getElementById('currencySelect');
+                        if (currencySelect) currencySelect.value = state.currency;
                         saveState();
                         renderAll(true);
                         showToast('Data restored successfully!');
                     } else {
-                        showToast('Invalid backup file');
+                        showToast('Invalid backup file format');
                     }
                 } catch (err) {
                     showToast('Could not read backup file');
@@ -3200,6 +4013,8 @@
             } else if (id === 'notificationsModal') {
                 renderNotificationsUI();
                 checkPushPermissionUI();
+            } else if (id === 'cloudSyncModal') {
+                refreshCloudSyncModalUI();
             }
             const modalEl = document.getElementById(id);
             if (modalEl) {
@@ -3221,6 +4036,15 @@
             }
         }
 
+        function sanitizeCsvCell(str) {
+            let val = String(str || '');
+            // Neutralize formula injection triggers (=, +, -, @, tab, CR)
+            if (/^[=\+\-@\t\r]/.test(val)) {
+                val = "'" + val;
+            }
+            return `"${val.replace(/"/g, '""')}"`;
+        }
+
         function exportCSV() {
             if (state.expenses.length === 0) {
                 showToast('No expenses to export');
@@ -3229,9 +4053,9 @@
             const headers = ['Date', 'Category', 'Description', 'Currency', 'Amount'];
             const rows = state.expenses.map(e => [
                 e.date || '',
-                e.category || '',
-                `"${(e.note || '').replace(/"/g, '""')}"`,
-                `"${(state.currency || '').replace(/"/g, '""')}"`,
+                sanitizeCsvCell(e.category || ''),
+                sanitizeCsvCell(e.note || ''),
+                sanitizeCsvCell(state.currency || ''),
                 Number(e.amount).toFixed(2)
             ]);
             const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
@@ -3330,12 +4154,7 @@
             }, 2200);
         }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
+        // Note: escapeHtml, escapeJsStr & safeEncodeURIComponent are defined above in security helpers
 
         // ==========================================
         // POCKETCOACH AI: FINANCIAL HABIT & SPENDING CHATBOT
@@ -3533,7 +4352,7 @@
             const items = COACH_TOPIC_DATA[topicKey] || COACH_TOPIC_DATA.popular;
             
             let html = items.map(item => {
-                const safeQ = encodeURIComponent(item.query);
+                const safeQ = safeEncodeURIComponent(item.query);
                 return `
                     <button type="button" onclick="sendQuickPrompt(decodeURIComponent('${safeQ}'))" 
                         class="px-2.5 py-1.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/70 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95">
@@ -3585,7 +4404,7 @@
             html = html.replace(/\[\[prompt:\s*([^\]\|]+)(?:\|([^\]]+))?\]\]/g, (match, query, label) => {
                 const q = query.trim();
                 const l = (label || q).trim();
-                const safeEncoded = encodeURIComponent(q);
+                const safeEncoded = safeEncodeURIComponent(q);
                 return `<button type="button" onclick="sendQuickPrompt(decodeURIComponent('${safeEncoded}'))" class="inline-flex items-center gap-1.5 my-1 mr-1.5 px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-emerald-600/30 text-emerald-300 hover:text-white border border-emerald-500/30 hover:border-emerald-400 text-[11px] font-semibold transition cursor-pointer shadow-sm"><i class="fa-solid fa-sparkles text-[10px] text-emerald-400"></i><span>${escapeHtml(l)}</span></button>`;
             });
             // Paragraphs and breaks
@@ -3600,10 +4419,10 @@
             const ctx = getSpendingContext();
             ribbon.innerHTML = `
                 <div class="flex items-center gap-3 sm:gap-4 shrink-0 font-medium">
-                    <span>Budget: <strong class="text-white">${ctx.currency} ${formatMoney(ctx.budget)}</strong></span>
-                    <span>Spent: <strong class="${ctx.pctUsed >= 90 ? 'text-rose-400' : 'text-amber-400'}">${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}%)</strong></span>
-                    <span>Remaining: <strong class="${ctx.remaining >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${ctx.currency} ${formatMoney(ctx.remaining)}</strong></span>
-                    <span>Safe Daily: <strong class="text-sky-400">${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day</strong></span>
+                    <span>Budget: <strong class="text-white">${escapeHtml(ctx.currency)} ${formatMoney(ctx.budget)}</strong></span>
+                    <span>Spent: <strong class="${ctx.pctUsed >= 90 ? 'text-rose-400' : 'text-amber-400'}">${escapeHtml(ctx.currency)} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}%)</strong></span>
+                    <span>Remaining: <strong class="${ctx.remaining >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${escapeHtml(ctx.currency)} ${formatMoney(ctx.remaining)}</strong></span>
+                    <span>Safe Daily: <strong class="text-sky-400">${escapeHtml(ctx.currency)} ${formatMoney(ctx.safeDailyAllowance)}/day</strong></span>
                 </div>
             `;
         }

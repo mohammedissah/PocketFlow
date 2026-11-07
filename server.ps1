@@ -39,24 +39,27 @@ while ($listener.IsListening) {
             $localPath = 'index.html'
         }
 
-        $filePath = Join-Path $folder $localPath
+        # Security: Prevent directory traversal by verifying resolved path stays strictly within $folder
+        $fullTarget = [System.IO.Path]::GetFullPath((Join-Path $folder $localPath))
+        $fullBase = [System.IO.Path]::GetFullPath($folder)
 
-        if (Test-Path $filePath -PathType Leaf) {
-            $ext = [System.IO.Path]::GetExtension($filePath).ToLower()
+        if ($fullTarget.StartsWith($fullBase, [System.StringComparison]::OrdinalIgnoreCase) -and (Test-Path $fullTarget -PathType Leaf)) {
+            $ext = [System.IO.Path]::GetExtension($fullTarget).ToLower()
             $mime = switch ($ext) {
-                '.html' { 'text/html; charset=utf-8' }
-                '.js'   { 'application/javascript; charset=utf-8' }
-                '.css'  { 'text/css; charset=utf-8' }
-                '.json' { 'application/json; charset=utf-8' }
-                '.png'  { 'image/png' }
-                '.jpg'  { 'image/jpeg' }
-                '.jpeg' { 'image/jpeg' }
-                '.svg'  { 'image/svg+xml' }
-                '.ico'  { 'image/x-icon' }
-                default { 'application/octet-stream' }
+                '.html'        { 'text/html; charset=utf-8' }
+                '.js'          { 'application/javascript; charset=utf-8' }
+                '.css'         { 'text/css; charset=utf-8' }
+                '.json'        { 'application/json; charset=utf-8' }
+                '.webmanifest' { 'application/manifest+json; charset=utf-8' }
+                '.png'         { 'image/png' }
+                '.jpg'         { 'image/jpeg' }
+                '.jpeg'        { 'image/jpeg' }
+                '.svg'         { 'image/svg+xml' }
+                '.ico'         { 'image/x-icon' }
+                default        { 'application/octet-stream' }
             }
 
-            $bytes = [System.IO.File]::ReadAllBytes($filePath)
+            $bytes = [System.IO.File]::ReadAllBytes($fullTarget)
             $response.ContentType = $mime
             $response.ContentLength64 = $bytes.Length
             $response.StatusCode = 200

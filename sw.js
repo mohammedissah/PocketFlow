@@ -1,5 +1,5 @@
-// PocketFlow Service Worker v3.6 (WebAPK PWA for Android & iOS)
-const CACHE_NAME = 'pocketflow-cache-v3.6';
+// PocketFlow Service Worker v3.7 (WebAPK PWA with Supabase Cloud Sync)
+const CACHE_NAME = 'pocketflow-cache-v3.7';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
