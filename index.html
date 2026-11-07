@@ -281,10 +281,9 @@
                 </button>
 
                 <!-- Cloud Sync Multi-Device Button (Visible on all screen sizes) -->
-                <button onclick="openModal('cloudSyncModal')" id="cloudSyncHeaderBtn" class="relative w-8 h-8 sm:w-auto sm:px-2.5 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs font-semibold shrink-0" title="Cloud Sync & Multi-Device" aria-label="Cloud Sync">
-                    <i id="cloudSyncHeaderIcon" class="fa-solid fa-cloud text-slate-400 text-xs sm:text-sm"></i>
-                    <span id="cloudSyncHeaderLabel" class="hidden md:inline">Sync</span>
-                    <span id="cloudSyncHeaderDot" class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                <button onclick="openModal('cloudSyncModal')" id="cloudSyncHeaderBtn" class="relative w-8 h-8 sm:w-9 sm:h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center text-xs font-semibold shrink-0" title="Cloud Sync & Multi-Device" aria-label="Cloud Sync">
+                    <i id="cloudSyncHeaderIcon" class="fa-solid fa-cloud text-emerald-400 text-xs sm:text-sm"></i>
+                    <span id="cloudSyncHeaderDot" class="hidden absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-900"></span>
                 </button>
 
                 <!-- Currency Selector (Visible on all screen sizes) -->
@@ -2278,14 +2277,14 @@
                 if (modalLastSync) modalLastSync.textContent = `Synced: ${timeStr}`;
 
                 if (status === 'syncing') {
-                    if (headerDot) headerDot.className = 'w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse';
+                    if (headerDot) headerDot.className = 'absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse ring-2 ring-slate-900';
                     if (headerIcon) headerIcon.className = 'fa-solid fa-arrows-rotate text-sky-400 text-xs sm:text-sm animate-spin';
                     if (cardDot) cardDot.className = 'w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0';
                     if (cardStatus) cardStatus.textContent = 'Syncing...';
                     if (modalDot) modalDot.className = 'w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse shrink-0';
                     if (modalTitle) modalTitle.textContent = 'Syncing with Cloud...';
                 } else if (!isOnline || status === 'offline') {
-                    if (headerDot) headerDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400';
+                    if (headerDot) headerDot.className = 'absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-400 ring-2 ring-slate-900';
                     if (headerIcon) headerIcon.className = 'fa-solid fa-cloud text-amber-400 text-xs sm:text-sm';
                     if (cardDot) cardDot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
                     if (cardStatus) cardStatus.textContent = 'Offline (Saved Locally)';
@@ -2293,7 +2292,7 @@
                     if (modalTitle) modalTitle.textContent = 'Offline – Changes saved locally';
                     if (modalDesc) modalDesc.textContent = 'No internet connection. Changes will upload automatically once you reconnect.';
                 } else {
-                    if (headerDot) headerDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+                    if (headerDot) headerDot.className = 'absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-900';
                     if (headerIcon) headerIcon.className = 'fa-solid fa-cloud text-emerald-400 text-xs sm:text-sm';
                     if (cardDot) cardDot.className = 'w-2 h-2 rounded-full bg-emerald-400 shrink-0';
                     if (cardStatus) cardStatus.textContent = 'Cloud Connected (In Sync)';
@@ -2305,7 +2304,7 @@
                 if (signedInView) signedInView.classList.add('hidden');
                 if (authView) authView.classList.remove('hidden');
 
-                if (headerDot) headerDot.className = 'w-1.5 h-1.5 rounded-full bg-slate-500';
+                if (headerDot) headerDot.className = 'hidden';
                 if (headerIcon) headerIcon.className = 'fa-solid fa-cloud text-slate-400 text-xs sm:text-sm';
                 if (cardDot) cardDot.className = 'w-2 h-2 rounded-full bg-slate-500 shrink-0';
                 if (cardStatus) cardStatus.textContent = 'Local Only (Offline)';
