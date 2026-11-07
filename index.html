@@ -2050,6 +2050,29 @@
             };
         }
 
+        function stripPreloadedExpenses(list) {
+            if (!Array.isArray(list)) return [];
+            return list.filter(exp => {
+                if (!exp) return false;
+                if (exp.isPreloaded === true) return false;
+                if (exp.id === 'exp-1' || exp.id === 'exp-2' || exp.id === 'exp-3') return false;
+                if ((exp.id || '').startsWith('exp-') && (exp.note === 'Waakye & Juice' || exp.note === 'Bolt ride' || exp.note === 'MTN 15GB Data Bundle')) return false;
+                return true;
+            });
+        }
+
+        function stripAndPurgePreloadedExpenses() {
+            if (!Array.isArray(state.expenses)) return;
+            const cleanExpenses = stripPreloadedExpenses(state.expenses);
+            if (cleanExpenses.length !== state.expenses.length) {
+                state.expenses = cleanExpenses;
+                saveState(false);
+                if (typeof renderAll === 'function') {
+                    renderAll(true);
+                }
+            }
+        }
+
         function initSupabaseSync() {
             try {
                 const config = getSupabaseConfig();
@@ -2072,6 +2095,10 @@
                         currentCloudUser = session.user;
                         updateCloudSyncUI('synced');
                         setupRealtimeSync();
+
+                        // Automatically purge any sample preloaded expenses when user logs in
+                        stripAndPurgePreloadedExpenses();
+
                         await pullFromCloud(true);
                     } else {
                         currentCloudUser = null;
@@ -2111,9 +2138,13 @@
             updateCloudSyncUI('syncing');
 
             try {
+                // Ensure no preloaded demo expenses are ever uploaded to cloud vault
+                const cleanExpenses = stripPreloadedExpenses(state.expenses || []);
+                state.expenses = cleanExpenses;
+
                 const payload = {
                     user_id: currentCloudUser.id,
-                    expenses: state.expenses,
+                    expenses: cleanExpenses,
                     budget: state.budget,
                     currency: state.currency,
                     coach_strictness: state.coachStrictness || 'balanced',
@@ -2152,10 +2183,11 @@
                 if (error) throw error;
 
                 if (data) {
-                    const localExpenses = state.expenses || [];
-                    const remoteExpenses = Array.isArray(data.expenses) ? data.expenses : [];
+                    const rawRemote = Array.isArray(data.expenses) ? data.expenses : [];
+                    const remoteExpenses = stripPreloadedExpenses(rawRemote);
+                    const localExpenses = stripPreloadedExpenses(state.expenses || []);
 
-                    // Two-way merge: combine unique expenses by id
+                    // Two-way merge: combine unique non-sample expenses by id
                     const expenseMap = new Map();
                     remoteExpenses.forEach(exp => {
                         if (exp && exp.id) expenseMap.set(exp.id, exp);
@@ -2167,11 +2199,6 @@
                             if (!expenseMap.has(exp.id)) {
                                 expenseMap.set(exp.id, exp);
                                 hasNewLocalExpenses = true;
-                            } else {
-                                const remoteExp = expenseMap.get(exp.id);
-                                if (remoteExp.isPreloaded && !exp.isPreloaded) {
-                                    expenseMap.set(exp.id, exp);
-                                }
                             }
                         }
                     });
@@ -2189,7 +2216,8 @@
                     saveState(false);
                     renderAll(true);
 
-                    if (hasNewLocalExpenses) {
+                    // If remote cloud had sample expenses, or local had new real items, update cloud to clean state
+                    if (rawRemote.length !== remoteExpenses.length || hasNewLocalExpenses) {
                         pushToCloud();
                     }
 
@@ -2200,10 +2228,14 @@
                         showToast('Cloud data synced successfully!');
                     }
                 } else {
-                    // First time login: push local data to initialize the cloud vault
+                    // First time login for this user: strip sample data so account starts clean
+                    state.expenses = stripPreloadedExpenses(state.expenses || []);
+                    saveState(false);
+                    renderAll(true);
+
                     await pushToCloud();
                     if (isInitial) {
-                        showToast('Local spending saved to Cloud Vault!');
+                        showToast('Connected! Clean account ready for your spending.');
                     }
                 }
             } catch (err) {
@@ -2347,6 +2379,7 @@
         }
 
         async function handleGoogleSignIn() {
+            stripAndPurgePreloadedExpenses();
             const config = getSupabaseConfig();
             if (!config.url || !config.anonKey) {
                 toggleSupabaseConfigPanel(true);
@@ -2374,6 +2407,7 @@
 
         async function handleEmailAuth(event) {
             event.preventDefault();
+            stripAndPurgePreloadedExpenses();
             const config = getSupabaseConfig();
             if (!config.url || !config.anonKey) {
                 toggleSupabaseConfigPanel(true);
@@ -2421,6 +2455,7 @@
         }
 
         async function handleSendMagicLink() {
+            stripAndPurgePreloadedExpenses();
             const email = (document.getElementById('cloudAuthEmail').value || '').trim();
             if (!email) {
                 showToast('Please enter your email above first');
