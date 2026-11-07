@@ -93,6 +93,13 @@
             }
 
             function trackLaunch() {
+                // Sanitize any OAuth token hash from URL bar before tracking
+                if (window.location.hash && (window.location.hash.includes('access_token=') || window.location.hash.includes('refresh_token='))) {
+                    try {
+                        history.replaceState(null, '', window.location.pathname + window.location.search);
+                    } catch (e) {}
+                }
+
                 var eventName = isStandalone ? 'PWA Launch' : 'Browser Visit';
                 var attempts = 0;
                 var timer = setInterval(function() {
@@ -2089,8 +2096,20 @@
                     }
                 });
 
+                // Immediately clean OAuth tokens from address bar so they never leak into analytics or history
+                if (window.location.hash && (window.location.hash.includes('access_token=') || window.location.hash.includes('refresh_token='))) {
+                    try {
+                        history.replaceState(null, '', window.location.pathname + window.location.search);
+                    } catch (e) {}
+                }
+
                 // Listen for Auth changes (login, logout, token refresh)
                 supabaseClient.auth.onAuthStateChange(async (event, session) => {
+                    if (window.location.hash && (window.location.hash.includes('access_token=') || window.location.hash.includes('refresh_token='))) {
+                        try {
+                            history.replaceState(null, '', window.location.pathname + window.location.search);
+                        } catch (e) {}
+                    }
                     if (session && session.user) {
                         currentCloudUser = session.user;
                         updateCloudSyncUI('synced');
