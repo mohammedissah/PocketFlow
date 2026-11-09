@@ -177,7 +177,7 @@
                 padding-top: max(3.75rem, calc(2.25rem + env(safe-area-inset-top, 44px))) !important;
                 padding-bottom: 1rem !important;
             }
-            #nativeInstallBtn, #homeScreenGuideBtn, #mobileDropdownInstallBtn {
+            #nativeInstallBtn, #homeScreenGuideBtn, #mobileDropdownInstallBtn, #smartInstallBanner {
                 display: none !important;
             }
         }
@@ -187,7 +187,8 @@
         }
         .is-standalone #nativeInstallBtn,
         .is-standalone #homeScreenGuideBtn,
-        .is-standalone #mobileDropdownInstallBtn {
+        .is-standalone #mobileDropdownInstallBtn,
+        .is-standalone #smartInstallBanner {
             display: none !important;
         }
         .safe-bottom-pad {
@@ -1087,7 +1088,7 @@
                         <div class="pt-2">
                             <button type="button" onclick="closeModal('helpGuideModal'); openModal('installModal');" class="w-full py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center justify-center gap-2 transition">
                                 <i class="fa-solid fa-download"></i>
-                                <span>Open Full Install Screen & Data Bundle</span>
+                                <span>Open Install Guide Screen</span>
                             </button>
                         </div>
                     </div>
@@ -1201,43 +1202,30 @@
             </p>
 
             <div class="space-y-4 text-xs">
+                <!-- iPhone / iOS Card -->
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4">
-                    <div class="flex items-center gap-2 font-bold text-emerald-400 mb-1.5">
+                    <div class="flex items-center gap-2 font-bold text-emerald-400 mb-2">
                         <i class="fa-brands fa-apple text-base"></i>
-                        <span>For iPhone / iOS (Safari)</span>
+                        <span>For iPhone & iPad (Safari)</span>
                     </div>
-                    <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
-                        <li>Tap the button below to bundle your current expenses.</li>
-                        <li>Tap Safari's <strong>Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket text-emerald-400 px-1"></i>.</li>
-                        <li>Scroll down and tap <strong>"Add to Home Screen"</strong> <i class="fa-regular fa-square-plus text-emerald-400 px-1"></i>.</li>
-                        <li>Tap <strong>Add</strong> in the top-right corner.</li>
+                    <ol class="list-decimal list-inside space-y-2 text-slate-300 leading-relaxed">
+                        <li>Tap Safari's <strong class="text-white">Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket text-emerald-400 px-1"></i> at the bottom toolbar.</li>
+                        <li>Scroll down and tap <strong class="text-white">"Add to Home Screen"</strong> <i class="fa-regular fa-square-plus text-emerald-400 px-1"></i>.</li>
+                        <li>Tap <strong class="text-white">Add</strong> in the top-right corner.</li>
                     </ol>
-                    <button type="button" onclick="prepareDataForHomeScreen()" class="w-full mt-3 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center justify-center gap-2 transition">
-                        <i class="fa-solid fa-link"></i>
-                        <span>Prepare My Data for Home Screen</span>
-                    </button>
                 </div>
 
+                <!-- Android & Chrome Card -->
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4">
-                    <div class="flex items-center gap-2 font-bold text-emerald-400 mb-1.5">
+                    <div class="flex items-center gap-2 font-bold text-emerald-400 mb-2">
                         <i class="fa-brands fa-android text-base"></i>
-                        <span>For Android (Chrome)</span>
+                        <span>For Android & Desktop (Chrome / Edge)</span>
                     </div>
-                    <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
-                        <li>Open this app in <strong>Google Chrome</strong>.</li>
-                        <li>Tap the <strong>three dots menu</strong> <i class="fa-solid fa-ellipsis-vertical text-emerald-400 px-1"></i> in the top-right corner.</li>
-                        <li>Select <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>.</li>
-                        <li>Confirm by tapping <strong>Add</strong>.</li>
+                    <ol class="list-decimal list-inside space-y-2 text-slate-300 leading-relaxed">
+                        <li>Tap the <strong class="text-white">"Install"</strong> button on your screen or browser menu <i class="fa-solid fa-ellipsis-vertical text-emerald-400 px-1"></i>.</li>
+                        <li>Select <strong class="text-white">"Add to Home screen"</strong> or <strong class="text-white">"Install app"</strong>.</li>
+                        <li>Confirm by tapping <strong class="text-white">Install</strong>.</li>
                     </ol>
-                </div>
-
-                <div class="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-4">
-                    <h4 class="font-bold text-emerald-300 mb-1">Live Host Info</h4>
-                    <p class="text-slate-400 mb-3">Your live app link is active on your host. Open it in Safari or Chrome to add it instantly.</p>
-                    <button onclick="downloadSingleFileApp()" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition">
-                        <i class="fa-solid fa-file-arrow-down"></i>
-                        <span>Download App File (.html)</span>
-                    </button>
                 </div>
 
                 <button onclick="closeModal('installModal'); openModal('helpGuideModal');" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition">
@@ -1681,6 +1669,40 @@
         <span id="toastMessage">Saved!</span>
     </div>
 
+    <!-- Smart Floating Install Banner (PWA) -->
+    <div id="smartInstallBanner" class="fixed left-0 right-0 z-50 hidden flex justify-center px-3 sm:px-4 pointer-events-none transition-all duration-500 ease-out" style="bottom: max(1rem, calc(0.75rem + env(safe-area-inset-bottom, 0px)));">
+        <div id="smartInstallCard" class="w-full max-w-md pointer-events-auto bg-slate-900/95 backdrop-blur-xl border border-emerald-500/40 rounded-2xl p-3 sm:p-3.5 shadow-2xl shadow-emerald-950/70 flex items-center justify-between gap-3 transform translate-y-36 opacity-0 transition-all duration-500 ease-out">
+            <!-- Left: Logo & Details -->
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <div class="relative shrink-0">
+                    <img src="logo.png" alt="PocketFlow" class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl object-contain shadow-md shadow-emerald-500/20 bg-slate-950 p-1 border border-slate-800" onerror="this.onerror=null; this.src='logo-512.png';" />
+                    <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5 sm:h-3 sm:w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-full w-full bg-emerald-500"></span>
+                    </span>
+                </div>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                        <h4 class="font-bold text-white text-xs sm:text-sm tracking-tight truncate">Install PocketFlow</h4>
+                        <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0">Free</span>
+                    </div>
+                    <p id="smartInstallSubtitle" class="text-[10px] sm:text-[11px] text-slate-400 truncate mt-0.5">Fast, offline & 1-tap home screen access</p>
+                </div>
+            </div>
+
+            <!-- Right: Action & Close -->
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <button id="smartInstallActionBtn" onclick="handleSmartInstallClick()" class="py-2 px-3 sm:px-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-emerald-500/25 active:scale-95 transition flex items-center gap-1.5 whitespace-nowrap" aria-label="Install App">
+                    <i id="smartInstallBtnIcon" class="fa-solid fa-download text-xs"></i>
+                    <span id="smartInstallBtnText">Install</span>
+                </button>
+                <button onclick="dismissSmartInstallBanner(false)" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition active:scale-90 shrink-0" title="Dismiss" aria-label="Dismiss banner">
+                    <i class="fa-solid fa-xmark text-xs sm:text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==========================================
         // APP CONFIG & STATE DATA
@@ -1752,6 +1774,8 @@
                 if (nativeBtn) nativeBtn.classList.add('hidden');
                 const mobileInstallBtn = document.getElementById('mobileDropdownInstallBtn');
                 if (mobileInstallBtn) mobileInstallBtn.classList.add('hidden');
+                const smartBanner = document.getElementById('smartInstallBanner');
+                if (smartBanner) smartBanner.classList.add('hidden');
             }
         }
 
@@ -1799,7 +1823,13 @@
                     guideBtn.classList.add('hidden');
                     guideBtn.classList.remove('flex');
                 }
+                updateSmartBannerForNativeInstall();
             }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            dismissSmartInstallBanner(true);
+            showToast('PocketFlow installed to your device!');
         });
 
         async function triggerNativeInstall() {
@@ -1811,6 +1841,7 @@
             const { outcome } = await deferredInstallPrompt.userChoice;
             if (outcome === 'accepted') {
                 showToast('PocketFlow installed to your device!');
+                dismissSmartInstallBanner(true);
                 const btn = document.getElementById('nativeInstallBtn');
                 if (btn) {
                     btn.classList.add('hidden');
@@ -1822,6 +1853,106 @@
                 if (mobileInstallBtn) mobileInstallBtn.classList.add('hidden');
             }
             deferredInstallPrompt = null;
+        }
+
+        // ==========================================
+        // SMART FLOATING INSTALL BANNER (PWA)
+        // ==========================================
+        function initSmartInstallBanner() {
+            const isStandalone = window.navigator.standalone === true || 
+                                 window.matchMedia('(display-mode: standalone)').matches ||
+                                 window.matchMedia('(display-mode: fullscreen)').matches ||
+                                 window.matchMedia('(display-mode: minimal-ui)').matches;
+            if (isStandalone) return;
+
+            if (localStorage.getItem('pocketflow_installed') === 'true') return;
+
+            const dismissedUntil = Number(localStorage.getItem('pocketflow_install_dismissed_until') || '0');
+            if (Date.now() < dismissedUntil) return;
+
+            // Appears smoothly 2 seconds after opening
+            setTimeout(() => {
+                showSmartInstallBanner();
+            }, 2000);
+        }
+
+        function updateSmartBannerForNativeInstall() {
+            const actionBtnIcon = document.getElementById('smartInstallBtnIcon');
+            const actionBtnText = document.getElementById('smartInstallBtnText');
+            const subtitle = document.getElementById('smartInstallSubtitle');
+            if (actionBtnIcon) actionBtnIcon.className = 'fa-solid fa-download text-xs';
+            if (actionBtnText) actionBtnText.textContent = '1-Tap Install';
+            if (subtitle) subtitle.textContent = 'Install directly to your home screen';
+        }
+
+        function showSmartInstallBanner() {
+            const isStandalone = window.navigator.standalone === true || 
+                                 window.matchMedia('(display-mode: standalone)').matches;
+            if (isStandalone || localStorage.getItem('pocketflow_installed') === 'true') return;
+
+            const banner = document.getElementById('smartInstallBanner');
+            const card = document.getElementById('smartInstallCard');
+            if (!banner || !card) return;
+
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const actionBtnIcon = document.getElementById('smartInstallBtnIcon');
+            const actionBtnText = document.getElementById('smartInstallBtnText');
+            const subtitle = document.getElementById('smartInstallSubtitle');
+
+            if (isIOS) {
+                if (actionBtnIcon) actionBtnIcon.className = 'fa-brands fa-apple text-sm';
+                if (actionBtnText) actionBtnText.textContent = 'Add to iPhone';
+                if (subtitle) subtitle.textContent = 'Tap to see 2-step iPhone install guide';
+            } else if (deferredInstallPrompt) {
+                updateSmartBannerForNativeInstall();
+            } else {
+                if (actionBtnIcon) actionBtnIcon.className = 'fa-solid fa-download text-xs';
+                if (actionBtnText) actionBtnText.textContent = 'Install App';
+                if (subtitle) subtitle.textContent = 'Fast, offline & 1-tap home screen access';
+            }
+
+            banner.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    card.classList.remove('translate-y-36', 'opacity-0');
+                    card.classList.add('translate-y-0', 'opacity-100');
+                });
+            });
+        }
+
+        function dismissSmartInstallBanner(isPermanent = false) {
+            const banner = document.getElementById('smartInstallBanner');
+            const card = document.getElementById('smartInstallCard');
+            if (card) {
+                card.classList.remove('translate-y-0', 'opacity-100');
+                card.classList.add('translate-y-36', 'opacity-0');
+            }
+            setTimeout(() => {
+                if (banner) banner.classList.add('hidden');
+            }, 520);
+
+            if (isPermanent) {
+                localStorage.setItem('pocketflow_installed', 'true');
+            } else {
+                localStorage.setItem('pocketflow_install_dismissed_until', (Date.now() + 24 * 60 * 60 * 1000).toString());
+            }
+        }
+
+        function handleSmartInstallClick() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+            if (deferredInstallPrompt) {
+                triggerNativeInstall();
+                dismissSmartInstallBanner(false);
+            } else if (isIOS) {
+                openModal('installModal');
+                dismissSmartInstallBanner(false);
+            } else {
+                openModal('installModal');
+                dismissSmartInstallBanner(false);
+            }
         }
 
         function toggleMobileHeaderMenu(e) {
@@ -2733,6 +2864,7 @@ $$;`;
             checkPushPermissionUI();
             setupModalBackdrops();
             checkWelcomeBanner();
+            initSmartInstallBanner();
             updateCloudSyncUI(currentCloudUser ? 'synced' : 'guest');
 
             const now = new Date();
