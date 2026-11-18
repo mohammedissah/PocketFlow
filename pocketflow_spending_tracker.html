@@ -258,6 +258,12 @@
                     <span class="hidden md:inline">AI Coach</span>
                 </button>
 
+                <!-- Desktop MoMo Quick Paste Button (lg+) -->
+                <button onclick="openMomoReaderModal()" class="hidden lg:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-bold text-xs border border-amber-500/25 transition shadow-sm" title="Paste MTN MoMo, Telecel or AT SMS">
+                    <i class="fa-solid fa-receipt text-amber-400"></i>
+                    <span>Paste MoMo SMS</span>
+                </button>
+
                 <!-- Desktop Quick Add Button (lg+) -->
                 <button onclick="openModal('addExpenseModal')" class="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition">
                     <i class="fa-solid fa-plus"></i>
@@ -640,10 +646,14 @@
 
         <!-- Floating Bottom Action Bar (Mobile & Tablet) -->
         <div class="fixed bottom-0 left-0 right-0 z-30 pointer-events-none lg:hidden">
-            <div class="max-w-md mx-auto px-4 sm:px-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-3 pointer-events-auto safe-bottom-pad">
-                <button onclick="openModal('addExpenseModal')" class="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2" aria-label="Log New Expense">
+            <div class="max-w-md mx-auto px-4 sm:px-5 pt-2 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex items-center justify-between gap-2.5 pointer-events-auto safe-bottom-pad">
+                <button onclick="openModal('addExpenseModal')" class="flex-1 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2" aria-label="Log New Expense">
                     <i class="fa-solid fa-plus text-base"></i>
-                    <span>Log New Expense</span>
+                    <span>Log Expense</span>
+                </button>
+                <button onclick="openMomoReaderModal()" class="py-3.5 sm:py-4 px-3.5 sm:px-4 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-300 font-bold text-xs border border-amber-500/30 shadow-lg active:scale-[0.98] transition flex items-center justify-center gap-1.5 shrink-0" aria-label="Paste MoMo SMS" title="Paste MTN MoMo, Telecel or AT SMS">
+                    <i class="fa-solid fa-receipt text-amber-400 text-sm"></i>
+                    <span>MoMo SMS</span>
                 </button>
             </div>
         </div>
@@ -1020,6 +1030,14 @@
                                     <p class="text-slate-400 text-[11px] mt-0.5">The item is instantly saved offline, grouped under today's date, and reflected across all charts!</p>
                                 </div>
                             </div>
+
+                            <div class="flex items-start gap-2.5 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">⚡</span>
+                                <div>
+                                    <p class="font-semibold text-amber-300">Fast-Track with MoMo SMS (Ghana)</p>
+                                    <p class="text-slate-300 text-[11px] mt-0.5">Instead of manual entry, copy your MTN MoMo, Telecel Cash, or AT Money confirmation SMS and tap <strong>"MoMo SMS"</strong>. PocketFlow auto-detects the amount, MoMo fee, merchant, and category in 1 second!</p>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Direct Shortcut Action -->
@@ -1120,6 +1138,23 @@
                 </button>
             </div>
 
+            <!-- Quick MoMo SMS Auto-Fill Banner -->
+            <div class="mb-4 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-sm">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-amber-300">Have a MoMo or Telco SMS?</p>
+                        <p class="text-[10px] text-slate-400 truncate">Auto-extract amount, fee & category in 1 tap</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('addExpenseModal'); openMomoReaderModal();" class="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shrink-0 transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-paste"></i>
+                    <span>Paste</span>
+                </button>
+            </div>
+
             <form id="expenseForm" onsubmit="handleSaveExpense(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Amount</label>
@@ -1156,6 +1191,60 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- MODAL: SMART MOMO & TELCO SMS READER (GHANA) -->
+    <div id="momoReaderModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border-t sm:border border-slate-800 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl modal-enter max-h-[92dvh] sm:max-h-[88vh] overflow-y-auto">
+            <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-3.5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-base shrink-0">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                            <span>Smart MoMo Reader</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">Ghana</span>
+                        </h3>
+                        <p class="text-[11px] text-slate-400">MTN MoMo • Telecel Cash • AT Money • Bank SMS</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('momoReaderModal')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Paste Input Area -->
+            <div class="space-y-3">
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Transaction SMS</label>
+                        <button type="button" onclick="pasteMomoFromClipboard()" class="text-amber-400 hover:text-amber-300 font-bold text-xs flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-paste"></i>
+                            <span>Paste from Clipboard</span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <textarea id="momoSmsInput" rows="3" oninput="handleMomoSmsInputChange()" placeholder="Paste your MoMo or Telco SMS message here... (e.g. Payment of GHS 85.00 to Kweku Boateng was successful.)"
+                            class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-2xl p-3 text-xs sm:text-sm text-white placeholder-slate-600 focus:outline-none transition resize-none"></textarea>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px] text-slate-500">
+                        <span>Tip: Auto-extracts amount, fee, merchant & category</span>
+                        <button type="button" onclick="clearMomoSmsInput()" class="text-slate-400 hover:text-slate-200 transition">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Extracted Preview Container -->
+                <div id="momoPreviewContainer" class="pt-1">
+                    <!-- Populated dynamically via renderMomoPreview() -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -4165,6 +4254,8 @@ $$;`;
                 checkPushPermissionUI();
             } else if (id === 'cloudSyncModal') {
                 refreshCloudSyncModalUI();
+            } else if (id === 'momoReaderModal') {
+                initMomoReaderModal();
             }
             const modalEl = document.getElementById(id);
             if (modalEl) {
@@ -4236,6 +4327,460 @@ $$;`;
                 URL.revokeObjectURL(url);
                 showToast('App HTML downloaded!');
             }, 100);
+        }
+
+        // ==========================================
+        // SMART MOMO & GHANA TELCO SMS READER
+        // ==========================================
+        let currentParsedMomo = null;
+
+        function openMomoReaderModal() {
+            openModal('momoReaderModal');
+        }
+
+        function initMomoReaderModal() {
+            const inputEl = document.getElementById('momoSmsInput');
+            if (inputEl && !inputEl.value.trim()) {
+                currentParsedMomo = null;
+                renderMomoPreview();
+                autoPasteMomoIfPermitted();
+            } else {
+                parseMomoSmsInput();
+            }
+        }
+
+        async function autoPasteMomoIfPermitted() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText && navigator.permissions && navigator.permissions.query) {
+                    const status = await navigator.permissions.query({ name: 'clipboard-read' });
+                    if (status.state === 'granted') {
+                        const clipText = await navigator.clipboard.readText();
+                        if (clipText && clipText.trim()) {
+                            const parsed = parseGhanaTelcoSms(clipText);
+                            if (parsed && parsed.isRecognized) {
+                                const inputEl = document.getElementById('momoSmsInput');
+                                if (inputEl) {
+                                    inputEl.value = clipText.trim();
+                                    currentParsedMomo = parsed;
+                                    renderMomoPreview();
+                                    showToast('⚡ Auto-detected MoMo SMS from clipboard!');
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                // Clipboard permissions error ignored gracefully
+            }
+        }
+
+        async function pasteMomoFromClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    if (text && text.trim()) {
+                        const inputEl = document.getElementById('momoSmsInput');
+                        if (inputEl) {
+                            inputEl.value = text.trim();
+                            parseMomoSmsInput();
+                            showToast('Pasted from clipboard!');
+                            return;
+                        }
+                    }
+                }
+                showToast('Please paste the SMS directly into the box.');
+            } catch (err) {
+                showToast('Please paste the SMS into the box (Ctrl+V / Long-press Paste).');
+            }
+        }
+
+        function clearMomoSmsInput() {
+            const inputEl = document.getElementById('momoSmsInput');
+            if (inputEl) inputEl.value = '';
+            currentParsedMomo = null;
+            renderMomoPreview();
+        }
+
+        function handleMomoSmsInputChange() {
+            parseMomoSmsInput();
+        }
+
+        function parseMomoSmsInput() {
+            const inputEl = document.getElementById('momoSmsInput');
+            if (!inputEl) return;
+            const text = inputEl.value.trim();
+            if (!text) {
+                currentParsedMomo = null;
+                renderMomoPreview();
+                return;
+            }
+            currentParsedMomo = parseGhanaTelcoSms(text);
+            renderMomoPreview();
+        }
+
+        function parseGhanaTelcoSms(text) {
+            if (!text || typeof text !== 'string') return null;
+            const cleanText = text.replace(/[\r\n]+/g, ' ').trim();
+            if (!cleanText) return null;
+
+            let result = {
+                raw: cleanText,
+                network: 'other',
+                networkName: 'Bank / Other',
+                networkBadgeClass: 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+                direction: 'debit',
+                amount: 0,
+                fee: 0,
+                includeFee: true,
+                recipient: '',
+                reference: '',
+                date: getLocalDateStr(),
+                category: 'other',
+                isRecognized: false,
+                note: ''
+            };
+
+            const lower = cleanText.toLowerCase();
+
+            // 1. Detect Network (Prioritize explicit headers and provider markers)
+            if (lower.includes('at money') || lower.includes('airteltigo') || /trans(?:\.|\s+)id:\s*at/i.test(cleanText) || /0(?:27|57|26|56)\d{7}/.test(cleanText)) {
+                result.network = 'at';
+                result.networkName = 'AT Money';
+                result.networkBadgeClass = 'bg-sky-500/20 text-sky-300 border-sky-500/30';
+            } else if (lower.includes('telecel') || lower.includes('vodafone') || lower.includes('v-cash') || lower.includes('till') || /0(?:20|50)\d{7}/.test(cleanText)) {
+                result.network = 'telecel';
+                result.networkName = 'Telecel Cash';
+                result.networkBadgeClass = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+            } else if (lower.includes('mobilemoney') || lower.includes('momo') || lower.includes('fee charged:') || /0(?:24|54|55|59|25)\d{7}/.test(cleanText) || /\bmtn\b/i.test(cleanText)) {
+                result.network = 'mtn';
+                result.networkName = 'MTN MoMo';
+                result.networkBadgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+            }
+
+            // 2. Detect Direction: Credit (Incoming) vs Debit (Outgoing)
+            if (lower.includes('payment received') || lower.includes('you have received') || lower.includes('cash in of') || lower.includes('has credited your') || lower.includes('credited with')) {
+                result.direction = 'credit';
+            } else {
+                result.direction = 'debit';
+            }
+
+            // 3. Amount Extraction
+            const amountPatterns = [
+                /(?:payment of|cash out of|sent|paid|purchased|debited with|debit:?)\s*(?:gh[s|c|¢]?\.?)\s*([0-9,]+\.?[0-9]{0,2})/i,
+                /(?:gh[s|c|¢]?\.?)\s*([0-9,]+\.?[0-9]{0,2})\s*(?:sent to|paid to|withdrawn|debited)/i,
+                /(?:payment for|for)\s*(?:gh[s|c|¢]?\.?)\s*([0-9,]+\.?[0-9]{0,2})/i,
+                /(?:gh[s|c|¢]?\.?)\s*([0-9,]+\.[0-9]{2})/i
+            ];
+            for (let pat of amountPatterns) {
+                const m = cleanText.match(pat);
+                if (m && m[1]) {
+                    const val = parseFloat(m[1].replace(/,/g, ''));
+                    if (!isNaN(val) && val > 0) {
+                        result.amount = val;
+                        result.isRecognized = true;
+                        break;
+                    }
+                }
+            }
+
+            // 4. Fee Extraction (Fee charged: GHS 0.90, Fee: GHS 0.38, charge: GHS 0.50)
+            const feeMatch = cleanText.match(/(?:fee charged:?|fee:?|charge:?)\s*(?:gh[s|c|¢]?\.?)\s*([0-9,]+\.?[0-9]{0,2})/i);
+            if (feeMatch && feeMatch[1]) {
+                const feeVal = parseFloat(feeMatch[1].replace(/,/g, ''));
+                if (!isNaN(feeVal) && feeVal > 0) {
+                    result.fee = feeVal;
+                }
+            }
+
+            // 5. Recipient / Counterparty
+            const recipientPatterns = [
+                /(?:to made to|made to|paid to|sent to|transfer to|to)\s+([A-Za-z0-9\s\-\.\'\&\(\)]+?)(?:\s+was successful|\s+on\s|\.|\s+Reference:|\s+Fee|\s+Current|\s+Your)/i,
+                /(?:from agent|from)\s+([A-Za-z0-9\s\-\.\'\&]+?)(?:\s+was successful|\s+on\s|\.|\s+Fee|\s+Current)/i
+            ];
+            for (let pat of recipientPatterns) {
+                const m = cleanText.match(pat);
+                if (m && m[1]) {
+                    let r = m[1].trim();
+                    r = r.replace(/^(the|a)\s+/i, '');
+                    if (r.length > 1 && r.length < 50 && !/^(ghs|ghc|payment|cash|trans)/i.test(r)) {
+                        result.recipient = r;
+                        break;
+                    }
+                }
+            }
+
+            // 6. Reference / Note
+            const refMatch = cleanText.match(/(?:reference|ref|reason):?\s*([A-Za-z0-9\s\-\.\'\&]+?)(?:\.|\s+Current|\s+Fee|\s+Trans|\s+Your|$)/i);
+            if (refMatch && refMatch[1]) {
+                result.reference = refMatch[1].trim();
+            }
+
+            // Synthesize note
+            if (result.recipient && result.reference) {
+                result.note = `${result.recipient} (${result.reference})`;
+            } else if (result.recipient) {
+                result.note = result.recipient;
+            } else if (result.reference) {
+                result.note = result.reference;
+            } else if (lower.includes('airtime')) {
+                result.note = `${result.networkName} Airtime`;
+            } else if (lower.includes('data bundle') || lower.includes('data')) {
+                result.note = `${result.networkName} Data Bundle`;
+            } else {
+                result.note = `${result.networkName} Payment`;
+            }
+
+            // 7. Auto-detect category
+            result.category = detectGhanaCategory(cleanText, result.note);
+
+            return result;
+        }
+
+        function detectGhanaCategory(text, note) {
+            const combined = (text + ' ' + (note || '')).toLowerCase();
+
+            // Food & Dining
+            if (/waakye|jollof|kenkey|fufu|koko|banku|chop|food|lunch|dinner|breakfast|snack|restaurant|kfc|pizzaman|chickenman|papaye|buka|cafe|burger|eats|eatery|bakery|shawarma|starbites|doughnut|pastry|cake/i.test(combined)) {
+                return 'food';
+            }
+            // Transport & Uber
+            if (/bolt|uber|yango|trotro|fuel|petrol|diesel|shell|totalenergies|goil|allied|ride|taxi|driver|transit|transport|fare|bus|flight/i.test(combined)) {
+                return 'transport';
+            }
+            // Bills & Data
+            if (/ecg|electricity|gwcl|water|dstv|gotv|startimes|bundle|data|airtime|surfline|telecel|mtn|fibre|internet|utility|power|broadband|recharge/i.test(combined)) {
+                return 'bills';
+            }
+            // Shopping & Groceries
+            if (/melcom|palace|shoprite|supermarket|mall|mart|grocery|groceries|market|provisions|store|boutique|cloth|shoes|pharmacy|chemist|meds|cosmetics|clothing|electronics/i.test(combined)) {
+                return 'shopping';
+            }
+            // Leisure & Fun
+            if (/netflix|spotify|cinema|movie|club|drinks|lounge|game|gaming|beer|bar|beach|resort|party|concert|event|tickets/i.test(combined)) {
+                return 'fun';
+            }
+            return 'other';
+        }
+
+        function renderMomoPreview() {
+            const container = document.getElementById('momoPreviewContainer');
+            if (!container) return;
+
+            if (!currentParsedMomo || !currentParsedMomo.isRecognized) {
+                container.innerHTML = `
+                    <div class="p-4 rounded-2xl bg-slate-950/40 border border-dashed border-slate-800 text-center text-slate-400 space-y-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-400/80 text-xl mb-1"></i>
+                        <p class="text-xs font-semibold text-slate-300">Ready to Scan Your SMS</p>
+                        <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Copy any transaction SMS from your Messages app, then tap "Paste from Clipboard" or paste it into the box above.</p>
+                        <div class="pt-2 flex items-center justify-center gap-1.5 text-[10px] text-emerald-400">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>100% Private &amp; Offline (processed strictly in your browser)</span>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            if (currentParsedMomo.direction === 'credit') {
+                container.innerHTML = `
+                    <div class="p-4 rounded-2xl bg-slate-950 border border-amber-500/30 space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${currentParsedMomo.networkBadgeClass}">
+                                ${currentParsedMomo.networkName}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/25">
+                                <i class="fa-solid fa-arrow-down mr-1 text-[8px]"></i> Money Received (Credit)
+                            </span>
+                        </div>
+                        <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 text-xs text-amber-200">
+                            <p class="font-bold mb-1">Incoming Transfer of ${state.currency} ${formatMoney(currentParsedMomo.amount)}</p>
+                            <p class="text-[11px] text-amber-300/80 leading-relaxed">
+                                PocketFlow is an expense tracker for what you spend. Since this was an incoming transfer, it does not reduce your budget balance.
+                            </p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const feeToInclude = currentParsedMomo.includeFee && currentParsedMomo.fee > 0 ? currentParsedMomo.fee : 0;
+            const finalAmount = currentParsedMomo.amount + feeToInclude;
+
+            container.innerHTML = `
+                <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3.5">
+                    <!-- Network & Type Badges -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${currentParsedMomo.networkBadgeClass}">
+                                ${currentParsedMomo.networkName}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
+                                <i class="fa-solid fa-arrow-up mr-1 text-[8px]"></i> Expense Outflow
+                            </span>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-mono">${currentParsedMomo.date}</span>
+                    </div>
+
+                    <!-- Amount Highlight -->
+                    <div class="bg-slate-900/80 rounded-2xl p-3.5 border border-slate-800/80 flex items-center justify-between">
+                        <div>
+                            <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Amount Paid</p>
+                            <p class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                                <span class="text-emerald-400">${state.currency}</span> ${formatMoney(currentParsedMomo.amount)}
+                            </p>
+                        </div>
+                        ${currentParsedMomo.fee > 0 ? `
+                            <div class="text-right">
+                                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">MoMo Fee / E-Levy</p>
+                                <p class="text-xs font-bold text-amber-400">+ ${state.currency} ${formatMoney(currentParsedMomo.fee)}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Fee inclusion toggle if fee > 0 -->
+                    ${currentParsedMomo.fee > 0 ? `
+                        <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none px-1">
+                            <input type="checkbox" id="momoIncludeFeeCheckbox" ${currentParsedMomo.includeFee ? 'checked' : ''} onchange="toggleMomoFeeInclusion(event)"
+                                class="w-4 h-4 rounded text-emerald-500 bg-slate-950 border-slate-700 focus:ring-emerald-500">
+                            <span>Add MoMo fee (${state.currency} ${formatMoney(currentParsedMomo.fee)}) to total: <strong class="text-white">${state.currency} ${formatMoney(currentParsedMomo.amount + currentParsedMomo.fee)}</strong></span>
+                        </label>
+                    ` : ''}
+
+                    <!-- Editable Description -->
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Description / Note</label>
+                        <input type="text" id="momoParsedNote" value="${escapeHtml(currentParsedMomo.note)}" oninput="currentParsedMomo.note = this.value"
+                            class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
+                    </div>
+
+                    <!-- Category Picker -->
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                            <span>Category</span>
+                            <span class="text-[10px] text-emerald-400 font-normal">Auto-detected</span>
+                        </label>
+                        <div class="grid grid-cols-3 gap-1.5">
+                            ${CATEGORIES.map(cat => {
+                                const isSel = currentParsedMomo.category === cat.id;
+                                return `
+                                    <button type="button" onclick="setMomoCategory('${cat.id}')"
+                                        class="p-2 rounded-xl border text-left flex items-center gap-2 transition ${isSel ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 font-bold' : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:text-slate-200'}">
+                                        <i class="fa-solid ${cat.icon} text-xs"></i>
+                                        <span class="text-[10px] truncate">${cat.name.split(' ')[0]}</span>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="pt-2 flex items-center gap-2">
+                        <button type="button" onclick="confirmSaveMomoExpense()" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-check text-sm"></i>
+                            <span>Save ${state.currency} ${formatMoney(finalAmount)}</span>
+                        </button>
+                        <button type="button" onclick="transferMomoToAddModal()" class="py-3 px-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition" title="Edit in standard form">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setMomoCategory(catId) {
+            if (!currentParsedMomo) return;
+            currentParsedMomo.category = catId;
+            renderMomoPreview();
+        }
+
+        function toggleMomoFeeInclusion(e) {
+            if (!currentParsedMomo) return;
+            currentParsedMomo.includeFee = e.target.checked;
+            renderMomoPreview();
+        }
+
+        function confirmSaveMomoExpense() {
+            if (!currentParsedMomo || !currentParsedMomo.isRecognized) return;
+
+            let finalAmount = currentParsedMomo.amount;
+            if (currentParsedMomo.includeFee && currentParsedMomo.fee > 0) {
+                finalAmount += currentParsedMomo.fee;
+            }
+
+            const noteInput = document.getElementById('momoParsedNote');
+            const note = noteInput ? noteInput.value.trim() : (currentParsedMomo.note || 'MoMo Expense');
+            const category = currentParsedMomo.category || 'other';
+            const date = currentParsedMomo.date || getLocalDateStr();
+
+            const ctxBefore = getSpendingContext();
+            const newExpense = {
+                id: 'exp-' + Date.now(),
+                amount: finalAmount,
+                category: category,
+                note: note,
+                date: date
+            };
+
+            state.expenses.unshift(newExpense);
+
+            // Check if single expense is unusually large (>= 20% of monthly budget or >= 2x safe allowance)
+            if (finalAmount >= state.budget * 0.20 || (ctxBefore.safeDailyAllowance > 0 && finalAmount >= ctxBefore.safeDailyAllowance * 2)) {
+                addNotificationItem(
+                    '💸 High-Impact Expense Recorded',
+                    `You recorded "${note}" for ${state.currency} ${formatMoney(finalAmount)}, taking ${Math.round((finalAmount / state.budget) * 100)}% of your monthly budget.`,
+                    'warning',
+                    {
+                        strictTip: 'Discipline Guard: Compensate with a 48-hour spending freeze on dining and non-essentials.',
+                        coachPrompt: `I just spent ${state.currency} ${formatMoney(finalAmount)} on "${note}". Give me strict guidance on how to adjust my budget and curb other expenses to absorb this shock.`,
+                        category: 'large_expense'
+                    }
+                );
+            }
+
+            saveState();
+            renderAll();
+            closeModal('momoReaderModal');
+
+            // Evaluate post-expense state for immediate interactive toast feedback
+            const ctxAfter = getSpendingContext();
+            if (ctxAfter.remaining < 0) {
+                showStrictToast(`🚨 Over budget by ${state.currency} ${formatMoney(Math.abs(ctxAfter.remaining))}! Tap for coach advice`, () => {
+                    consultPocketCoachFromAlert(`🚨 Over Budget Alert: I just logged "${note}" for ${state.currency} ${formatMoney(finalAmount)} via ${currentParsedMomo.networkName} and my total spending has exceeded my budget by ${state.currency} ${formatMoney(Math.abs(ctxAfter.remaining))}. Give me a strict emergency recovery plan!`);
+                });
+            } else if (ctxAfter.spentToday > ctxAfter.safeDailyAllowance && ctxAfter.safeDailyAllowance > 0) {
+                showStrictToast(`🛑 Daily allowance exceeded! Tap for coach correction`, () => {
+                    consultPocketCoachFromAlert(`🛑 Daily Limit Blown: I spent ${state.currency} ${formatMoney(ctxAfter.spentToday)} today against my safe allowance of ${state.currency} ${formatMoney(ctxAfter.safeDailyAllowance)}. Give me a strict recovery plan to curb spending over the next 3 days!`);
+                });
+            } else {
+                showToast(`🎉 Logged ${state.currency} ${formatMoney(finalAmount)} from ${currentParsedMomo.networkName}!`);
+            }
+        }
+
+        function transferMomoToAddModal() {
+            if (!currentParsedMomo) return;
+            const noteInput = document.getElementById('momoParsedNote');
+            if (noteInput) currentParsedMomo.note = noteInput.value.trim();
+
+            closeModal('momoReaderModal');
+            openModal('addExpenseModal');
+
+            let finalAmount = currentParsedMomo.amount;
+            if (currentParsedMomo.includeFee && currentParsedMomo.fee > 0) {
+                finalAmount += currentParsedMomo.fee;
+            }
+
+            const amtEl = document.getElementById('expenseAmount');
+            if (amtEl) amtEl.value = finalAmount.toFixed(2);
+
+            const noteEl = document.getElementById('expenseNote');
+            if (noteEl) noteEl.value = currentParsedMomo.note || '';
+
+            const dateEl = document.getElementById('expenseDate');
+            if (dateEl) dateEl.value = currentParsedMomo.date || getLocalDateStr();
+
+            if (currentParsedMomo.category) {
+                selectModalCategory(currentParsedMomo.category);
+            }
         }
 
         function hideToast() {
