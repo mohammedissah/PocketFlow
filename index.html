@@ -1926,7 +1926,16 @@
         let state = {
             currency: 'GH₵',
             budget: 2500,
+            budgetUpdatedAt: null,
+            hasUnsyncedBudget: false,
+            currencyUpdatedAt: null,
+            hasUnsyncedCurrency: false,
             coachStrictness: 'balanced',
+            coachStrictnessUpdatedAt: null,
+            hasUnsyncedCoach: false,
+            hasUnsyncedChanges: false,
+            deletedExpenseIds: [],
+            expensesClearedAt: null,
             notificationsFilter: 'all',
             lastDailyBreachDate: '',
             lastPaceNotifiedDay: 0,
@@ -2281,6 +2290,33 @@
                         if (parsed.budget !== undefined && parsed.budget !== null) {
                             state.budget = Number(parsed.budget);
                         }
+                        if (parsed.budgetUpdatedAt) {
+                            state.budgetUpdatedAt = parsed.budgetUpdatedAt;
+                        }
+                        if (parsed.hasUnsyncedBudget !== undefined) {
+                            state.hasUnsyncedBudget = Boolean(parsed.hasUnsyncedBudget);
+                        }
+                        if (parsed.currencyUpdatedAt) {
+                            state.currencyUpdatedAt = parsed.currencyUpdatedAt;
+                        }
+                        if (parsed.hasUnsyncedCurrency !== undefined) {
+                            state.hasUnsyncedCurrency = Boolean(parsed.hasUnsyncedCurrency);
+                        }
+                        if (parsed.coachStrictnessUpdatedAt) {
+                            state.coachStrictnessUpdatedAt = parsed.coachStrictnessUpdatedAt;
+                        }
+                        if (parsed.hasUnsyncedCoach !== undefined) {
+                            state.hasUnsyncedCoach = Boolean(parsed.hasUnsyncedCoach);
+                        }
+                        if (parsed.hasUnsyncedChanges !== undefined) {
+                            state.hasUnsyncedChanges = Boolean(parsed.hasUnsyncedChanges);
+                        }
+                        if (Array.isArray(parsed.deletedExpenseIds)) {
+                            state.deletedExpenseIds = parsed.deletedExpenseIds;
+                        }
+                        if (parsed.expensesClearedAt) {
+                            state.expensesClearedAt = parsed.expensesClearedAt;
+                        }
                         if (parsed.currency) {
                             state.currency = String(parsed.currency).trim().slice(0, 8).replace(/[<>'"]/g, '') || '$';
                         }
@@ -2331,7 +2367,16 @@
                 const payloadObj = {
                     currency: state.currency,
                     budget: state.budget,
+                    budgetUpdatedAt: state.budgetUpdatedAt || null,
+                    hasUnsyncedBudget: Boolean(state.hasUnsyncedBudget),
+                    currencyUpdatedAt: state.currencyUpdatedAt || null,
+                    hasUnsyncedCurrency: Boolean(state.hasUnsyncedCurrency),
                     coachStrictness: state.coachStrictness || 'balanced',
+                    coachStrictnessUpdatedAt: state.coachStrictnessUpdatedAt || null,
+                    hasUnsyncedCoach: Boolean(state.hasUnsyncedCoach),
+                    hasUnsyncedChanges: Boolean(state.hasUnsyncedChanges),
+                    deletedExpenseIds: state.deletedExpenseIds || [],
+                    expensesClearedAt: state.expensesClearedAt || null,
                     expenses: state.expenses,
                     notifications: state.notifications,
                     lastNotifiedTier: state.lastNotifiedTier || 0,
@@ -2365,6 +2410,7 @@
         let cloudRealtimeChannel = null;
         let cloudSyncTimeout = null;
         let isCloudSyncing = false;
+        let hasPendingPush = false;
         let lastSyncedTime = null;
 
         function cleanSupabaseUrl(rawUrl) {
@@ -2465,6 +2511,19 @@
                     }
                 });
 
+                // Auto-sync when closing, hiding, or switching away from app
+                window.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        flushPendingCloudSync();
+                    }
+                });
+                window.addEventListener('pagehide', () => {
+                    flushPendingCloudSync();
+                });
+                window.addEventListener('beforeunload', () => {
+                    flushPendingCloudSync();
+                });
+
             } catch (err) {
                 console.error('Supabase init error:', err);
                 updateCloudSyncUI('guest');
@@ -2480,8 +2539,22 @@
             }, delayMs);
         }
 
+        function flushPendingCloudSync() {
+            if (cloudSyncTimeout) {
+                clearTimeout(cloudSyncTimeout);
+                cloudSyncTimeout = null;
+            }
+            if (supabaseClient && currentCloudUser && (state.hasUnsyncedChanges || state.hasUnsyncedBudget || state.hasUnsyncedCurrency || state.hasUnsyncedCoach)) {
+                pushToCloud();
+            }
+        }
+
         async function pushToCloud() {
-            if (!supabaseClient || !currentCloudUser || isCloudSyncing) return;
+            if (!supabaseClient || !currentCloudUser) return;
+            if (isCloudSyncing) {
+                hasPendingPush = true;
+                return;
+            }
             isCloudSyncing = true;
             updateCloudSyncUI('syncing');
 
@@ -2505,6 +2578,14 @@
 
                 if (error) throw error;
 
+                // Sync succeeded: mark flags as synced
+                state.hasUnsyncedChanges = false;
+                state.hasUnsyncedBudget = false;
+                state.hasUnsyncedCurrency = false;
+                state.hasUnsyncedCoach = false;
+                state.deletedExpenseIds = [];
+                saveState(false);
+
                 lastSyncedTime = new Date();
                 localStorage.setItem('pocketflow_last_cloud_sync', lastSyncedTime.toISOString());
                 updateCloudSyncUI('synced');
@@ -2513,6 +2594,10 @@
                 updateCloudSyncUI('offline');
             } finally {
                 isCloudSyncing = false;
+                if (hasPendingPush) {
+                    hasPendingPush = false;
+                    setTimeout(() => pushToCloud(), 100);
+                }
             }
         }
 
@@ -2531,20 +2616,33 @@
                 if (error) throw error;
 
                 if (data) {
+                    const remoteUpdatedAtMs = data.updated_at ? new Date(data.updated_at).getTime() : 0;
+                    const localBudgetUpdatedAtMs = state.budgetUpdatedAt ? new Date(state.budgetUpdatedAt).getTime() : 0;
+                    const localCurrencyUpdatedAtMs = state.currencyUpdatedAt ? new Date(state.currencyUpdatedAt).getTime() : 0;
+                    const localCoachUpdatedAtMs = state.coachStrictnessUpdatedAt ? new Date(state.coachStrictnessUpdatedAt).getTime() : 0;
+                    const localClearedAtMs = state.expensesClearedAt ? new Date(state.expensesClearedAt).getTime() : 0;
+
+                    let needsPushBack = false;
+
                     const rawRemote = Array.isArray(data.expenses) ? data.expenses : [];
                     const remoteExpenses = stripPreloadedExpenses(rawRemote);
                     const localExpenses = stripPreloadedExpenses(state.expenses || []);
+                    const deletedIds = new Set(state.deletedExpenseIds || []);
 
-                    // Two-way merge: combine unique non-sample expenses by id
+                    // Two-way merge: combine unique non-sample expenses by id, respecting locally deleted items
                     const expenseMap = new Map();
-                    remoteExpenses.forEach(exp => {
-                        if (exp && exp.id) expenseMap.set(exp.id, exp);
-                    });
+                    if (!state.expensesClearedAt || localClearedAtMs < remoteUpdatedAtMs) {
+                        remoteExpenses.forEach(exp => {
+                            if (exp && exp.id && !deletedIds.has(exp.id)) {
+                                expenseMap.set(exp.id, exp);
+                            }
+                        });
+                    }
 
                     let hasNewLocalExpenses = false;
                     localExpenses.forEach(exp => {
                         if (exp && exp.id) {
-                            if (!expenseMap.has(exp.id)) {
+                            if (!expenseMap.has(exp.id) && !deletedIds.has(exp.id)) {
                                 expenseMap.set(exp.id, exp);
                                 hasNewLocalExpenses = true;
                             }
@@ -2552,26 +2650,59 @@
                     });
 
                     state.expenses = Array.from(expenseMap.values());
-                    if (data.budget) state.budget = Number(data.budget);
-                    if (data.currency) {
+
+                    // BUDGET SYNC RESOLUTION:
+                    // If local budget was modified by the user (unsynced or local timestamp is newer),
+                    // protect local budget from being reverted by older cloud data!
+                    if (state.hasUnsyncedBudget || (localBudgetUpdatedAtMs > remoteUpdatedAtMs)) {
+                        if (data.budget !== undefined && Number(data.budget) !== Number(state.budget)) {
+                            needsPushBack = true;
+                        }
+                    } else if (data.budget !== undefined && data.budget !== null) {
+                        state.budget = Number(data.budget);
+                        state.budgetUpdatedAt = data.updated_at || new Date().toISOString();
+                        state.hasUnsyncedBudget = false;
+                    }
+
+                    // CURRENCY SYNC RESOLUTION:
+                    if (state.hasUnsyncedCurrency || (localCurrencyUpdatedAtMs > remoteUpdatedAtMs)) {
+                        if (data.currency && data.currency !== state.currency) {
+                            needsPushBack = true;
+                        }
+                    } else if (data.currency) {
                         state.currency = data.currency;
+                        state.currencyUpdatedAt = data.updated_at || new Date().toISOString();
+                        state.hasUnsyncedCurrency = false;
                         const currencySelect = document.getElementById('currencySelect');
                         if (currencySelect) currencySelect.value = state.currency;
                     }
-                    if (data.coach_strictness) state.coachStrictness = data.coach_strictness;
+
+                    // COACH STRICTNESS SYNC RESOLUTION:
+                    if (state.hasUnsyncedCoach || (localCoachUpdatedAtMs > remoteUpdatedAtMs)) {
+                        if (data.coach_strictness && data.coach_strictness !== state.coachStrictness) {
+                            needsPushBack = true;
+                        }
+                    } else if (data.coach_strictness) {
+                        state.coachStrictness = data.coach_strictness;
+                        state.coachStrictnessUpdatedAt = data.updated_at || new Date().toISOString();
+                        state.hasUnsyncedCoach = false;
+                    }
 
                     // Save locally without triggering a circular sync push
                     saveState(false);
                     renderAll(true);
 
-                    // If remote cloud had sample expenses, or local had new real items, update cloud to clean state
-                    if (rawRemote.length !== remoteExpenses.length || hasNewLocalExpenses) {
-                        pushToCloud();
-                    }
-
                     lastSyncedTime = new Date(data.updated_at || Date.now());
                     localStorage.setItem('pocketflow_last_cloud_sync', lastSyncedTime.toISOString());
                     updateCloudSyncUI('synced');
+
+                    // If remote had sample expenses, local had new items, local had deleted items,
+                    // or local budget/settings were newer, update the cloud to the latest consolidated state!
+                    if (rawRemote.length !== remoteExpenses.length || hasNewLocalExpenses || needsPushBack || deletedIds.size > 0 || (state.expensesClearedAt && localClearedAtMs > remoteUpdatedAtMs)) {
+                        isCloudSyncing = false;
+                        await pushToCloud();
+                    }
+
                     if (isInitial) {
                         showToast('Cloud data synced successfully!');
                     }
@@ -2581,6 +2712,7 @@
                     saveState(false);
                     renderAll(true);
 
+                    isCloudSyncing = false;
                     await pushToCloud();
                     if (isInitial) {
                         showToast('Connected! Clean account ready for your spending.');
@@ -2612,6 +2744,11 @@
                             const remote = payload.new;
                             const remoteTime = new Date(remote.updated_at).getTime();
                             const localTime = lastSyncedTime ? lastSyncedTime.getTime() : 0;
+                            // If local has unsynced changes, push our latest state instead of pulling older state
+                            if (state.hasUnsyncedBudget || state.hasUnsyncedChanges) {
+                                scheduleCloudSync(300);
+                                return;
+                            }
                             if (remoteTime > localTime + 1500) {
                                 pullFromCloud(false);
                             }
@@ -2716,8 +2853,15 @@
             const icon = document.getElementById('manualSyncIcon');
             if (icon) icon.classList.add('animate-spin');
             try {
+                if (cloudSyncTimeout) {
+                    clearTimeout(cloudSyncTimeout);
+                    cloudSyncTimeout = null;
+                }
+                // Push local unsynced changes FIRST so cloud has our latest budget, expenses, and settings
+                if (state.hasUnsyncedChanges || state.hasUnsyncedBudget || state.hasUnsyncedCurrency || state.hasUnsyncedCoach) {
+                    await pushToCloud();
+                }
                 await pullFromCloud(false);
-                await pushToCloud();
                 showToast('Sync complete! All devices up to date.');
             } catch (e) {
                 showToast('Sync error: ' + (e.message || 'Check connection'));
@@ -3008,9 +3152,17 @@ $$;`;
 
                     state.expenses = clean.expenses;
                     state.budget = clean.budget;
+                    state.budgetUpdatedAt = new Date().toISOString();
+                    state.hasUnsyncedBudget = true;
                     state.currency = clean.currency;
+                    state.currencyUpdatedAt = new Date().toISOString();
+                    state.hasUnsyncedCurrency = true;
+                    state.hasUnsyncedChanges = true;
                     saveState();
                     showToast('Expenses successfully transferred to Home Screen!');
+                    if (supabaseClient && currentCloudUser) {
+                        pushToCloud();
+                    }
                 }
             } catch (e) {
                 console.log('URL data import skipped', e);
@@ -3076,9 +3228,19 @@ $$;`;
             currencySelect.value = state.currency;
             currencySelect.addEventListener('change', (e) => {
                 state.currency = String(e.target.value || '$').trim().slice(0, 8).replace(/[<>'"]/g, '') || '$';
+                state.currencyUpdatedAt = new Date().toISOString();
+                state.hasUnsyncedCurrency = true;
+                state.hasUnsyncedChanges = true;
                 saveState();
                 renderAll();
                 showToast(`Currency updated to ${escapeHtml(state.currency)}`);
+                if (supabaseClient && currentCloudUser) {
+                    if (cloudSyncTimeout) {
+                        clearTimeout(cloudSyncTimeout);
+                        cloudSyncTimeout = null;
+                    }
+                    pushToCloud();
+                }
             });
 
             renderModalCategories();
@@ -3914,11 +4076,21 @@ $$;`;
 
         function setCoachStrictness(level) {
             state.coachStrictness = level;
+            state.coachStrictnessUpdatedAt = new Date().toISOString();
+            state.hasUnsyncedCoach = true;
+            state.hasUnsyncedChanges = true;
             saveState();
             renderCoachStrictnessUI();
             renderAll();
             const label = level === 'strict' ? 'Strict Disciplinarian' : (level === 'balanced' ? 'Balanced Guardian' : 'Gentle Guide');
             showToast(`Coach Mode: ${label}`);
+            if (supabaseClient && currentCloudUser) {
+                if (cloudSyncTimeout) {
+                    clearTimeout(cloudSyncTimeout);
+                    cloudSyncTimeout = null;
+                }
+                pushToCloud();
+            }
         }
 
         function renderCoachStrictnessUI() {
@@ -4135,6 +4307,7 @@ $$;`;
                 );
             }
 
+            state.hasUnsyncedChanges = true;
             saveState();
             renderAll();
 
@@ -4159,9 +4332,21 @@ $$;`;
 
         function deleteExpense(id) {
             state.expenses = state.expenses.filter(e => e.id !== id);
+            state.deletedExpenseIds = state.deletedExpenseIds || [];
+            if (!state.deletedExpenseIds.includes(id)) {
+                state.deletedExpenseIds.push(id);
+            }
+            state.hasUnsyncedChanges = true;
             saveState();
             renderAll();
             showToast('Transaction removed');
+            if (supabaseClient && currentCloudUser) {
+                if (cloudSyncTimeout) {
+                    clearTimeout(cloudSyncTimeout);
+                    cloudSyncTimeout = null;
+                }
+                pushToCloud();
+            }
         }
 
         function handleSaveBudget(e) {
@@ -4169,19 +4354,40 @@ $$;`;
             const val = parseFloat(document.getElementById('budgetInput').value);
             if (val && val > 0) {
                 state.budget = val;
-                saveState();
+                state.budgetUpdatedAt = new Date().toISOString();
+                state.hasUnsyncedBudget = true;
+                state.hasUnsyncedChanges = true;
+                saveState(true);
                 renderAll();
                 closeModal('budgetModal');
                 showToast('Monthly budget updated!');
+
+                // Immediately sync to cloud so if user closes app right away, it is already persisted
+                if (supabaseClient && currentCloudUser) {
+                    if (cloudSyncTimeout) {
+                        clearTimeout(cloudSyncTimeout);
+                        cloudSyncTimeout = null;
+                    }
+                    pushToCloud();
+                }
             }
         }
 
         function clearAllExpenses() {
             state.expenses = [];
+            state.expensesClearedAt = new Date().toISOString();
+            state.hasUnsyncedChanges = true;
             saveState();
             renderAll();
             closeModal('confirmClearModal');
             showToast('All expenses cleared! Ready for your data.');
+            if (supabaseClient && currentCloudUser) {
+                if (cloudSyncTimeout) {
+                    clearTimeout(cloudSyncTimeout);
+                    cloudSyncTimeout = null;
+                }
+                pushToCloud();
+            }
         }
 
         // ==========================================
@@ -4309,12 +4515,20 @@ $$;`;
                     if (clean && Array.isArray(clean.expenses)) {
                         state.expenses = clean.expenses;
                         state.budget = clean.budget;
+                        state.budgetUpdatedAt = new Date().toISOString();
+                        state.hasUnsyncedBudget = true;
                         state.currency = clean.currency;
+                        state.currencyUpdatedAt = new Date().toISOString();
+                        state.hasUnsyncedCurrency = true;
+                        state.hasUnsyncedChanges = true;
                         const currencySelect = document.getElementById('currencySelect');
                         if (currencySelect) currencySelect.value = state.currency;
                         saveState();
                         renderAll(true);
                         showToast('Data restored successfully!');
+                        if (supabaseClient && currentCloudUser) {
+                            pushToCloud();
+                        }
                     } else {
                         showToast('Invalid backup file format');
                     }
@@ -4846,6 +5060,7 @@ $$;`;
                 );
             }
 
+            state.hasUnsyncedChanges = true;
             saveState();
             renderAll();
             closeModal('momoReaderModal');
