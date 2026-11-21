@@ -288,6 +288,16 @@
                     <span class="hidden sm:inline">Install</span>
                 </button>
 
+                <!-- Undo & Redo Header Controls (sm+) -->
+                <div class="hidden sm:flex items-center gap-0.5 bg-slate-800 p-0.5 rounded-xl border border-slate-700 shrink-0" role="group" aria-label="Undo and Redo actions">
+                    <button id="headerUndoBtn" onclick="undo()" disabled class="w-8 h-8 rounded-lg text-slate-500 hover:text-emerald-400 hover:bg-slate-700/80 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-slate-500 disabled:hover:bg-transparent flex items-center justify-center transition active:scale-95" title="Undo (Ctrl+Z)" aria-label="Undo last action">
+                        <i class="fa-solid fa-rotate-left text-xs sm:text-sm"></i>
+                    </button>
+                    <button id="headerRedoBtn" onclick="redo()" disabled class="w-8 h-8 rounded-lg text-slate-500 hover:text-emerald-400 hover:bg-slate-700/80 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-slate-500 disabled:hover:bg-transparent flex items-center justify-center transition active:scale-95" title="Redo (Ctrl+Y)" aria-label="Redo action">
+                        <i class="fa-solid fa-rotate-right text-xs sm:text-sm"></i>
+                    </button>
+                </div>
+
                 <!-- Notifications Bell Center (Visible on all screen sizes) -->
                 <button onclick="openModal('notificationsModal')" class="relative w-8 h-8 sm:w-9 sm:h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center justify-center text-xs font-semibold shrink-0" title="Notifications & Alerts" aria-label="Notifications">
                     <i class="fa-solid fa-bell text-emerald-400 text-xs sm:text-sm"></i>
@@ -316,6 +326,20 @@
                     </button>
                     <!-- Mobile Dropdown Menu -->
                     <div id="mobileHeaderDropdown" class="hidden absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl py-1.5 z-50 text-xs text-slate-200 divide-y divide-slate-800/80">
+                        <button id="mobileUndoBtn" onclick="closeMobileHeaderMenu(); undo();" disabled class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-rotate-left text-emerald-400 text-sm w-4 text-center"></i>
+                            <div>
+                                <div class="font-bold text-white text-xs">Undo Action</div>
+                                <div id="mobileUndoSubtext" class="text-[10px] text-slate-400">Revert last change (Ctrl+Z)</div>
+                            </div>
+                        </button>
+                        <button id="mobileRedoBtn" onclick="closeMobileHeaderMenu(); redo();" disabled class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-rotate-right text-emerald-400 text-sm w-4 text-center"></i>
+                            <div>
+                                <div class="font-bold text-white text-xs">Redo Action</div>
+                                <div id="mobileRedoSubtext" class="text-[10px] text-slate-400">Reapply change (Ctrl+Y)</div>
+                            </div>
+                        </button>
                         <button onclick="closeMobileHeaderMenu(); openModal('cloudSyncModal');" class="w-full px-3 py-2.5 text-left flex items-center gap-2.5 hover:bg-slate-800 transition">
                             <i class="fa-solid fa-cloud text-sky-400 text-sm w-4 text-center"></i>
                             <div>
@@ -609,8 +633,19 @@
                 </div>
 
                 <!-- Transactions Header & Export -->
-                <div class="flex items-center justify-between px-1">
-                    <h3 class="text-sm font-bold text-slate-300">Transactions</h3>
+                <div class="flex items-center justify-between px-1 gap-2">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-slate-300">Transactions</h3>
+                        <!-- Undo / Redo Toolbar -->
+                        <div class="flex items-center gap-0.5 bg-slate-800/80 p-0.5 rounded-xl border border-slate-700/60 shadow-sm" role="group" aria-label="Undo and Redo actions">
+                            <button id="txUndoBtn" onclick="undo()" disabled class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-500 hover:text-emerald-400 hover:bg-slate-700/70 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-slate-500 disabled:hover:bg-transparent flex items-center justify-center transition active:scale-90" title="Undo (Ctrl+Z)" aria-label="Undo transaction action">
+                                <i class="fa-solid fa-rotate-left text-xs"></i>
+                            </button>
+                            <button id="txRedoBtn" onclick="redo()" disabled class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-500 hover:text-emerald-400 hover:bg-slate-700/70 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-slate-500 disabled:hover:bg-transparent flex items-center justify-center transition active:scale-90" title="Redo (Ctrl+Y)" aria-label="Redo transaction action">
+                                <i class="fa-solid fa-rotate-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
                     <div class="flex items-center gap-2">
                         <button onclick="openModal('confirmClearModal')" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1.5 bg-rose-500/10 hover:bg-rose-500/20 px-2.5 sm:px-3 py-1.5 rounded-xl border border-rose-500/20 transition" title="Clear all expenses">
                             <i class="fa-solid fa-trash-can text-xs"></i>
@@ -1048,6 +1083,16 @@
                                 <div>
                                     <p class="font-semibold text-amber-300">Fast-Track with MoMo SMS (Ghana)</p>
                                     <p class="text-slate-300 text-[11px] mt-0.5">Instead of manual entry, copy your MTN MoMo, Telecel Cash, or AT Money confirmation SMS and tap <strong>"MoMo SMS"</strong>. PocketFlow auto-detects the amount, MoMo fee, merchant, and category in 1 second!</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-2.5 bg-slate-900 border border-slate-800/80 rounded-xl p-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-extrabold flex items-center justify-center shrink-0 text-xs">
+                                    <i class="fa-solid fa-rotate-left text-[9px]"></i>
+                                </span>
+                                <div>
+                                    <p class="font-semibold text-white">Made a Mistake? Undo & Redo</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">Accidentally deleted or added an expense? Tap the <strong>Undo</strong> (<i class="fa-solid fa-rotate-left text-emerald-400"></i>) or <strong>Redo</strong> (<i class="fa-solid fa-rotate-right text-emerald-400"></i>) buttons in the Transactions toolbar or top bar, or press <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[10px]">Ctrl+Z</kbd> / <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[10px]">Ctrl+Y</kbd> on your keyboard!</p>
                                 </div>
                             </div>
                         </div>
@@ -1963,6 +2008,193 @@
             selectedCategoryFilter: 'all',
             searchQuery: ''
         };
+
+        // ==========================================
+        // UNDO & REDO HISTORY ENGINE
+        // ==========================================
+        const MAX_UNDO_STACK_SIZE = 50;
+        let undoStack = [];
+        let redoStack = [];
+
+        function createHistorySnapshot() {
+            return {
+                expenses: JSON.parse(JSON.stringify(state.expenses || [])),
+                budget: state.budget,
+                currency: state.currency,
+                deletedExpenseIds: Array.isArray(state.deletedExpenseIds) ? [...state.deletedExpenseIds] : [],
+                expensesClearedAt: state.expensesClearedAt || null,
+                budgetUpdatedAt: state.budgetUpdatedAt || null,
+                currencyUpdatedAt: state.currencyUpdatedAt || null,
+                coachStrictness: state.coachStrictness || 'balanced'
+            };
+        }
+
+        function recordUndoAction(description = 'Change') {
+            const snapshot = createHistorySnapshot();
+            undoStack.push({
+                description: description,
+                snapshot: snapshot,
+                timestamp: Date.now()
+            });
+            if (undoStack.length > MAX_UNDO_STACK_SIZE) {
+                undoStack.shift();
+            }
+            redoStack = [];
+            updateUndoRedoUI();
+        }
+
+        function applyHistorySnapshot(snapshot) {
+            if (!snapshot) return;
+
+            state.expenses = JSON.parse(JSON.stringify(snapshot.expenses || []));
+            state.budget = Number(snapshot.budget) || 2500;
+            state.currency = snapshot.currency || '$';
+            state.deletedExpenseIds = Array.isArray(snapshot.deletedExpenseIds) ? [...snapshot.deletedExpenseIds] : [];
+            state.expensesClearedAt = snapshot.expensesClearedAt || null;
+            state.budgetUpdatedAt = snapshot.budgetUpdatedAt || new Date().toISOString();
+            state.currencyUpdatedAt = snapshot.currencyUpdatedAt || new Date().toISOString();
+            state.hasUnsyncedBudget = true;
+            state.hasUnsyncedCurrency = true;
+            if (snapshot.coachStrictness) {
+                state.coachStrictness = snapshot.coachStrictness;
+                if (typeof renderCoachStrictnessUI === 'function') {
+                    renderCoachStrictnessUI();
+                }
+            }
+
+            const currencySelect = document.getElementById('currencySelect');
+            if (currencySelect) {
+                currencySelect.value = state.currency;
+            }
+            const budgetInput = document.getElementById('budgetInput');
+            if (budgetInput) {
+                budgetInput.value = state.budget;
+            }
+        }
+
+        function undo() {
+            if (undoStack.length === 0) {
+                showToast('Nothing to undo');
+                return;
+            }
+
+            const currentSnapshot = createHistorySnapshot();
+            const action = undoStack.pop();
+
+            redoStack.push({
+                description: action.description,
+                snapshot: currentSnapshot,
+                timestamp: Date.now()
+            });
+            if (redoStack.length > MAX_UNDO_STACK_SIZE) {
+                redoStack.shift();
+            }
+
+            applyHistorySnapshot(action.snapshot);
+            state.hasUnsyncedChanges = true;
+            saveState(true);
+            renderAll();
+            updateUndoRedoUI();
+
+            showToast(`Undid: ${action.description}`);
+
+            if (supabaseClient && currentCloudUser) {
+                if (cloudSyncTimeout) {
+                    clearTimeout(cloudSyncTimeout);
+                    cloudSyncTimeout = null;
+                }
+                pushToCloud();
+            }
+        }
+
+        function redo() {
+            if (redoStack.length === 0) {
+                showToast('Nothing to redo');
+                return;
+            }
+
+            const currentSnapshot = createHistorySnapshot();
+            const action = redoStack.pop();
+
+            undoStack.push({
+                description: action.description,
+                snapshot: currentSnapshot,
+                timestamp: Date.now()
+            });
+            if (undoStack.length > MAX_UNDO_STACK_SIZE) {
+                undoStack.shift();
+            }
+
+            applyHistorySnapshot(action.snapshot);
+            state.hasUnsyncedChanges = true;
+            saveState(true);
+            renderAll();
+            updateUndoRedoUI();
+
+            showToast(`Redid: ${action.description}`);
+
+            if (supabaseClient && currentCloudUser) {
+                if (cloudSyncTimeout) {
+                    clearTimeout(cloudSyncTimeout);
+                    cloudSyncTimeout = null;
+                }
+                pushToCloud();
+            }
+        }
+
+        function updateUndoRedoUI() {
+            const canUndo = undoStack.length > 0;
+            const canRedo = redoStack.length > 0;
+            const nextUndoDesc = canUndo ? undoStack[undoStack.length - 1].description : '';
+            const nextRedoDesc = canRedo ? redoStack[redoStack.length - 1].description : '';
+
+            const undoButtons = [
+                document.getElementById('headerUndoBtn'),
+                document.getElementById('txUndoBtn'),
+                document.getElementById('mobileUndoBtn')
+            ].filter(Boolean);
+
+            const redoButtons = [
+                document.getElementById('headerRedoBtn'),
+                document.getElementById('txRedoBtn'),
+                document.getElementById('mobileRedoBtn')
+            ].filter(Boolean);
+
+            undoButtons.forEach(btn => {
+                btn.disabled = !canUndo;
+                if (canUndo) {
+                    btn.setAttribute('title', `Undo: ${nextUndoDesc} (Ctrl+Z)`);
+                    btn.classList.remove('opacity-30', 'cursor-not-allowed', 'text-slate-500');
+                    btn.classList.add('text-slate-300', 'hover:text-emerald-400');
+                } else {
+                    btn.setAttribute('title', 'Nothing to undo (Ctrl+Z)');
+                    btn.classList.add('opacity-30', 'cursor-not-allowed', 'text-slate-500');
+                    btn.classList.remove('text-slate-300', 'hover:text-emerald-400');
+                }
+            });
+
+            redoButtons.forEach(btn => {
+                btn.disabled = !canRedo;
+                if (canRedo) {
+                    btn.setAttribute('title', `Redo: ${nextRedoDesc} (Ctrl+Y)`);
+                    btn.classList.remove('opacity-30', 'cursor-not-allowed', 'text-slate-500');
+                    btn.classList.add('text-slate-300', 'hover:text-emerald-400');
+                } else {
+                    btn.setAttribute('title', 'Nothing to redo (Ctrl+Y)');
+                    btn.classList.add('opacity-30', 'cursor-not-allowed', 'text-slate-500');
+                    btn.classList.remove('text-slate-300', 'hover:text-emerald-400');
+                }
+            });
+
+            const mobileUndoSub = document.getElementById('mobileUndoSubtext');
+            if (mobileUndoSub) {
+                mobileUndoSub.textContent = canUndo ? nextUndoDesc : 'Nothing to undo (Ctrl+Z)';
+            }
+            const mobileRedoSub = document.getElementById('mobileRedoSubtext');
+            if (mobileRedoSub) {
+                mobileRedoSub.textContent = canRedo ? nextRedoDesc : 'Nothing to redo (Ctrl+Y)';
+            }
+        }
 
         // ==========================================
         // PWA & LOCAL STORAGE
@@ -3227,24 +3459,53 @@ $$;`;
             const currencySelect = document.getElementById('currencySelect');
             currencySelect.value = state.currency;
             currencySelect.addEventListener('change', (e) => {
-                state.currency = String(e.target.value || '$').trim().slice(0, 8).replace(/[<>'"]/g, '') || '$';
-                state.currencyUpdatedAt = new Date().toISOString();
-                state.hasUnsyncedCurrency = true;
-                state.hasUnsyncedChanges = true;
-                saveState();
-                renderAll();
-                showToast(`Currency updated to ${escapeHtml(state.currency)}`);
-                if (supabaseClient && currentCloudUser) {
-                    if (cloudSyncTimeout) {
-                        clearTimeout(cloudSyncTimeout);
-                        cloudSyncTimeout = null;
+                const newCurr = String(e.target.value || '$').trim().slice(0, 8).replace(/[<>'"]/g, '') || '$';
+                if (newCurr !== state.currency) {
+                    recordUndoAction(`Change currency to ${newCurr}`);
+                    state.currency = newCurr;
+                    state.currencyUpdatedAt = new Date().toISOString();
+                    state.hasUnsyncedCurrency = true;
+                    state.hasUnsyncedChanges = true;
+                    saveState();
+                    renderAll();
+                    showToast(`Currency updated to ${escapeHtml(state.currency)}`);
+                    if (supabaseClient && currentCloudUser) {
+                        if (cloudSyncTimeout) {
+                            clearTimeout(cloudSyncTimeout);
+                            cloudSyncTimeout = null;
+                        }
+                        pushToCloud();
                     }
-                    pushToCloud();
+                }
+            });
+
+            // Global Undo / Redo keyboard shortcuts (Ctrl+Z, Ctrl+Y, Ctrl+Shift+Z)
+            document.addEventListener('keydown', (e) => {
+                const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+                if (!isCtrlOrCmd) return;
+
+                const activeTag = document.activeElement ? document.activeElement.tagName : '';
+                if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable)) {
+                    return;
+                }
+
+                const key = e.key.toLowerCase();
+                if (key === 'z') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        redo();
+                    } else {
+                        undo();
+                    }
+                } else if (key === 'y') {
+                    e.preventDefault();
+                    redo();
                 }
             });
 
             renderModalCategories();
             renderAll(true);
+            updateUndoRedoUI();
         };
 
         function formatMoney(num) {
@@ -4075,6 +4336,9 @@ $$;`;
         }
 
         function setCoachStrictness(level) {
+            if (level !== state.coachStrictness) {
+                recordUndoAction(`Change coach mode to ${level}`);
+            }
             state.coachStrictness = level;
             state.coachStrictnessUpdatedAt = new Date().toISOString();
             state.hasUnsyncedCoach = true;
@@ -4282,6 +4546,8 @@ $$;`;
 
             if (!amount || amount <= 0 || !note) return;
 
+            recordUndoAction(`Add "${note}" (${formatMoney(amount)})`);
+
             const ctxBefore = getSpendingContext();
             const newExpense = {
                 id: 'exp-' + Date.now(),
@@ -4331,6 +4597,10 @@ $$;`;
         }
 
         function deleteExpense(id) {
+            const toDelete = (state.expenses || []).find(e => e.id === id);
+            const note = toDelete ? toDelete.note : 'Transaction';
+            recordUndoAction(`Delete "${note}"`);
+
             state.expenses = state.expenses.filter(e => e.id !== id);
             state.deletedExpenseIds = state.deletedExpenseIds || [];
             if (!state.deletedExpenseIds.includes(id)) {
@@ -4339,7 +4609,7 @@ $$;`;
             state.hasUnsyncedChanges = true;
             saveState();
             renderAll();
-            showToast('Transaction removed');
+            showToastWithUndo(`Deleted "${escapeHtml(note)}"`);
             if (supabaseClient && currentCloudUser) {
                 if (cloudSyncTimeout) {
                     clearTimeout(cloudSyncTimeout);
@@ -4353,6 +4623,9 @@ $$;`;
             e.preventDefault();
             const val = parseFloat(document.getElementById('budgetInput').value);
             if (val && val > 0) {
+                if (val !== state.budget) {
+                    recordUndoAction(`Update budget to ${state.currency} ${formatMoney(val)}`);
+                }
                 state.budget = val;
                 state.budgetUpdatedAt = new Date().toISOString();
                 state.hasUnsyncedBudget = true;
@@ -4374,13 +4647,15 @@ $$;`;
         }
 
         function clearAllExpenses() {
+            if (!state.expenses || state.expenses.length === 0) return;
+            recordUndoAction('Clear all expenses');
             state.expenses = [];
             state.expensesClearedAt = new Date().toISOString();
             state.hasUnsyncedChanges = true;
             saveState();
             renderAll();
             closeModal('confirmClearModal');
-            showToast('All expenses cleared! Ready for your data.');
+            showToastWithUndo('All expenses cleared');
             if (supabaseClient && currentCloudUser) {
                 if (cloudSyncTimeout) {
                     clearTimeout(cloudSyncTimeout);
@@ -4513,6 +4788,7 @@ $$;`;
                     const imported = JSON.parse(e.target.result);
                     const clean = sanitizeImportedState(imported);
                     if (clean && Array.isArray(clean.expenses)) {
+                        recordUndoAction('Restore JSON backup');
                         state.expenses = clean.expenses;
                         state.budget = clean.budget;
                         state.budgetUpdatedAt = new Date().toISOString();
@@ -4525,7 +4801,7 @@ $$;`;
                         if (currencySelect) currencySelect.value = state.currency;
                         saveState();
                         renderAll(true);
-                        showToast('Data restored successfully!');
+                        showToastWithUndo('Data restored from backup');
                         if (supabaseClient && currentCloudUser) {
                             pushToCloud();
                         }
@@ -5035,6 +5311,8 @@ $$;`;
             const category = currentParsedMomo.category || 'other';
             const date = currentParsedMomo.date || getLocalDateStr();
 
+            recordUndoAction(`Add MoMo: "${note}" (${formatMoney(finalAmount)})`);
+
             const ctxBefore = getSpendingContext();
             const newExpense = {
                 id: 'exp-' + Date.now(),
@@ -5171,6 +5449,42 @@ $$;`;
             window.toastTimer = setTimeout(() => {
                 hideToast();
             }, 2200);
+        }
+
+        function showToastWithUndo(msg) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+
+            toast.onclick = null;
+            toast.innerHTML = `
+                <div class="flex items-center justify-between gap-3 w-full">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <i class="fa-solid fa-circle-info text-emerald-400 text-xs shrink-0"></i>
+                        <span class="truncate text-xs font-semibold text-white">${msg}</span>
+                    </div>
+                    <button id="toastUndoBtn" type="button" class="px-2.5 py-1 rounded-xl bg-slate-700/90 hover:bg-slate-600 text-emerald-300 hover:text-white text-[11px] font-bold shrink-0 transition active:scale-95 border border-slate-600 flex items-center gap-1 shadow-sm cursor-pointer">
+                        <i class="fa-solid fa-rotate-left text-[10px]"></i>
+                        <span>Undo</span>
+                    </button>
+                </div>
+            `;
+            toast.classList.remove('hidden', 'opacity-0');
+            toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur border border-slate-700/90 text-white px-3.5 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold flex items-center opacity-100 pointer-events-auto transition-opacity duration-300 max-w-[92vw] sm:max-w-md';
+
+            const undoBtn = document.getElementById('toastUndoBtn');
+            if (undoBtn) {
+                undoBtn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    hideToast();
+                    undo();
+                };
+            }
+
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                hideToast();
+            }, 4500);
         }
 
         // Note: escapeHtml, escapeJsStr & safeEncodeURIComponent are defined above in security helpers
