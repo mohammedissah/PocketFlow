@@ -1925,16 +1925,20 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <h3 class="text-sm sm:text-base font-bold text-white">PocketCoach AI</h3>
-                            <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                            <button type="button" onclick="openModal('coachSettingsModal')" id="coachEngineBadge" class="cursor-pointer inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full hover:bg-emerald-500/25 transition" title="Click to configure AI Intelligence">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                Live Coach
-                            </span>
+                                Smart Native
+                            </button>
                         </div>
-                        <p class="text-[11px] text-slate-400">Financial advisor, budgets & wealth coach</p>
+                        <p class="text-[11px] text-slate-400">Financial advisor • Answers basic to extensive questions</p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-1.5">
+                    <!-- AI Settings button -->
+                    <button onclick="openModal('coachSettingsModal')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-purple-400 flex items-center justify-center transition cursor-pointer" title="AI Model & Gemini Settings" aria-label="AI Settings">
+                        <i class="fa-solid fa-sliders text-xs"></i>
+                    </button>
                     <!-- Capabilities Directory button -->
                     <button onclick="sendQuickPrompt('What can you do and what questions can I ask?')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 flex items-center justify-center transition cursor-pointer" title="PocketCoach Capabilities Guide" aria-label="Capabilities">
                         <i class="fa-solid fa-circle-question text-xs"></i>
@@ -1966,6 +1970,12 @@
                 <div class="px-3 pt-2 pb-1 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
                     <button type="button" onclick="switchCoachTopic('popular')" id="coachTopicTab-popular" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold whitespace-nowrap transition cursor-pointer shadow-sm">
                         🔥 Popular
+                    </button>
+                    <button type="button" onclick="switchCoachTopic('basicQ')" id="coachTopicTab-basicQ" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-sky-400 hover:text-sky-300 border border-sky-500/40 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                        ❓ Basic Qs
+                    </button>
+                    <button type="button" onclick="switchCoachTopic('extensiveQ')" id="coachTopicTab-extensiveQ" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-purple-400 hover:text-purple-300 border border-purple-500/40 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                        📚 Deep Guides
                     </button>
                     <button type="button" onclick="switchCoachTopic('strictCurbs')" id="coachTopicTab-strictCurbs" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-rose-400 hover:text-rose-300 border border-rose-500/40 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
                         🛡️ Strict Curbs
@@ -2004,13 +2014,124 @@
             <!-- Chat Input Form -->
             <form id="coachChatForm" onsubmit="handleCoachSubmit(event)" class="p-3 sm:p-4 bg-slate-900 border-t border-slate-800 shrink-0 safe-bottom-pad">
                 <div class="flex items-center gap-2">
-                    <input type="text" id="coachUserInput" placeholder="Ask anything: budget, debt, afford X, cut costs, habits, investing..." required autocomplete="off"
+                    <input type="text" id="coachUserInput" placeholder="Ask any question: basic facts, math, guides, coding, budget, advice..." required autocomplete="off"
                         class="flex-1 bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl py-2.5 sm:py-3 px-4 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition">
                     <button type="submit" id="coachSendBtn" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold flex items-center justify-center shadow-lg shadow-emerald-500/20 active:scale-95 transition shrink-0" aria-label="Send Message">
                         <i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i>
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- PocketCoach AI Settings & Gemini Connection Modal -->
+    <div id="coachSettingsModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl modal-enter overflow-hidden flex flex-col max-h-[90dvh]">
+            <!-- Modal Header -->
+            <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-900/90">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-purple-500/25 shrink-0">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-bold text-white">PocketCoach AI Intelligence</h3>
+                        <p class="text-[11px] text-slate-400">Configure LLM provider & Gemini API</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('coachSettingsModal')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer" aria-label="Close">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div class="p-5 overflow-y-auto space-y-4 text-xs">
+                <!-- Status Banner -->
+                <div id="coachSettingsActiveStatus" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
+                    <!-- Updated via JS: e.g. Connected to Gemini vs Smart Native Engine -->
+                </div>
+
+                <!-- Mode Card 1: Google Gemini (Live AI) -->
+                <div class="p-4 rounded-2xl bg-slate-950/70 border border-purple-500/30 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                            <span class="font-bold text-white text-xs sm:text-sm">Google Gemini AI (Cloud LLM)</span>
+                        </div>
+                        <span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-semibold">Answers Any Question</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Unlocks unrestricted intelligence: answers deep questions, codes, creative writing, science, philosophy, complex budgets, and live math.
+                    </p>
+
+                    <!-- API Key Input -->
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Google Gemini API Key</label>
+                        <div class="relative flex items-center">
+                            <input type="password" id="coachGeminiApiKey" placeholder="AIzaSy..." 
+                                class="w-full bg-slate-900 border border-slate-700 focus:border-purple-500 rounded-xl py-2 px-3 pr-10 text-xs text-white placeholder-slate-500 focus:outline-none font-mono">
+                            <button type="button" onclick="toggleGeminiKeyVisibility()" class="absolute right-2.5 text-slate-400 hover:text-slate-200 p-1">
+                                <i id="coachKeyEyeIcon" class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Model Selector -->
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Gemini Model</label>
+                        <select id="coachGeminiModel" class="w-full bg-slate-900 border border-slate-700 focus:border-purple-500 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
+                            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended: Ultra-fast & smartest)</option>
+                            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                        </select>
+                    </div>
+
+                    <!-- Test Connection & Feedback -->
+                    <div class="flex items-center gap-2 pt-1">
+                        <button type="button" id="btnTestGeminiKey" onclick="testGeminiConnection()" class="px-3 py-1.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 text-[11px] font-semibold transition flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-bolt text-purple-400"></i>
+                            <span>Test Connection</span>
+                        </button>
+                        <button type="button" onclick="clearGeminiKey()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition cursor-pointer">
+                            Clear Key
+                        </button>
+                    </div>
+                    <div id="coachGeminiTestStatus" class="hidden text-[11px] p-2.5 rounded-xl"></div>
+
+                    <!-- Get Free Key Link -->
+                    <div class="pt-1 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+                        <span class="text-slate-400">Need a free API key?</span>
+                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:text-purple-300 font-semibold underline flex items-center gap-1">
+                            <span>Get Free Key at Google AI Studio</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mode Card 2: Smart Native Offline Engine -->
+                <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                            <span class="font-bold text-white text-xs sm:text-sm">Smart Native Engine (Offline)</span>
+                        </div>
+                        <span class="text-[10px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">100% Offline / Zero Setup</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Instant built-in responses for math calculations, 50/30/20 budgets, affordability checks, spending audits, science, tech, history, and comprehensive how-to guides. Works anywhere, even without internet.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 bg-slate-900 border-t border-slate-800 flex items-center justify-end gap-2 shrink-0">
+                <button type="button" onclick="closeModal('coachSettingsModal')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+                    Done
+                </button>
+                <button type="button" onclick="saveCoachSettings()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-bold transition shadow-lg shadow-emerald-500/20">
+                    Save Settings
+                </button>
+            </div>
         </div>
     </div>
 
@@ -4978,6 +5099,8 @@ $$;`;
                 refreshCloudSyncModalUI();
             } else if (id === 'momoReaderModal') {
                 initMomoReaderModal();
+            } else if (id === 'coachSettingsModal') {
+                initCoachSettingsModal();
             }
             const modalEl = document.getElementById(id);
             if (modalEl) {
@@ -5613,7 +5736,7 @@ $$;`;
         // Note: escapeHtml, escapeJsStr & safeEncodeURIComponent are defined above in security helpers
 
         // ==========================================
-        // POCKETCOACH AI: FINANCIAL HABIT & SPENDING CHATBOT
+        // POCKETCOACH AI: HYBRID DUAL-ENGINE CHATBOT (GEMINI CLOUD LLM + SUPERCHARGED NATIVE SMART ENGINE)
         // ==========================================
         let coachChatHistory = [];
 
@@ -5718,6 +5841,26 @@ $$;`;
                 { label: 'Stop Impulse Buys', query: 'How can I stop impulse spending and emotional buying?', icon: 'fa-shield-halved', color: 'text-rose-400' },
                 { label: 'Cut Food Costs', query: 'Give me practical ways to cut down on food and dining expenses.', icon: 'fa-utensils', color: 'text-emerald-400' },
                 { label: 'Emergency Fund', query: 'How do I build an emergency fund step by step?', icon: 'fa-piggy-bank', color: 'text-teal-400' }
+            ],
+            basicQ: [
+                { label: '🌿 Photosynthesis', query: 'What is photosynthesis and how does it work?', icon: 'fa-leaf', color: 'text-emerald-400' },
+                { label: '🏛️ Capital of France', query: 'What is the capital of France and what are key facts about it?', icon: 'fa-landmark', color: 'text-sky-400' },
+                { label: '⚡ Speed of Light', query: 'What is the speed of light in vacuum and why is it important?', icon: 'fa-bolt', color: 'text-yellow-400' },
+                { label: '🧮 15% of 3,500', query: 'What is 15% of 3500?', icon: 'fa-calculator', color: 'text-teal-400' },
+                { label: '🌌 How Gravity Works', query: 'How does gravity work according to Newton and Einstein?', icon: 'fa-apple-whole', color: 'text-rose-400' },
+                { label: '💻 What is an API', query: 'What is an API in software and how does it work?', icon: 'fa-code', color: 'text-indigo-400' },
+                { label: '📈 What is Inflation', query: 'What is inflation, what causes it, and how does it affect purchasing power?', icon: 'fa-fire-flame-curved', color: 'text-red-400' },
+                { label: '☀️ Why Sky is Blue', query: 'Why is the sky blue during the day and red at sunset?', icon: 'fa-sun', color: 'text-amber-400' }
+            ],
+            extensiveQ: [
+                { label: '🚀 Start a Business', query: 'Give me a comprehensive, step-by-step master guide on how to start a successful business from scratch.', icon: 'fa-rocket', color: 'text-purple-400' },
+                { label: '💻 Learn Programming', query: 'Give me a complete beginner-to-job-ready roadmap for learning programming in 2026.', icon: 'fa-laptop-code', color: 'text-sky-400' },
+                { label: '📄 Resume Masterclass', query: 'How do I write an ATS-optimized, high-converting resume with action-driven impact bullets?', icon: 'fa-file-lines', color: 'text-emerald-400' },
+                { label: '🌐 How Internet Works', query: 'Explain how the internet works from typing a URL in the browser to DNS, TCP, and page rendering.', icon: 'fa-network-wired', color: 'text-teal-400' },
+                { label: '🏃 Fat Loss Roadmap', query: 'Give me an extensive, science-backed roadmap for sustainable fat loss, nutrition, and exercise.', icon: 'fa-heart-pulse', color: 'text-rose-400' },
+                { label: '😴 Sleep Masterclass', query: 'Give me a comprehensive guide to optimizing sleep quality, circadian rhythms, and deep rest.', icon: 'fa-bed', color: 'text-indigo-400' },
+                { label: '🧠 Atomic Habits Guide', query: 'How do I master self-discipline and build unbreakable daily habits using the Atomic Habits framework?', icon: 'fa-brain', color: 'text-amber-400' },
+                { label: '💼 Salary Negotiation', query: 'How do I prepare for and negotiate a salary increase or promotion step by step?', icon: 'fa-handshake', color: 'text-emerald-400' }
             ],
             strictCurbs: [
                 { label: '🚨 Overspend Recovery', query: 'I overspent my budget. Give me a strict emergency recovery plan, curb my expenses, and show me better ways to spend.', icon: 'fa-shield-halved', color: 'text-rose-400' },
@@ -5890,8 +6033,244 @@ $$;`;
             showToast('Conversation refreshed!');
         }
 
+        // ==========================================
+        // POCKETCOACH AI PROVIDER & GEMINI MANAGEMENT
+        // ==========================================
+        function getGeminiApiKey() {
+            return (localStorage.getItem('pocketflow_gemini_api_key') || '').trim();
+        }
+
+        function getGeminiModel() {
+            return localStorage.getItem('pocketflow_gemini_model') || 'gemini-2.5-flash';
+        }
+
+        function updateCoachEngineBadge() {
+            const badge = document.getElementById('coachEngineBadge');
+            if (!badge) return;
+            const hasKey = Boolean(getGeminiApiKey());
+            const model = getGeminiModel();
+            if (hasKey) {
+                badge.className = 'cursor-pointer inline-flex items-center gap-1 text-[10px] font-semibold text-purple-300 bg-purple-500/20 border border-purple-500/40 px-2 py-0.5 rounded-full hover:bg-purple-500/30 transition shadow-sm';
+                badge.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles text-[9px] text-purple-400"></i> Gemini AI';
+                badge.title = `Connected to Google Gemini (${model}). Click to configure.`;
+            } else {
+                badge.className = 'cursor-pointer inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full hover:bg-emerald-500/25 transition';
+                badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Smart Native';
+                badge.title = 'Using Smart Native Engine (Offline). Click to connect free Gemini API.';
+            }
+        }
+
+        function initCoachSettingsModal() {
+            const keyInput = document.getElementById('coachGeminiApiKey');
+            const modelSelect = document.getElementById('coachGeminiModel');
+            const statusBanner = document.getElementById('coachSettingsActiveStatus');
+            const testStatus = document.getElementById('coachGeminiTestStatus');
+            if (testStatus) {
+                testStatus.className = 'hidden';
+                testStatus.innerHTML = '';
+            }
+
+            const currentKey = getGeminiApiKey();
+            const currentModel = getGeminiModel();
+
+            if (keyInput) keyInput.value = currentKey;
+            if (modelSelect) modelSelect.value = currentModel;
+
+            if (statusBanner) {
+                if (currentKey) {
+                    statusBanner.className = 'p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/40 flex items-center gap-3';
+                    statusBanner.innerHTML = `
+                        <div class="w-8 h-8 rounded-xl bg-purple-500/25 text-purple-300 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                                <span>Active: Google Gemini AI</span>
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            </div>
+                            <div class="text-[11px] text-purple-300 truncate font-mono">Model: ${escapeHtml(currentModel)}</div>
+                        </div>
+                    `;
+                } else {
+                    statusBanner.className = 'p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3';
+                    statusBanner.innerHTML = `
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-bolt text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-white">Active: Smart Native Engine (Offline)</div>
+                            <div class="text-[11px] text-slate-400">Zero setup needed. Paste a free Gemini API key below to unlock unrestricted cloud LLM reasoning.</div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function toggleGeminiKeyVisibility() {
+            const input = document.getElementById('coachGeminiApiKey');
+            const icon = document.getElementById('coachKeyEyeIcon');
+            if (!input || !icon) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash text-xs';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye text-xs';
+            }
+        }
+
+        async function testGeminiConnection() {
+            const keyInput = document.getElementById('coachGeminiApiKey');
+            const modelSelect = document.getElementById('coachGeminiModel');
+            const statusDiv = document.getElementById('coachGeminiTestStatus');
+            const btn = document.getElementById('btnTestGeminiKey');
+            if (!keyInput || !statusDiv) return;
+
+            const key = keyInput.value.trim();
+            const model = modelSelect ? modelSelect.value : 'gemini-2.5-flash';
+
+            if (!key) {
+                statusDiv.className = 'text-[11px] p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 block';
+                statusDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation mr-1"></i> Please paste an API key first.';
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Testing...';
+            }
+
+            statusDiv.className = 'text-[11px] p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 block';
+            statusDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Connecting to Google Gemini API...';
+
+            const startTime = performance.now();
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ role: 'user', parts: [{ text: 'Hello' }] }]
+                    })
+                });
+
+                const elapsed = Math.round(performance.now() - startTime);
+
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    const msg = errData.error?.message || `HTTP ${res.status}: ${res.statusText}`;
+                    throw new Error(msg);
+                }
+
+                statusDiv.className = 'text-[11px] p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 block';
+                statusDiv.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> <strong>Connection Successful!</strong> Gemini ${escapeHtml(model)} responded in ${elapsed}ms. Click "Save Settings" below to activate.`;
+            } catch (err) {
+                statusDiv.className = 'text-[11px] p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 block';
+                statusDiv.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> <strong>Connection Failed:</strong> ${escapeHtml(err.message || 'Network error')}`;
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-bolt text-purple-400 mr-1"></i> Test Connection';
+                }
+            }
+        }
+
+        function saveCoachSettings() {
+            const keyInput = document.getElementById('coachGeminiApiKey');
+            const modelSelect = document.getElementById('coachGeminiModel');
+            if (!keyInput || !modelSelect) return;
+
+            const key = keyInput.value.trim();
+            const model = modelSelect.value || 'gemini-2.5-flash';
+
+            if (key) {
+                localStorage.setItem('pocketflow_gemini_api_key', key);
+            } else {
+                localStorage.removeItem('pocketflow_gemini_api_key');
+            }
+            localStorage.setItem('pocketflow_gemini_model', model);
+
+            updateCoachEngineBadge();
+            closeModal('coachSettingsModal');
+            showToast(key ? 'Gemini AI enabled!' : 'Smart Native Engine active!');
+        }
+
+        function clearGeminiKey() {
+            const keyInput = document.getElementById('coachGeminiApiKey');
+            if (keyInput) keyInput.value = '';
+            localStorage.removeItem('pocketflow_gemini_api_key');
+            const statusDiv = document.getElementById('coachGeminiTestStatus');
+            if (statusDiv) {
+                statusDiv.className = 'text-[11px] p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 block';
+                statusDiv.innerHTML = '<i class="fa-solid fa-circle-info mr-1"></i> Key cleared. Using Smart Native Engine.';
+            }
+            initCoachSettingsModal();
+            updateCoachEngineBadge();
+        }
+
+        async function callGeminiAPI(query, ctx, history) {
+            const apiKey = getGeminiApiKey();
+            const model = getGeminiModel();
+            if (!apiKey) throw new Error('No API key configured');
+
+            const historyForApi = history.slice(-8).map(m => ({
+                role: m.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: m.text }]
+            }));
+            if (historyForApi.length === 0 || historyForApi[historyForApi.length - 1].role !== 'user') {
+                historyForApi.push({ role: 'user', parts: [{ text: query }] });
+            }
+
+            const systemPrompt = `You are PocketCoach AI, an extraordinarily capable polymath AI financial advisor and intelligent problem solver built into the PocketFlow spending tracker app.
+You possess comprehensive world knowledge and can answer ANY question the user asks, from basic questions (quick arithmetic, definitions, trivia, science, history, geography, everyday tips) to extensive, deep, and complex questions (comprehensive financial plans, business roadmaps, technical explanations, coding, workouts, recipes, philosophy, health, and lifestyle).
+
+USER'S LIVE POCKETFLOW FINANCIAL CONTEXT:
+- Currency: ${ctx.currency}
+- Total Monthly Budget: ${ctx.currency} ${formatMoney(ctx.budget)}
+- Spent So Far This Month: ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
+- Remaining Balance: ${ctx.currency} ${formatMoney(ctx.remaining)}
+- Safe Daily Spending Allowance: ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day
+- Days Remaining in Month: ${ctx.daysRemaining} days (Day ${ctx.todayDate} of ${ctx.daysInMonth})
+- Spent Today: ${ctx.currency} ${formatMoney(ctx.spentToday)}
+- Top Spending Category: ${ctx.topCategory.name} (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of total spending)
+- Recent Transactions: ${ctx.recentExpensesSummary}
+
+RESPONSE INSTRUCTIONS:
+1. When the user asks about their finances, spending, budget, affordability ("Can I afford X?"), or habits, reference their exact live data above with concrete numbers.
+2. When the user asks ANY question outside of finances (science, coding, recipes, history, health, fitness, writing, math, philosophy, travel, general knowledge), answer thoroughly, accurately, and helpful!
+3. For basic questions: provide concise, direct, crystal-clear answers.
+4. For extensive questions: provide structured, comprehensive, step-by-step master guides with headers, bullet points, and practical takeaways.
+5. Format your output with clean GitHub-flavored markdown: bold key concepts, use bullet lists, numbered steps, and code blocks.
+6. At the very end of your response, you can optionally include 1-2 interactive follow-up prompt pills using the format: [[prompt: specific question | Short Label]] so the user can easily tap to explore further.`;
+
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    system_instruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                    contents: historyForApi,
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 2048
+                    }
+                })
+            });
+
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error?.message || `HTTP ${res.status}`);
+            }
+
+            const data = await res.json();
+            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!reply) throw new Error('Empty response from Gemini');
+            return reply;
+        }
+
         function initCoachChat(forceReset = false) {
             updateCoachContextRibbon();
+            updateCoachEngineBadge();
             renderCoachTopicChips(currentCoachTopic);
             const container = document.getElementById('coachMessagesContainer');
             if (!container) return;
@@ -5907,23 +6286,27 @@ $$;`;
 
             if (!coachChatHistory || coachChatHistory.length === 0) {
                 const ctx = getSpendingContext();
-                const welcomeText = `👋 Hello! I'm **PocketCoach**, your personal financial habit and budget advisor.
+                const hasGemini = Boolean(getGeminiApiKey());
+                const welcomeText = `👋 Hello! I'm **PocketCoach AI**, your personal financial habit advisor and all-around intelligence partner.
 
-I'm linked directly to your live PocketFlow data:
+I can answer **any question you ask**—from **basic questions** (quick math, facts, science, definitions, tips) to **extensive questions** (complete budget plans, business blueprints, coding roadmaps, scientific mechanisms, and fitness guides)!
+
+${hasGemini ? '✨ **Google Gemini AI is connected and active!** Ready for unrestricted, deep AI reasoning.' : '⚡ **Smart Native Engine Active** (100% offline). Connect a free Google Gemini API key in [AI Settings] anytime for cloud intelligence!'}
+
+📊 **Your Live PocketFlow Context:**
 • **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
 • **Spent So Far:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
 • **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
-• **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day for the remaining ${ctx.daysRemaining} days
+• **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day for ${ctx.daysRemaining} days left
 
-Ask me **any question**—from your daily spending habits and live data audits to debt payoff, 50/30/20 budgeting, cost cutting, investing, lifestyle, or general questions! No setup or API keys needed.
-
-**Try tapping one of these quick starters:**
-[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What is my biggest single expense this month? | 🏆 Top Expense]] [[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Target]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]`;
+**Try tapping any question to test:**
+[[prompt: What is 15% of 3500? | 🧮 15% of 3500]] [[prompt: What is photosynthesis and how does it work? | 🌿 Basic: Photosynthesis]] [[prompt: Give me a comprehensive, step-by-step master guide on how to start a successful business from scratch. | 🚀 Extensive: Start a Business]] [[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]`;
 
                 coachChatHistory = [{
                     role: 'assistant',
                     text: welcomeText,
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    model: hasGemini ? '✨ Gemini AI' : '⚡ Smart Native'
                 }];
                 localStorage.setItem('pocketflow_coach_chat', JSON.stringify(coachChatHistory));
             }
@@ -5943,7 +6326,7 @@ Ask me **any question**—from your daily spending habits and live data audits t
                 return `
                     <div class="flex items-start gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}">
                         ${!isUser ? `
-                            <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20 text-xs mt-0.5">
+                            <div class="w-7 h-7 rounded-xl bg-gradient-to-tr ${msg.model && msg.model.includes('Gemini') ? 'from-purple-600 to-indigo-500' : 'from-emerald-500 to-teal-400'} text-white flex items-center justify-center shrink-0 shadow-md text-xs mt-0.5">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                             </div>
                         ` : ''}
@@ -5951,7 +6334,10 @@ Ask me **any question**—from your daily spending habits and live data audits t
                             <div class="text-xs sm:text-[13px] leading-relaxed">
                                 ${formatCoachMarkdown(msg.text)}
                             </div>
-                            <span class="text-[9px] ${isUser ? 'text-emerald-200' : 'text-slate-500'} block mt-1 text-right">${msg.time || ''}</span>
+                            <span class="text-[9px] ${isUser ? 'text-emerald-200' : 'text-slate-500'} flex items-center justify-end gap-1.5 mt-1">
+                                ${!isUser && msg.model ? `<span class="text-[9px] ${msg.model.includes('Gemini') ? 'text-purple-400 font-semibold' : 'text-emerald-400/80 font-medium'}">${escapeHtml(msg.model)}</span>` : ''}
+                                <span>${msg.time || ''}</span>
+                            </span>
                         </div>
                     </div>
                 `;
@@ -5990,29 +6376,46 @@ Ask me **any question**—from your daily spending habits and live data audits t
             const container = document.getElementById('coachMessagesContainer');
             container.scrollTop = container.scrollHeight;
 
+            const hasGemini = Boolean(getGeminiApiKey());
+
             // 2. Add temporary typing indicator
             const typingId = 'typing-' + Date.now();
             const typingBubble = document.createElement('div');
             typingBubble.id = typingId;
             typingBubble.className = 'flex items-start gap-2.5 justify-start';
             typingBubble.innerHTML = `
-                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20 text-xs mt-0.5">
+                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr ${hasGemini ? 'from-purple-600 to-indigo-500' : 'from-emerald-500 to-teal-400'} text-white flex items-center justify-center shrink-0 shadow-md text-xs mt-0.5">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                 </div>
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl rounded-tl-none px-3.5 py-2.5 flex items-center gap-1.5 text-slate-400">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce"></span>
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]"></span>
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]"></span>
-                    <span class="text-[11px] ml-1">Analyzing habits...</span>
+                    <span class="w-1.5 h-1.5 rounded-full ${hasGemini ? 'bg-purple-400' : 'bg-emerald-400'} animate-bounce"></span>
+                    <span class="w-1.5 h-1.5 rounded-full ${hasGemini ? 'bg-purple-400' : 'bg-emerald-400'} animate-bounce [animation-delay:0.2s]"></span>
+                    <span class="w-1.5 h-1.5 rounded-full ${hasGemini ? 'bg-purple-400' : 'bg-emerald-400'} animate-bounce [animation-delay:0.4s]"></span>
+                    <span class="text-[11px] ml-1">${hasGemini ? 'Reasoning with Gemini AI...' : 'Analyzing with Smart Engine...'}</span>
                 </div>
             `;
             container.appendChild(typingBubble);
             container.scrollTop = container.scrollHeight;
 
             const ctx = getSpendingContext();
-            // PocketCoach native intelligence engine with natural delay
-            await new Promise(r => setTimeout(r, 300));
-            const responseText = generatePocketCoachResponse(query, ctx);
+            let responseText = '';
+            let usedModel = '';
+
+            if (hasGemini) {
+                try {
+                    responseText = await callGeminiAPI(query, ctx, coachChatHistory);
+                    usedModel = '✨ Gemini AI';
+                } catch (apiErr) {
+                    console.warn('Gemini API call failed, falling back to Smart Native Engine:', apiErr);
+                    showToast('Gemini offline; answered via Smart Native');
+                    responseText = generatePocketCoachResponse(query, ctx);
+                    usedModel = '⚡ Smart Native';
+                }
+            } else {
+                await new Promise(r => setTimeout(r, 200));
+                responseText = generatePocketCoachResponse(query, ctx);
+                usedModel = '⚡ Smart Native';
+            }
 
             // Remove typing indicator
             const typingEl = document.getElementById(typingId);
@@ -6022,7 +6425,8 @@ Ask me **any question**—from your daily spending habits and live data audits t
             coachChatHistory.push({
                 role: 'assistant',
                 text: responseText,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                model: usedModel
             });
 
             localStorage.setItem('pocketflow_coach_chat', JSON.stringify(coachChatHistory));
@@ -6032,10 +6436,802 @@ Ask me **any question**—from your daily spending habits and live data audits t
             if (sendBtn) sendBtn.disabled = false;
         }
 
+
         // ==========================================
-        // POCKETCOACH NATIVE INTELLIGENCE ENGINE
+        // 1. MATHEMATICAL & ARITHMETIC SOLVER ENGINE
         // ==========================================
-        function generatePocketCoachResponse(rawQuery, ctx) {
+        function trySolveMath(rawQuery, ctx) {
+            const q = (rawQuery || '').toLowerCase().trim();
+
+            // Compound interest: compound interest P at R% for T years
+            const ciMatch = q.match(/compound\s*interest\s*(?:on|for)?\s*(?:gh[¢\?]?|\$|€|£)?\s*(\d+(?:\.\d+)?)\s*(?:at|@)?\s*(\d+(?:\.\d+)?)\s*%\s*(?:for)?\s*(\d+(?:\.\d+)?)\s*(?:years|yrs)/i);
+            if (ciMatch) {
+                const p = parseFloat(ciMatch[1]);
+                const r = parseFloat(ciMatch[2]) / 100;
+                const t = parseFloat(ciMatch[3]);
+                const fv = p * Math.pow(1 + r, t);
+                const interest = fv - p;
+                return '📈 **Compound Interest Wealth Projection**\n\n' +
+                    '• **Initial Principal:** ' + (ctx.currency || '') + ' ' + formatMoney(p) + '\n' +
+                    '• **Annual Expected Return:** ' + (r * 100).toFixed(1) + '%\n' +
+                    '• **Investment Horizon:** ' + t + ' years\n' +
+                    '• **Total Future Balance:** **' + (ctx.currency || '') + ' ' + formatMoney(fv) + '**\n' +
+                    '• **Total Compounded Interest:** **' + (ctx.currency || '') + ' ' + formatMoney(interest) + '**\n\n' +
+                    '💡 **Wealth Takeaway:** Compounding turns consistency into financial freedom. Reinvest all gains and let time do the heavy lifting!\n\n' +
+                    '[[prompt: How does compound interest work with the Rule of 72? | 🪄 Rule of 72]] [[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Index Funds]]';
+            }
+
+            // Split bill: split X between Y people
+            const splitMatch = q.match(/split\s*(?:gh[¢\?]?|\$|€|£)?\s*(\d+(?:\.\d+)?)\s*(?:between|among|by)\s*(\d+)\s*(?:people|friends|ways|persons)?/i);
+            if (splitMatch) {
+                const total = parseFloat(splitMatch[1]);
+                const people = parseInt(splitMatch[2], 10);
+                if (people > 0) {
+                    const perPerson = total / people;
+                    return '👥 **Split Bill & Shared Expense Calculator**\n\n' +
+                        '• **Total Bill:** ' + (ctx.currency || '') + ' ' + formatMoney(total) + '\n' +
+                        '• **Number of People:** ' + people + '\n' +
+                        '• **Each Person Pays:** **' + (ctx.currency || '') + ' ' + formatMoney(perPerson) + '**\n\n' +
+                        '💡 **Habit Tip:** Settle shared dining tabs and group costs instantly via mobile money before leaving the venue to prevent forgotten debts!\n\n' +
+                        '[[prompt: Can I afford ' + Math.round(perPerson) + ' for dinner? | 💳 Affordability Check]] [[prompt: How to have a fun social life without going broke | 🥂 Cheap Fun]]';
+                }
+            }
+
+            // Unit conversions
+            const convMatch = q.match(/(?:convert|what is|how many)?\s*(\d+(?:\.\d+)?)\s*([a-z°]+)\s*(?:to|in|into)\s*([a-z°]+)/i);
+            if (convMatch) {
+                const val = parseFloat(convMatch[1]);
+                const from = convMatch[2].replace('°', '');
+                const to = convMatch[3].replace('°', '');
+
+                if ((from === 'kg' || from === 'kilograms' || from === 'kilos') && (to === 'lbs' || to === 'pounds' || to === 'lb')) {
+                    return '⚖️ **Unit Conversion: Weight**\n\n• **' + val + ' kg** = **' + (val * 2.20462).toFixed(2) + ' lbs** (pounds)\n• *Formula:* Multiply kilograms by 2.20462';
+                }
+                if ((from === 'lbs' || from === 'pounds' || from === 'lb') && (to === 'kg' || to === 'kilograms' || to === 'kilos')) {
+                    return '⚖️ **Unit Conversion: Weight**\n\n• **' + val + ' lbs** = **' + (val / 2.20462).toFixed(2) + ' kg** (kilograms)\n• *Formula:* Divide pounds by 2.20462';
+                }
+                if ((from === 'miles' || from === 'mile' || from === 'mi') && (to === 'km' || to === 'kilometers')) {
+                    return '📏 **Unit Conversion: Distance**\n\n• **' + val + ' miles** = **' + (val * 1.60934).toFixed(2) + ' km** (kilometers)\n• *Formula:* Multiply miles by 1.60934';
+                }
+                if ((from === 'km' || from === 'kilometers') && (to === 'miles' || to === 'mile' || to === 'mi')) {
+                    return '📏 **Unit Conversion: Distance**\n\n• **' + val + ' km** = **' + (val / 1.60934).toFixed(2) + ' miles**\n• *Formula:* Divide kilometers by 1.60934';
+                }
+                if ((from === 'c' || from === 'celsius') && (to === 'f' || to === 'fahrenheit')) {
+                    return '🌡️ **Temperature Conversion**\n\n• **' + val + '°C** = **' + ((val * 9/5) + 32).toFixed(1) + '°F**\n• *Formula:* (' + val + ' × 9/5) + 32';
+                }
+                if ((from === 'f' || from === 'fahrenheit') && (to === 'c' || to === 'celsius')) {
+                    return '🌡️ **Temperature Conversion**\n\n• **' + val + '°F** = **' + (((val - 32) * 5) / 9).toFixed(1) + '°C**\n• *Formula:* (' + val + ' − 32) × 5/9';
+                }
+                if ((from === 'feet' || from === 'ft') && (to === 'm' || to === 'meters' || to === 'meter')) {
+                    return '📏 **Unit Conversion: Length**\n\n• **' + val + ' feet** = **' + (val * 0.3048).toFixed(2) + ' meters**';
+                }
+                if ((from === 'm' || from === 'meters' || from === 'meter') && (to === 'feet' || to === 'ft')) {
+                    return '📏 **Unit Conversion: Length**\n\n• **' + val + ' meters** = **' + (val / 0.3048).toFixed(2) + ' feet**';
+                }
+            }
+
+            // Percentage calculation: X% of Y, X% discount on Y, X% tip on Y
+            const pctMatch = q.match(/(\d+(?:\.\d+)?)\s*(?:%|percent)(?:[^\d]+)?(\d+(?:\.\d+)?)/i);
+            if (pctMatch) {
+                const pct = parseFloat(pctMatch[1]);
+                const base = parseFloat(pctMatch[2]);
+                const isOff = q.includes('off') || q.includes('discount');
+                const isTip = q.includes('tip') || q.includes('tax') || q.includes('markup');
+                const val = (pct / 100) * base;
+                const totalAfter = isOff ? (base - val) : (base + val);
+
+                return '🧮 **Percentage Calculation**\n\n' +
+                    '• **' + pct + '% of ' + (ctx.currency || '') + ' ' + formatMoney(base) + '** = **' + (ctx.currency || '') + ' ' + formatMoney(val) + '**\n' +
+                    (isOff ? ('• **Discounted Final Price:** **' + (ctx.currency || '') + ' ' + formatMoney(totalAfter) + '** *(You save ' + (ctx.currency || '') + ' ' + formatMoney(val) + ')*\n') : '') +
+                    (isTip ? ('• **Total Amount (with ' + pct + '% tip/tax):** **' + (ctx.currency || '') + ' ' + formatMoney(totalAfter) + '**\n') : '') +
+                    '\n💡 *Habit Tip:* Always compute total costs including sales tax, shipping, or tips before approving discretionary purchases!';
+            }
+
+            // Pure arithmetic evaluation: 450 * 12, (1200 + 400) / 4, 2^8, sqrt(144)
+            const cleanMath = q.replace(/^(?:what is|calculate|compute|solve|how much is)\s+/i, '').replace(/[?=]+$/, '').trim();
+            if (/^[\d\s\+\-\*/\^\(\)\.\%]+$/.test(cleanMath) && /[\+\-\*/\^]/.test(cleanMath)) {
+                try {
+                    let expr = cleanMath.replace(/\^/g, '**');
+                    const fn = new Function('return (' + expr + ')');
+                    const res = fn();
+                    if (typeof res === 'number' && !isNaN(res) && isFinite(res)) {
+                        return '🧮 **Calculation Result**\n\n' +
+                            '• **Expression:** `' + cleanMath + '`\n' +
+                            '• **Result:** **' + formatMoney(res) + '** (' + res + ')\n\n' +
+                            '💡 *PocketCoach Math:* Quick math checks keep budget allocations sharp and error-free!';
+                    }
+                } catch (e) {}
+            }
+
+            return null;
+        }
+
+        // ==========================================
+        // 2. SALARY & CUSTOM INCOME ALLOCATION SOLVER
+        // ==========================================
+        function tryAnswerSalaryBudget(rawQuery, ctx) {
+            const q = (rawQuery || '').toLowerCase().trim();
+            const salaryMatch = q.match(/(?:earn|income|salary|make|budget for)\s*(?:of|is|around|about)?\s*(?:gh[¢\?]?|\$|€|£)?\s*(\d+(?:\.\d+)?)/i) ||
+                                q.match(/(?:gh[¢\?]?|\$|€|£)?\s*(\d+(?:\.\d+)?)\s*(?:monthly income|salary|per month|a month)/i);
+
+            if (salaryMatch && (q.includes('budget') || q.includes('allocate') || q.includes('plan') || q.includes('spend') || q.includes('structure') || q.includes('divide') || q.includes('manage'))) {
+                const s = parseFloat(salaryMatch[1]);
+                if (s > 0) {
+                    const needs = s * 0.50;
+                    const wants = s * 0.30;
+                    const savings = s * 0.20;
+                    const rentCap = s * 0.30;
+                    const foodBudget = s * 0.12;
+                    const utilBudget = s * 0.05;
+                    const transBudget = s * 0.03;
+                    const dailyAllowance = (needs + wants) / 30;
+
+                    return '📊 **Custom Income Budget Blueprint for ' + ctx.currency + ' ' + formatMoney(s) + '/month**\n\n' +
+                        'Here is your optimal 50/30/20 allocation engineered for financial security and daily freedom:\n\n' +
+                        '🏠 **1. 50% Essential Needs (' + ctx.currency + ' ' + formatMoney(needs) + '):**\n' +
+                        '• **Rent / Housing Cap (30%):** Max **' + ctx.currency + ' ' + formatMoney(rentCap) + '** *(Never exceed 30% of gross pay!)*\n' +
+                        '• **Groceries & Basic Food (12%):** **' + ctx.currency + ' ' + formatMoney(foodBudget) + '**\n' +
+                        '• **Utilities & Internet/Data (5%):** **' + ctx.currency + ' ' + formatMoney(utilBudget) + '**\n' +
+                        '• **Commute / Public Transport (3%):** **' + ctx.currency + ' ' + formatMoney(transBudget) + '**\n\n' +
+                        '🎉 **2. 30% Guilt-Free Wants (' + ctx.currency + ' ' + formatMoney(wants) + '):**\n' +
+                        '• Dining out, social weekends, hobbies, and personal shopping. Enjoy this guilt-free up to this ceiling!\n\n' +
+                        '🛡️ **3. 20% Wealth & Savings Shield (' + ctx.currency + ' ' + formatMoney(savings) + '):**\n' +
+                        '• Pay yourself first! Automate this **' + ctx.currency + ' ' + formatMoney(savings) + '** into an emergency buffer or index funds the hour you get paid.\n\n' +
+                        '🎯 **Your Safe Daily Living Ceiling:** **' + ctx.currency + ' ' + formatMoney(dailyAllowance) + '/day**\n\n' +
+                        '[[prompt: How do I build an emergency fund step by step? | 🛡️ Emergency Fund]] [[prompt: What is zero-based budgeting and how do I do it? | ⚖️ Zero-Based Budget]] [[prompt: Can I afford 200 for shopping? | 💳 Affordability Check]]';
+                }
+            }
+            return null;
+        }
+
+
+        // ==========================================
+        // 3. BASIC KNOWLEDGE ENGINE (SCIENCE, TECH, GEOGRAPHY, HISTORY, DEFINITIONS)
+        // ==========================================
+        function tryAnswerBasicKnowledge(rawQuery, ctx) {
+            const q = (rawQuery || '').toLowerCase().trim();
+            const has = (...terms) => terms.some(t => {
+                const term = t.toLowerCase();
+                if (term.includes(' ') || /[^a-z0-9]/i.test(term)) {
+                    return q.includes(term);
+                }
+                const regex = new RegExp('\\b' + term + '\\b', 'i');
+                return regex.test(q);
+            });
+
+            // A. SCIENCE & NATURE
+            if (has('photosynthesis')) {
+                return '🌿 **Photosynthesis Explained**\n\n' +
+                    'Photosynthesis is the foundational biochemical process by which green plants, algae, and cyanobacteria convert light energy into chemical energy stored in glucose:\n\n' +
+                    '🧪 **Chemical Equation:**\n' +
+                    '`6CO₂ (Carbon Dioxide) + 6H₂O (Water) + Light Energy → C₆H₁₂O₆ (Glucose) + 6O₂ (Oxygen)`\n\n' +
+                    '🔬 **The Two Main Stages:**\n' +
+                    '1. **Light-Dependent Reactions (in Thylakoid Membranes):** Chlorophyll absorbs photons, splits water molecules ($H_2O$), releases oxygen ($O_2$) into the atmosphere, and produces cellular energy carriers (ATP and NADPH).\n' +
+                    '2. **The Calvin Cycle / Light-Independent Reactions (in the Stroma):** Uses ATP and NADPH to fix carbon dioxide ($CO_2$) into 3-carbon sugars that combine to form glucose.\n\n' +
+                    '🌍 **Why It Matters:** Photosynthesis produces virtually all the oxygen we breathe and serves as the primary base for all food chains on Earth!\n\n' +
+                    '[[prompt: How does gravity work according to Newton and Einstein? | 🌌 Gravity]] [[prompt: What is the speed of light in vacuum and why is it important? | ⚡ Speed of Light]]';
+            }
+
+            if (has('how does gravity work', 'how gravity works', 'what is gravity', 'explain gravity')) {
+                return '🌌 **How Gravity Works: Newton vs. Einstein**\n\n' +
+                    'Gravity is the universal attractive force that draws objects with mass or energy toward one another:\n\n' +
+                    '🍎 **1. Newton\'s Classical Mechanics (1687):**\n' +
+                    '• Newton viewed gravity as an invisible pulling force between masses: $F = G \\frac{m_1 m_2}{r^2}$.\n' +
+                    '• The greater the mass, the stronger the pull; the greater the distance, the weaker the force (inverse-square law).\n\n' +
+                    '🌐 **2. Einstein\'s General Relativity (1915 - Modern Physics):**\n' +
+                    '• Einstein revealed that gravity is **not** an invisible tractor beam. Instead, mass and energy **warp the 4-dimensional fabric of spacetime**!\n' +
+                    '• Think of a heavy bowling ball placed on a trampoline: it creates a deep dip. Smaller marbles naturally roll along curved paths around the indentation.\n' +
+                    '• Planets orbit the Sun not because the Sun pulls them with a rope, but because they are traveling along the straightest possible path (geodesic) through curved spacetime.\n\n' +
+                    '[[prompt: What is the speed of light in vacuum? | ⚡ Speed of Light]] [[prompt: What is a black hole? | 🕳️ Black Holes]]';
+            }
+
+            if (has('speed of light')) {
+                return '⚡ **The Speed of Light (c)**\n\n' +
+                    'The speed of light in a vacuum is one of the fundamental constants of nature:\n\n' +
+                    '• **Exact Value:** **299,792,458 meters per second**\n' +
+                    '• **Metric:** ~**300,000 km/s**\n' +
+                    '• **Imperial:** ~**186,282 miles/s**\n' +
+                    '• Light from the Sun reaches Earth in approximately **8 minutes and 20 seconds**.\n\n' +
+                    '💡 **Why It Is the Cosmic Speed Limit:**\n' +
+                    'Under Einstein\'s Special Relativity ($E = mc^2$), as an object with mass accelerates toward light speed, its relativistic mass and energy requirement approach infinity. Therefore, only massless particles (photons) can travel at $c$.\n\n' +
+                    '[[prompt: How does gravity work according to Newton and Einstein? | 🌌 Gravity]] [[prompt: What is photosynthesis? | 🌿 Photosynthesis]]';
+            }
+
+            if (has('why is the sky blue', 'why the sky is blue', 'sky blue')) {
+                return '☀️ **Why is the Sky Blue?**\n\n' +
+                    'The sky appears blue because of a phenomenon called **Rayleigh Scattering**:\n\n' +
+                    '1. Sunlight appears white, but it is actually a blend of all the colors of the rainbow (from long red wavelengths to short blue and violet wavelengths).\n' +
+                    '2. Earth\'s atmosphere is filled with gases (nitrogen and oxygen molecules).\n' +
+                    '3. When sunlight enters the atmosphere, the gas molecules scatter shorter wavelengths (blue and violet) in all directions much more strongly than longer red wavelengths.\n' +
+                    '4. Because human eyes have receptor cones that are far more sensitive to blue than violet light, we perceive the daytime sky as bright sky blue!\n\n' +
+                    '🌅 *Why Sunsets are Red:* At sunrise and sunset, sunlight travels through a much thicker slice of atmosphere. The blue light gets completely scattered away before reaching your eyes, leaving only deep reds and oranges.\n\n' +
+                    '[[prompt: What is photosynthesis? | 🌿 Photosynthesis]] [[prompt: What is the speed of light? | ⚡ Speed of Light]]';
+            }
+
+            if (has('what is an atom', 'structure of an atom', 'atom structure', 'parts of an atom')) {
+                return '⚛️ **Structure of an Atom**\n\n' +
+                    'An atom is the basic building block of all ordinary matter, consisting of a dense central nucleus surrounded by a cloud of orbiting electrons:\n\n' +
+                    '1. **The Nucleus (Center):**\n' +
+                    '   • **Protons:** Positively charged particles ($+1$). The number of protons determines the chemical element (Atomic Number).\n' +
+                    '   • **Neutrons:** Electrically neutral particles ($0$). Together with protons, they make up 99.94% of the atom\'s mass.\n' +
+                    '2. **The Electron Cloud:**\n' +
+                    '   • **Electrons:** Negatively charged particles ($-1$) that occupy quantum energy levels/orbitals around the nucleus.\n\n' +
+                    '💡 **Fun Fact:** Atoms are 99.9999999% empty space! If the nucleus were the size of a marble in the center of a football stadium, the electrons would be gnats buzzing in the upper bleachers.\n\n' +
+                    '[[prompt: What is DNA? | 🧬 DNA Structure]] [[prompt: What is quantum computing? | 💻 Quantum Computing]]';
+            }
+
+            if (has('what is dna', 'structure of dna', 'dna structure', 'dna explained')) {
+                return '🧬 **DNA (Deoxyribonucleic Acid) Explained**\n\n' +
+                    'DNA is the hereditary molecule that contains the biological genetic blueprint for the growth, development, functioning, and reproduction of all living organisms:\n\n' +
+                    '• **The Double Helix Structure:** Discovered in 1953 (James Watson, Francis Crick, Rosalind Franklin), resembling a twisted ladder.\n' +
+                    '• **The 4 Chemical Bases (The Alphabet of Life):**\n' +
+                    '   • **A** (Adenine) always pairs with **T** (Thymine)\n' +
+                    '   • **C** (Cytosine) always pairs with **G** (Guanine)\n' +
+                    '• **How It Works:** Sequences of these base pairs form genes. Genes instruct ribosomes how to assemble amino acids into proteins that build every tissue and enzyme in your body!\n\n' +
+                    '[[prompt: What is photosynthesis? | 🌿 Photosynthesis]] [[prompt: What is an atom? | ⚛️ Structure of an Atom]]';
+            }
+
+            if (has('black hole', 'what is a black hole')) {
+                return '🕳️ **Black Holes Explained**\n\n' +
+                    'A black hole is a region of spacetime where gravity is so intense that nothing—not even particles or light—has enough escape velocity to break free:\n\n' +
+                    '• **Event Horizon:** The "point of no return." Once anything crosses this boundary, it is causally disconnected from the outside universe.\n' +
+                    '• **Singularity:** The theoretical center where mass is crushed to infinite density and known laws of general relativity break down.\n' +
+                    '• **How They Form:** When massive dying stars (20+ times our Sun) exhaust their nuclear fuel, their cores collapse inward under their own gravitational weight.\n' +
+                    '• **Hawking Radiation:** Stephen Hawking proved black holes aren\'t completely black; quantum fluctuations at the event horizon cause them to slowly emit radiation and evaporate over astronomical timescales.\n\n' +
+                    '[[prompt: How does gravity work according to Newton and Einstein? | 🌌 Gravity]] [[prompt: What is the speed of light? | ⚡ Speed of Light]]';
+            }
+
+            if (has('solar system', 'planets in order', 'how many planets')) {
+                return '🪐 **The Solar System & Planets in Order**\n\n' +
+                    'Our solar system consists of our central star (the Sun) and **8 recognized planets**, ordered by distance from the Sun:\n\n' +
+                    '1. **Mercury:** Smallest, closest to Sun, extreme temperature swings (no atmosphere).\n' +
+                    '2. **Venus:** Hottest planet (~465°C) due to a runaway greenhouse carbon dioxide atmosphere.\n' +
+                    '3. **Earth:** Our home—liquid surface water and thriving biosphere.\n' +
+                    '4. **Mars:** The Red Planet, iron oxide soil, thin atmosphere, target for human exploration.\n' +
+                    '*(The Asteroid Belt separates the inner rocky planets from the outer gas giants)*\n' +
+                    '5. **Jupiter:** Largest planet, Great Red Spot anticyclonic storm, over 95 moons.\n' +
+                    '6. **Saturn:** Spectacular ring system made of ice and rock fragments.\n' +
+                    '7. **Uranus:** Ice giant that rotates on its side (98-degree axial tilt).\n' +
+                    '8. **Neptune:** Windiest planet, supersonic storms, deep blue methane atmosphere.\n\n' +
+                    '❄️ *Pluto:* Reclassified in 2006 by the IAU as a **Dwarf Planet** in the Kuiper Belt.\n\n' +
+                    '[[prompt: What is the speed of light in vacuum? | ⚡ Speed of Light]] [[prompt: What is a black hole? | 🕳️ Black Holes]]';
+            }
+
+            if (has('quantum computing', 'quantum physics', 'qubits')) {
+                return '💻 **Quantum Computing & Physics in Plain English**\n\n' +
+                    'Classical computers process data using binary bits (either **0** or **1**). Quantum computers use **Qubits** governed by quantum mechanics:\n\n' +
+                    '• **1. Superposition:** A qubit can exist in a linear combination of both 0 AND 1 simultaneously. This allows quantum processors to evaluate exponential possibilities at once.\n' +
+                    '• **2. Entanglement:** Qubits can become fundamentally intertwined so that the state of one instantly dictates the state of another, regardless of distance.\n' +
+                    '• **Applications:** Simulating complex molecular chemistry for drug discovery, breaking classical RSA encryption, and optimizing global logistics.\n\n' +
+                    '[[prompt: What is an API in software? | 💻 What is an API]] [[prompt: How does the internet work? | 🌐 How Internet Works]]';
+            }
+
+            // B. TECHNOLOGY & PROGRAMMING
+            if (has('what is an api', 'what is api', 'explain api', 'how do apis work')) {
+                return '🔌 **What is an API (Application Programming Interface)?**\n\n' +
+                    'An API is a software messenger that allows two different applications to communicate and exchange data securely:\n\n' +
+                    '🍽️ **The Restaurant Waiter Analogy:**\n' +
+                    '• **You (The Client / App):** Sit at a table and look at a menu of available options.\n' +
+                    '• **The Kitchen (The Server / Database):** Prepares the food and holds all raw ingredients.\n' +
+                    '• **The Waiter (The API):** Takes your order (Request), delivers it to the kitchen, and brings back your meal (Response).\n\n' +
+                    '📋 **Core Web API Concepts:**\n' +
+                    '• **Endpoints:** Specific URLs like `https://api.example.com/v1/users`\n' +
+                    '• **HTTP Verbs:** `GET` (fetch data), `POST` (create new data), `PUT` (update), `DELETE` (remove)\n' +
+                    '• **Payload:** Data typically formatted in lightweight **JSON** (JavaScript Object Notation)\n' +
+                    '• **Authentication:** Secured with API Keys, Bearer Tokens, or OAuth2.\n\n' +
+                    '[[prompt: How does the internet work from URL to page rendering? | 🌐 How Internet Works]] [[prompt: Give me a beginner-to-job-ready roadmap for learning programming | 💻 Learn Coding]]';
+            }
+
+            if (has('what is git', 'what is github', 'git vs github', 'version control')) {
+                return '🐙 **Git & GitHub Explained**\n\n' +
+                    '• **Git:** A free, open-source distributed version control system that runs locally on your computer. It tracks every change you make to code files like an interactive time-machine.\n' +
+                    '• **GitHub:** A cloud-based hosting platform for Git repositories that enables software teams to collaborate, review code, track bugs, and deploy projects.\n\n' +
+                    '📋 **The Core Git Workflow:**\n' +
+                    '1. `git init` — Initialize a new tracking repository.\n' +
+                    '2. `git add .` — Stage modified files to the commit preview index.\n' +
+                    '3. `git commit -m "Add feature"` — Snapshot your work permanently with a descriptive message.\n' +
+                    '4. `git branch feature-auth` — Create an isolated work stream without breaking production code.\n' +
+                    '5. `git push origin main` — Upload local commits to GitHub for team review.\n\n' +
+                    '[[prompt: Give me a complete beginner-to-job-ready roadmap for learning programming in 2026 | 💻 Learn Programming]] [[prompt: What is an API in software? | 🔌 What is an API]]';
+            }
+
+            if (has('cloud computing', 'what is aws', 'what is cloud')) {
+                return '☁️ **Cloud Computing in Plain English**\n\n' +
+                    'Cloud computing means delivering computing services—servers, storage, databases, networking, and AI—over the Internet ("the cloud") on a pay-as-you-go pricing model instead of owning physical server racks:\n\n' +
+                    '• **IaaS (Infrastructure as a Service):** Renting raw virtual machines and networks (e.g. AWS EC2, Google Compute Engine).\n' +
+                    '• **PaaS (Platform as a Service):** Deploying code directly without managing operating systems (e.g. Vercel, Heroku, AWS Elastic Beanstalk).\n' +
+                    '• **SaaS (Software as a Service):** Ready-to-use software delivered over browser (e.g. Google Docs, Slack, Netflix).\n' +
+                    '• **Why It Won:** Zero capital hardware costs, instant global scale in 30 seconds, and 99.99% automated uptime redundancy.\n\n' +
+                    '[[prompt: How does the internet work? | 🌐 How Internet Works]] [[prompt: What is an API? | 🔌 What is an API]]';
+            }
+
+            // C. GEOGRAPHY & CAPITALS
+            const capMatch = q.match(/capital(?:\s+city)?(?:\s+of)?\s+([a-z\s]+)/i);
+            if (capMatch) {
+                const country = capMatch[1].replace(/[?!.]+$/, '').trim();
+                const capitals = {
+                    'france': { cap: 'Paris', note: 'Known as the City of Light, home to the Eiffel Tower and the Louvre.' },
+                    'japan': { cap: 'Tokyo', note: 'The world\'s most populous metropolitan area (~37 million people).' },
+                    'ghana': { cap: 'Accra', note: 'Vibrant coastal capital located along the Gulf of Guinea.' },
+                    'nigeria': { cap: 'Abuja', note: 'Purpose-built federal capital in the geographic center of Nigeria (moved from Lagos in 1991).' },
+                    'kenya': { cap: 'Nairobi', note: 'Known as the Green City in the Sun, with a national safari park within city borders.' },
+                    'south africa': { cap: 'Pretoria (Executive), Cape Town (Legislative), Bloemfontein (Judicial)', note: 'South Africa is unique with three distinct constitutional capitals.' },
+                    'united kingdom': { cap: 'London', note: 'Historic global financial hub on the River Thames.' },
+                    'uk': { cap: 'London', note: 'Historic global financial hub on the River Thames.' },
+                    'england': { cap: 'London', note: 'Capital of England and the United Kingdom.' },
+                    'united states': { cap: 'Washington, D.C.', note: 'Federal district created under the US Constitution, separate from any US state.' },
+                    'usa': { cap: 'Washington, D.C.', note: 'Federal district housing the White House, Capitol, and Supreme Court.' },
+                    'germany': { cap: 'Berlin', note: 'Known for history, the Brandenburg Gate, and vibrant tech/creative culture.' },
+                    'canada': { cap: 'Ottawa', note: 'Selected as capital by Queen Victoria in 1857 on the Ontario-Quebec border.' },
+                    'australia': { cap: 'Canberra', note: 'Built as a compromise capital between rivals Sydney and Melbourne.' },
+                    'china': { cap: 'Beijing', note: 'Home to the Forbidden City and over 3,000 years of recorded history.' },
+                    'india': { cap: 'New Delhi', note: 'Administrative seat of the world\'s most populous democracy.' },
+                    'brazil': { cap: 'Brasília', note: 'Futuristic planned capital designed in the shape of an airplane by Oscar Niemeyer.' },
+                    'italy': { cap: 'Rome', note: 'The Eternal City, surrounding the independent city-state of Vatican City.' },
+                    'spain': { cap: 'Madrid', note: 'High-altitude European capital in the Iberian peninsula.' },
+                    'russia': { cap: 'Moscow', note: 'Home to the historic Kremlin and Red Square.' },
+                    'egypt': { cap: 'Cairo', note: 'Historic metropolis on the Nile near the Giza Pyramids.' },
+                    'mexico': { cap: 'Mexico City', note: 'Built on the ancient Aztec capital of Tenochtitlan.' },
+                    'argentina': { cap: 'Buenos Aires', note: 'Cosmopolitan port city known as the Paris of South America.' },
+                    'turkey': { cap: 'Ankara', note: 'Chosen by Atatürk in 1923 (often confused with larger Istanbul).' },
+                    'netherlands': { cap: 'Amsterdam', note: 'Official capital, though government seats are in The Hague.' },
+                    'south korea': { cap: 'Seoul', note: 'High-tech metropolis along the Han River.' }
+                };
+
+                if (capitals[country]) {
+                    const info = capitals[country];
+                    return '🏛️ **Capital City: ' + country.toUpperCase() + '**\n\n' +
+                        '• **Capital:** **' + info.cap + '**\n' +
+                        '• **Context:** ' + info.note + '\n\n' +
+                        '[[prompt: How many continents and oceans are on Earth? | 🌍 Continents & Oceans]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]';
+                }
+            }
+
+            if (has('continents', 'how many continents')) {
+                return '🌍 **The 7 Continents of Earth (by Area):**\n\n' +
+                    '1. **Asia:** 44.6M km² (~60% of human population, 4.7B people)\n' +
+                    '2. **Africa:** 30.4M km² (54 countries, youngest median age, 1.4B people)\n' +
+                    '3. **North America:** 24.7M km² (Canada, USA, Mexico, Central America & Caribbean)\n' +
+                    '4. **South America:** 17.8M km² (Amazon basin, Andes mountains, 430M people)\n' +
+                    '5. **Antarctica:** 14.2M km² (Coldest, driest desert, covered in 98% ice, zero native population)\n' +
+                    '6. **Europe:** 10.2M km² (50 sovereign states, birthplace of Western industrialization)\n' +
+                    '7. **Australia / Oceania:** 8.6M km² (Smallest continent, unique marsupial biodiversity)\n\n' +
+                    '🌊 **The 5 Oceans:** Pacific (largest & deepest), Atlantic, Indian, Southern (Antarctic), and Arctic (smallest).\n\n' +
+                    '[[prompt: What is the capital of France? | 🏛️ Capital of France]] [[prompt: How does gravity work? | 🌌 Gravity]]';
+            }
+
+            if (has('who wrote hamlet', 'who wrote romeo and juliet', 'shakespeare')) {
+                return '🎭 **William Shakespeare (1564–1616)**\n\n' +
+                    'English playwright, poet, and actor widely regarded as the greatest writer in the English language:\n\n' +
+                    '• **Key Masterpieces:** *Hamlet*, *Romeo and Juliet*, *Macbeth*, *Othello*, *King Lear*, *A Midsummer Night\'s Dream*, and 154 sonnets.\n' +
+                    '• **Impact:** He invented over 1,700 common English words still used today (e.g. *lonely, swagger, assassination, generous, critical, bedroom*)!\n\n' +
+                    '[[prompt: What is the capital of United Kingdom? | 🏛️ Capital of UK]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]';
+            }
+
+            // D. BASIC FINANCIAL DEFINITIONS
+            if (has('what is inflation', 'explain inflation', 'causes of inflation')) {
+                return '📈 **Inflation Explained: The Silent Purchasing Power Drain**\n\n' +
+                    'Inflation is the rate at which the general level of prices for goods and services rises over time, reducing the purchasing power of your money:\n\n' +
+                    '• **The Reality:** If inflation is 10%, a grocery basket that cost ' + ctx.currency + ' 100 today will cost ' + ctx.currency + ' 110 next year. Your cash sitting in an uninvested checking account quietly lost 10% of its buying power!\n' +
+                    '• **2 Primary Causes:**\n' +
+                    '   1. **Demand-Pull Inflation:** Consumers have more money and demand more goods than factories can produce ("too much money chasing too few goods").\n' +
+                    '   2. **Cost-Push Inflation:** Surging costs of raw materials (crude oil, shipping, fertilizer) force producers to raise retail prices.\n\n' +
+                    '🛡️ **How to Beat Inflation:** Keep 3-6 months in liquid cash, but invest long-term capital into productive assets: broad index funds (S&P 500), real estate, or inflation-indexed bonds.\n\n' +
+                    '[[prompt: How does inflation eat away my cash savings and how do I beat it? | 🛡️ Beat Inflation]] [[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Index Funds]]';
+            }
+
+            if (has('what is gdp', 'explain gdp', 'gross domestic product')) {
+                return '📊 **GDP (Gross Domestic Product) Explained**\n\n' +
+                    'GDP measures the total monetary market value of all finished goods and services produced within a nation\'s borders in a specific period (typically one year):\n\n' +
+                    '📐 **The GDP Expenditure Formula:**\n' +
+                    '`GDP = C + I + G + (X − M)`\n' +
+                    '• **C (Consumer Spending):** Purchases by households (food, cars, healthcare) — usually 60-70% of total GDP.\n' +
+                    '• **I (Business Investment):** Corporate spending on machinery, software, and factories.\n' +
+                    '• **G (Government Spending):** Infrastructure, schools, defense, and public services.\n' +
+                    '• **(X − M) Net Exports:** Value of exports minus imports.\n\n' +
+                    '💡 **Why It Matters:** Growing GDP signifies expanding jobs and business health; two consecutive quarters of negative GDP contraction defines an economic **Recession**.\n\n' +
+                    '[[prompt: What is inflation and how does it affect purchasing power? | 📈 Inflation]] [[prompt: How do I start investing as a beginner? | 📈 Safe Investing]]';
+            }
+
+            if (has('what is apr', 'apr vs apy', 'explain apr')) {
+                return '💳 **APR vs. APY: What Every Spender Must Know**\n\n' +
+                    '• **APR (Annual Percentage Rate):** The annualized simple interest rate charged on borrowing (loans, credit cards, mortgages) without taking compounding into account.\n' +
+                    '• **APY (Annual Percentage Yield):** The actual real annual return earned on savings or charged on debt when compounding interest is included!\n\n' +
+                    '⚠️ **The Bank Trick:** Banks advertise savings accounts using **APY** (to make low returns look slightly bigger) and loans using **APR** (to make borrowing costs look smaller than they really are)!\n\n' +
+                    '[[prompt: How to crush high-interest credit card debt | 💳 Debt Payoff]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Compound Interest]]';
+            }
+
+            if (has('what is a credit score', 'how credit score works', 'improve credit score')) {
+                return '🏆 **Credit Score Anatomy & Optimization**\n\n' +
+                    'A credit score is a 3-digit number (typically 300 to 850) that lenders use to evaluate the risk of lending you money:\n\n' +
+                    '• **Payment History (35% - Biggest Factor):** Paying bills and loan minimums on time every single month.\n' +
+                    '• **Credit Utilization (30%):** The ratio of debt owed vs your total credit limit. Keep utilization strictly **under 30%** (ideally under 10%)!\n' +
+                    '• **Length of Credit History (15%):** How long accounts have been open. Never close your oldest active credit card!\n' +
+                    '• **Credit Mix (10%):** Having a responsible blend of revolving debt (cards) and installment loans.\n' +
+                    '• **New Credit Inquiries (10%):** Avoid applying for multiple loan cards in a short window.\n\n' +
+                    '[[prompt: Snowball vs Avalanche: which debt payoff method is best for me? | ❄️ Debt Methods]] [[prompt: What is zero-based budgeting? | ⚖️ Zero-Based Budgeting]]';
+            }
+
+            if (has('stocks vs bonds', 'what is a stock', 'what is a bond')) {
+                return '⚖️ **Stocks vs. Bonds: Core Investment Fundamentals**\n\n' +
+                    '• **Stocks (Equity):** You buy a tiny slice of ownership in a real operating company. If the company grows and earns profits, share price rises and you may receive dividends. Higher volatility, but historically delivers ~8-10% average annual returns over long horizons.\n' +
+                    '• **Bonds (Debt):** You lend money to a government or corporation for a fixed term in exchange for regular fixed interest payments (coupons) plus return of principal upon maturity. Lower risk and lower returns (~3-5%), used for portfolio stabilization.\n\n' +
+                    '💡 **Rule of Thumb:** A standard beginner diversified portfolio starts with broad low-cost index funds (like the S&P 500) before adding bonds as retirement nears.\n\n' +
+                    '[[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Index Funds]] [[prompt: What is Dollar-Cost Averaging (DCA)? | 📊 Dollar-Cost Averaging]]';
+            }
+
+            if (has('what is an index fund', 'what is an etf', 'what is s&p 500', 'sp500')) {
+                return '📊 **Index Funds & ETFs: The Wealth Cheat Code**\n\n' +
+                    '• **What It Is:** Instead of guessing which individual company will win, an index fund buys a pre-weighted basket of hundreds of the world\'s best companies at once.\n' +
+                    '• **The S&P 500 Index:** Tracks the 500 largest public companies in the United States (Apple, Microsoft, Google, Amazon, Nvidia, Berkshire Hathaway, etc.).\n' +
+                    '• **Warren Buffett\'s Advice:** Historical data shows that 90%+ of professional Wall Street fund managers fail to beat the S&P 500 over a 15-year period due to high management fees. An ultra-low fee index fund (expense ratio < 0.05%) outperforms the pros!\n\n' +
+                    '[[prompt: What is Dollar-Cost Averaging (DCA)? | 📊 DCA Strategy]] [[prompt: How does compound interest work with the Rule of 72? | 🪄 Compound Interest]]';
+            }
+
+            // E. HEALTH & EVERYDAY PRACTICAL
+            if (has('how much water should i drink', 'daily water intake', 'how much water')) {
+                return '💧 **Optimal Daily Water Intake**\n\n' +
+                    '• **The General Science Formula:** **30 to 35 milliliters of water per kilogram of body weight** daily.\n' +
+                    '• For a 70 kg (154 lb) person: ~**2.1 to 2.5 liters** (~8 to 10 glasses) per day.\n' +
+                    '• Add 500 ml for every 45 minutes of strenuous exercise or hot tropical weather.\n' +
+                    '• **The Color Test:** Your urine should be pale straw yellow. Dark yellow indicates dehydration; completely clear means you may be flushing electrolytes.\n\n' +
+                    '[[prompt: Health, vitality and wellness foundations | 🌱 Health Foundations]] [[prompt: Complete sleep optimization masterclass | 😴 Sleep Guide]]';
+            }
+
+            if (has('calorie deficit', 'what is a calorie deficit', 'how to lose fat')) {
+                return '🔥 **Calorie Deficit Explained**\n\n' +
+                    'A calorie deficit is the single physiological requirement for fat loss in human biology:\n\n' +
+                    '• **TDEE (Total Daily Energy Expenditure):** The total calories your body burns per day through basal metabolism (BMR), daily movement (NEAT), and exercise.\n' +
+                    '• **The Deficit:** Consuming **300 to 500 calories below your TDEE** forces your body to break down stored adipose tissue (body fat) for fuel.\n' +
+                    '• **The Math:** ~**3,500 calories** equals approximately 1 pound (0.45 kg) of fat. A sustainable 500 calorie daily deficit results in ~1 lb of fat loss per week without crashing metabolic rate or losing muscle!\n\n' +
+                    '[[prompt: Give me an extensive roadmap for sustainable fat loss | 🏃 Fat Loss Roadmap]] [[prompt: Health, vitality and wellness foundations | 🌱 Wellness Foundations]]';
+            }
+
+            if (has('how to boil eggs', 'boil eggs', 'boiled egg times')) {
+                return '🥚 **The Perfect Boiled Egg Timing Guide**\n\n' +
+                    'Bring a pot of water to a rolling boil, then gently lower large eggs with a spoon. Set a timer:\n\n' +
+                    '• **6 Minutes (Soft-Boiled):** Firm egg whites, warm liquid runny yolk (perfect with toast soldiers).\n' +
+                    '• **7 to 8 Minutes (Medium Jammy):** Tender whites, thick jammy creamy yolk (ramen style).\n' +
+                    '• **10 Minutes (Hard-Boiled):** Firm golden yolk, ideal for egg salads.\n' +
+                    '• **12+ Minutes:** Overcooked (produces a grey-green sulfur ring around the yolk).\n\n' +
+                    '💡 **The Peeling Secret:** Transfer immediately into an **ice water bath** for 3 minutes. The cold shock shrinks the egg inside the shell so it slides right off!\n\n' +
+                    '[[prompt: Quick, delicious and budget-friendly meal prep | 🍳 Meal Prep Hacks]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]';
+            }
+
+            return null;
+        }
+
+
+        // ==========================================
+        // 4. EXTENSIVE GUIDES & DEEP BLUEPRINTS ENGINE
+        // ==========================================
+        function tryAnswerExtensiveGuide(rawQuery, ctx) {
+            const q = (rawQuery || '').toLowerCase().trim();
+            const has = (...terms) => terms.some(t => {
+                const term = t.toLowerCase();
+                if (term.includes(' ') || /[^a-z0-9]/i.test(term)) {
+                    return q.includes(term);
+                }
+                const regex = new RegExp('\\b' + term + '\\b', 'i');
+                return regex.test(q);
+            });
+
+            // 1. START A BUSINESS FROM SCRATCH
+            if (has('start a business', 'start business', 'launch a business', 'business from scratch', 'build a startup', 'how to start a company')) {
+                return '🚀 **The Comprehensive Master Guide: Starting a Business from Scratch**\n\n' +
+                    'Building a profitable business isn\'t about luck—it is a repeatable engineering process divided into **6 Strategic Phases**:\n\n' +
+                    '🎯 **Phase 1: Problem & Idea Validation (Week 1–2)**\n' +
+                    '• Never start with an idea; start with a **painful, expensive problem** people are actively complaining about.\n' +
+                    '• **The Hair-on-Fire Test:** Are potential customers already spending money or time trying to patch this issue?\n' +
+                    '• Conduct 15 discovery interviews with target buyers. Ask: *"What is the hardest part about [topic]? How much does that cost you?"*\n\n' +
+                    '🔬 **Phase 2: Market & Competitor Moat (Week 3)**\n' +
+                    '• Identify existing competitors. Competitors are proof that a paying market exists!\n' +
+                    '• Pinpoint your **Unique Value Proposition (UVP)**: Are you 10x faster, 50% cheaper, radically simpler, or serving an ignored niche?\n\n' +
+                    '🔨 **Phase 3: The Minimum Viable Product (MVP) (Week 4–6)**\n' +
+                    '• Build the smallest possible prototype that delivers the core transformation. Avoid feature creep.\n' +
+                    '• **Pre-Sales Validation:** Try to secure 3 to 5 paid pre-orders or letters of intent before writing complex code or leasing property. If strangers won\'t pay you $10 upfront, they won\'t pay you $10 later!\n\n' +
+                    '💰 **Phase 4: Unit Economics & Pricing Model (Week 7)**\n' +
+                    '• Calculate your **Contribution Margin**: `Revenue per unit − Direct variable costs`.\n' +
+                    '• **LTV > 3x CAC Rule:** Customer Lifetime Value must be at least 3 times greater than your Customer Acquisition Cost.\n' +
+                    '• Never compete on being the absolute cheapest; compete on superior outcome and speed.\n\n' +
+                    '⚖️ **Phase 5: Legal, Banking & Operational Setup (Week 8)**\n' +
+                    '• Register a legal business entity (LLC or sole proprietorship) and obtain your local tax identification number.\n' +
+                    '• Open a dedicated **Business Bank Account**. Keep company cash 100% segregated from personal funds from Day 1.\n' +
+                    '• Set up accounting software to track every revenue cedi/dollar and expense.\n\n' +
+                    '📣 **Phase 6: Go-to-Market (GTM) & Distribution (Week 9+)**\n' +
+                    '• Master **one single acquisition channel** first (Cold email/outreach, SEO content, TikTok/Instagram organic, or paid ads).\n' +
+                    '• Over-deliver for your first 10 customers to turn them into raving referral evangelists!\n\n' +
+                    '[[prompt: How to write a high-converting resume | 📄 Resume Guide]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What are high-leverage side hustle ideas? | 💡 Side Hustles]]';
+            }
+
+            // 2. LEARN PROGRAMMING ROADMAP
+            if (has('learn programming', 'learn coding', 'how to learn code', 'become a software engineer', 'software developer roadmap')) {
+                return '💻 **Complete Beginner-to-Job-Ready Programming Roadmap (2026)**\n\n' +
+                    'The demand for skilled software engineers who understand real architecture, clean code, and AI integration is higher than ever. Here is the proven 5-step roadmap:\n\n' +
+                    '🌐 **Step 1: The Universal Web Foundations (Months 1–2)**\n' +
+                    '• **HTML5:** Semantic document structuring, accessibility (a11y), forms.\n' +
+                    '• **CSS3 & Tailwind CSS:** Flexbox, Grid, mobile-responsive media queries, modern UI components.\n' +
+                    '• **JavaScript (ES6+):** Variables, arrow functions, DOM manipulation, arrays/objects, fetch API, and async/await.\n\n' +
+                    '⚡ **Step 2: Frontend Engineering & State Management (Months 3–4)**\n' +
+                    '• Pick the dominant industry standard: **React** (or Next.js for full-stack).\n' +
+                    '• Master component architecture, hooks (`useState`, `useEffect`, `useMemo`), props drilling vs Context API.\n' +
+                    '• Learn **TypeScript**: Static typing prevents 80% of runtime errors in modern production teams.\n\n' +
+                    '🛠️ **Step 3: Backend, APIs & Databases (Months 5–6)**\n' +
+                    '• **Runtime & Framework:** Node.js with Express/Fastify, or Python with FastAPI.\n' +
+                    '• **Databases:** PostgreSQL (relational schemas, joins, indexing) and Supabase/Prisma ORM.\n' +
+                    '• **Authentication & Security:** JWT tokens, password hashing with bcrypt, CORS, and role-based access control.\n\n' +
+                    '🐙 **Step 4: Developer Tooling, Git & Deployment (Month 7)**\n' +
+                    '• Terminal / Bash command line mastery.\n' +
+                    '• Git & GitHub: Branching, merge conflicts, pull request reviews.\n' +
+                    '• Cloud hosting: Deploying apps on Vercel, Railway, or AWS.\n\n' +
+                    '💼 **Step 5: Portfolio Projects & Escaping Tutorial Hell (Month 8+)**\n' +
+                    '• Stop watching tutorials! Build **3 complete, original full-stack projects** that solve real problems (e.g. an expense tracker, an AI SaaS tool, an e-commerce platform).\n' +
+                    '• Prepare for technical interviews: Data structures (arrays, hash maps, two pointers) and System Design fundamentals.\n\n' +
+                    '[[prompt: What is an API in software? | 🔌 What is an API]] [[prompt: What is Git and GitHub? | 🐙 Git & GitHub]] [[prompt: How do I write a high-converting resume? | 📄 Resume Guide]]';
+            }
+
+            // 3. ATS RESUME MASTERCLASS
+            if (has('write a resume', 'resume masterclass', 'how to write a cv', 'ats resume', 'resume tips', 'improve resume')) {
+                return '📄 **The High-Converting, ATS-Optimized Resume Masterclass**\n\n' +
+                    'Recruiters spend an average of **6 seconds** scanning a resume, and Applicant Tracking Systems (ATS) filter out 70% of resumes before human eyes ever see them! Here is how to guarantee interviews:\n\n' +
+                    '📐 **1. ATS Formatting Rules (Non-Negotiable):**\n' +
+                    '• **Single-Column Layout:** Multi-column tables, graphics, and text boxes confuse ATS parsers.\n' +
+                    '• **Standard Fonts:** Arial, Calibri, or Helvetica (10–11pt body, 14–16pt headers).\n' +
+                    '• **Export as Clean PDF:** Ensure text is highlightable and searchable, not flattened into an image.\n' +
+                    '• **Page Limit:** Strictly 1 page (unless you have 10+ years of senior executive experience).\n\n' +
+                    '🎯 **2. The Google X-Y-Z Impact Formula for Bullet Points:**\n' +
+                    '❌ *Weak:* "Responsible for managing the company spending and budget."\n' +
+                    '✅ *Winning:* **"Accomplished [X] as measured by [Y] by doing [Z]"**\n' +
+                    '• *Example:* *"Reduced monthly operational expense leakage by 24% (saving $18,000/quarter) by engineering an automated purchase approval and daily tracking dashboard."*\n\n' +
+                    '🚀 **3. Power Action Verbs Only:**\n' +
+                    '• Replace passive phrases ("worked on", "helped with") with decisive verbs: *Spearheaded, Architected, Engineered, Negotiated, Automated, Optimized, Increased, Reduced, Launched*.\n\n' +
+                    '📋 **4. Section Hierarchy:**\n' +
+                    '1. Header (Name, Phone, Email, LinkedIn, GitHub/Portfolio URL, City)\n' +
+                    '2. Professional Experience (Reverse chronological)\n' +
+                    '3. Technical & Professional Skills (Hard skills, tools, frameworks)\n' +
+                    '4. Key Projects (Essential for engineers and career switchers)\n' +
+                    '5. Education & Certifications\n\n' +
+                    '[[prompt: How do I prepare for and ace a job interview? | 🎯 Interview Guide]] [[prompt: How to negotiate a salary increase | 💼 Salary Negotiation]]';
+            }
+
+            // 4. HOW THE INTERNET WORKS UNDER THE HOOD
+            if (has('how internet works', 'how does the internet work', 'from url to page', 'typing url in browser')) {
+                return '🌐 **How the Internet Works: From Typing a URL to Page Render**\n\n' +
+                    'When you type `https://www.example.com` into your browser and press Enter, a lightning-fast sequence of events takes place in under 400 milliseconds:\n\n' +
+                    '🔍 **1. DNS Resolution (Translating Names to IP Addresses):**\n' +
+                    '• Computers communicate via numeric IP addresses (like `93.184.216.34`).\n' +
+                    '• Your browser checks its cache → OS cache → Router → Recursive DNS resolver → Root & TLD nameservers to resolve the IP address.\n\n' +
+                    '🤝 **2. TCP 3-Way Handshake & TLS Encryption:**\n' +
+                    '• **SYN, SYN-ACK, ACK:** Browser and server establish a reliable connection.\n' +
+                    '• **TLS Handshake:** Cryptographic keys are exchanged securely to establish HTTPS encryption so hackers cannot snoop on your passwords or credit card data.\n\n' +
+                    '📨 **3. The HTTP Request & Server Processing:**\n' +
+                    '• The browser sends a `GET / HTTP/2` request with headers (User-Agent, Cookies, Accept).\n' +
+                    '• The web server (e.g. Nginx, Cloudflare, Node.js) handles routing, queries the database, and returns an **HTTP 200 OK** response with the HTML document payload.\n\n' +
+                    '🎨 **4. The Critical Rendering Path (In Your Browser):**\n' +
+                    '• **DOM Tree:** Browser parses HTML into a tree of document object nodes.\n' +
+                    '• **CSSOM Tree:** Browser parses stylesheets into CSS object models.\n' +
+                    '• **Render Tree & Layout:** Combines DOM + CSSOM to calculate exact geometry and pixel coordinates of every element on screen.\n' +
+                    '• **Paint & Compositing:** The GPU paints the pixels onto your display screen!\n\n' +
+                    '[[prompt: What is an API in software? | 🔌 What is an API]] [[prompt: What is Git and GitHub? | 🐙 Git & GitHub]] [[prompt: What is cloud computing? | ☁️ Cloud Computing]]';
+            }
+
+            // 5. SUSTAINABLE FAT LOSS & FITNESS ROADMAP
+            if (has('fat loss roadmap', 'sustainable fat loss', 'lose fat', 'lose weight sustainably', 'body transformation')) {
+                return '🏃 **The Science-Backed Sustainable Fat Loss & Fitness Blueprint**\n\n' +
+                    'Permanent body recomposition requires understanding 5 non-negotiable physiological laws:\n\n' +
+                    '🔥 **1. The Energy Balance (Caloric Deficit):**\n' +
+                    '• Calculate your **TDEE (Total Daily Energy Expenditure)** using an online calculator.\n' +
+                    '• Eat **300 to 500 calories below maintenance**. This produces steady, sustainable fat loss (~0.5 to 1 kg per week) while preserving your hormonal balance.\n\n' +
+                    '🥩 **2. High Protein Intake (The Muscle Shield):**\n' +
+                    '• Eat **1.6 to 2.2 grams of protein per kilogram of target bodyweight** daily (chicken breast, fish, eggs, beans, Greek yogurt, tofu).\n' +
+                    '• Protein has the highest **Thermic Effect of Food (TEF)**—your body burns 20-30% of protein calories just digesting it—and keeps you full for hours!\n\n' +
+                    '🏋️ **3. Progressive Overload Resistance Training (3-4 Days/Week):**\n' +
+                    '• If you diet without lifting weights, up to 40% of the weight lost is active muscle tissue!\n' +
+                    '• Lift weights with progressive overload (adding weight or reps each week) to signal your body to retain muscle and burn strictly fat.\n\n' +
+                    '🚶 **4. Maximize NEAT (8,000–10,000 Daily Steps):**\n' +
+                    '• Non-Exercise Activity Thermogenesis (walking, taking stairs, moving around) burns 3x to 5x more total daily calories than a 45-minute gym session.\n\n' +
+                    '😴 **5. Sleep & Cortisol Management:**\n' +
+                    '• Sleeping under 6 hours spikes **ghrelin** (hunger hormone) and lowers **leptin** (satiety hormone), making food cravings nearly impossible to resist.\n\n' +
+                    '[[prompt: Complete sleep optimization masterclass | 😴 Sleep Guide]] [[prompt: Health, vitality and wellness foundations | 🌱 Health Foundations]] [[prompt: Quick meal prep hacks | 🍳 Meal Prep]]';
+            }
+
+            // 6. SLEEP OPTIMIZATION MASTERCLASS
+            if (has('sleep masterclass', 'sleep optimization', 'how to sleep better', 'optimize sleep', 'cure insomnia')) {
+                return '😴 **The Complete Sleep Optimization Masterclass**\n\n' +
+                    'High-quality sleep is the biological foundation of cognitive performance, emotional resilience, fat loss, and wealth building:\n\n' +
+                    '☀️ **1. Anchor Your Circadian Rhythm in the Morning:**\n' +
+                    '• Get **10–15 minutes of direct outdoor sunlight** into your eyes within 30 minutes of waking. This triggers a morning cortisol peak and starts the 14-hour timer for melatonin release at night!\n\n' +
+                    '☕ **2. The 10-Hour Caffeine Cutoff:**\n' +
+                    '• Caffeine has an average half-life of 5 to 7 hours and a quarter-life of 10 to 12 hours. Drinking coffee at 3:00 PM means 25% of that stimulant is still blocking adenosine receptors in your brain at 1:00 AM, destroying restorative deep slow-wave sleep!\n\n' +
+                    '🌡️ **3. The Bedroom Temperature Rule (65–68°F / 18–20°C):**\n' +
+                    '• Your body must drop its core temperature by 1–2°F to initiate and stay in deep sleep. A cool, dark room dramatically accelerates sleep onset.\n\n' +
+                    '📱 **4. The 60-Minute Digital Sunset:**\n' +
+                    '• Blue light from smartphones and laptops suppresses melatonin production by up to 50%. Switch devices off 60 minutes before bed or wear blue-blocking glasses.\n\n' +
+                    '🛁 **5. Hot Shower Trick:**\n' +
+                    '• Taking a warm shower 90 minutes before bed brings blood to the surface of your skin. When you exit, the rapid heat evaporation drops your core body temperature, triggering sleepiness!\n\n' +
+                    '[[prompt: Health, vitality and wellness foundations | 🌱 Health Foundations]] [[prompt: How to master self-discipline using Atomic Habits | 🧠 Habits Guide]]';
+            }
+
+            // 7. ATOMIC HABITS & SELF-DISCIPLINE
+            if (has('atomic habits', 'build habits', 'break bad habits', 'self discipline', 'habit stacking')) {
+                return '🧠 **The Atomic Habits & Self-Discipline Masterclass**\n\n' +
+                    'James Clear\'s groundbreaking insight: *You do not rise to the level of your goals; you fall to the level of your systems.* Here is how to rewire your behavioral loops:\n\n' +
+                    '🔄 **The 4-Step Habit Loop:**\n' +
+                    '• **Cue → Craving → Response → Reward**\n\n' +
+                    '✨ **How to Build Good Habits (The 4 Laws):**\n' +
+                    '1. **Make It Obvious (Environment Design):** Put healthy snacks on the counter, keep running shoes next to the door, place a budget reminder on your home screen. Willpower is a finite resource; environment design is forever!\n' +
+                    '2. **Make It Attractive (Temptation Bundling):** Pair an action you *need* to do with an action you *want* to do (e.g. only listen to your favorite podcast while doing chores or logging expenses).\n' +
+                    '3. **Make It Easy (The 2-Minute Rule):** When starting a new habit, scale it down to under 2 minutes (e.g. "read 1 page", "do 5 pushups", "log 1 expense"). Consistency comes before optimization!\n' +
+                    '4. **Make It Satisfying (Immediate Reward):** Use a habit tracker calendar to mark visual streaks. Never break the chain twice!\n\n' +
+                    '🚫 **How to Break Bad Habits:**\n' +
+                    '• Make it invisible (hide apps, delete bookmarks).\n' +
+                    '• Make it difficult (introduce friction: put credit cards in another room, set app screen-time limits).\n' +
+                    '• Apply the **48-Hour Pause** before any impulse buy!\n\n' +
+                    '[[prompt: How can I stop impulse spending and emotional buying? | 🛡️ Stop Impulse Buys]] [[prompt: Complete sleep optimization masterclass | 😴 Sleep Guide]]';
+            }
+
+            // 8. SALARY NEGOTIATION PLAYBOOK
+            if (has('negotiate salary', 'salary negotiation', 'how to ask for a raise', 'ask for a raise', 'salary increase')) {
+                return '💼 **The Step-by-Step Salary Negotiation Playbook**\n\n' +
+                    'A single successful salary negotiation can compound into hundreds of thousands of dollars over a 30-year career. Here is the professional negotiation blueprint:\n\n' +
+                    '📊 **Step 1: Build Your 6-Month "Brag Sheet" (Value Audit):**\n' +
+                    '• Never ask for a raise based on personal living costs (rent went up). Always negotiate based on **value delivered to the company**!\n' +
+                    '• Document 3 to 5 concrete accomplishments: revenue generated, hours saved, processes automated, team members trained.\n\n' +
+                    '🔍 **Step 2: Research Market Benchmarks:**\n' +
+                    '• Gather salary data from Glassdoor, Levels.fyi, LinkedIn Salary, and recruiters in your industry.\n' +
+                    '• Determine your target range (e.g. ' + ctx.currency + ' 6,500 – 7,500) and pitch the upper bound.\n\n' +
+                    '⏰ **Step 3: Pick the Perfect Strategic Timing:**\n' +
+                    '• Best times: Right after delivering a high-profile win, during annual budget planning (2 months before fiscal year-end), or when your role\'s scope has visibly expanded.\n\n' +
+                    '🗣️ **Step 4: The Exact Meeting Script:**\n' +
+                    '• *"Over the past 12 months, I\'ve taken on [Project A] and [Responsibility B], which generated [Result C]. Based on my contributions and market research, I would like to adjust my compensation to [Target]. How can we make that happen?"*\n\n' +
+                    '🎁 **Step 5: Leverage Non-Salary Levers if Budget is Frozen:**\n' +
+                    '• If base salary is strictly capped, negotiate for: signing bonuses, equity/shares, flexible remote days, education budgets, or an expedited 6-month performance review.\n\n' +
+                    '[[prompt: How do I write a high-converting resume? | 📄 Resume Guide]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]]';
+            }
+
+            // 9. THE 7 PILLARS OF LIFETIME FINANCIAL INDEPENDENCE
+            if (has('personal finance roadmap', 'financial freedom roadmap', 'baby steps', 'how to build wealth', 'wealth building roadmap')) {
+                return '🏛️ **The 7 Pillars of Lifetime Financial Independence**\n\n' +
+                    'A proven sequential roadmap to move from financial anxiety to permanent freedom:\n\n' +
+                    '• **Pillar 1: The Starter Shield (' + ctx.currency + ' 1,000–2,500):**\n' +
+                    '  A small emergency buffer in liquid savings to stop minor emergencies from forcing you into debt.\n\n' +
+                    '• **Pillar 2: Eliminate High-Interest Consumer Debt:**\n' +
+                    '  Attack credit cards, digital loan apps, and BNPL balances using the **Debt Snowball** (smallest to largest) or **Avalanche** (highest interest rate first).\n\n' +
+                    '• **Pillar 3: The Fortress Emergency Fund (3 to 6 Months of Living Expenses):**\n' +
+                    '  Fully fund basic living costs in a High-Yield Savings Account. This is financial sleep-at-night insurance.\n\n' +
+                    '• **Pillar 4: Invest 15–20% of Income for Retirement & Compounding:**\n' +
+                    '  Consistently buy broad-market index funds (S&P 500, MSCI World) and maximize retirement accounts (Pensions, SSNIT, 401k/IRA).\n\n' +
+                    '• **Pillar 5: Fund Specific Sinking Funds:**\n' +
+                    '  Save in advance for children\'s education, car replacements, weddings, and real estate down payments without taking loans.\n\n' +
+                    '• **Pillar 6: Pay Down Mortgage & Real Estate:**\n' +
+                    '  Secure your primary home and build cash-flowing physical or paper assets.\n\n' +
+                    '• **Pillar 7: Generational Wealth & Philanthropy:**\n' +
+                    '  Reach true FIRE (Financial Independence), mentor others, and build a lasting family legacy!\n\n' +
+                    '[[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: How do I start investing as a beginner with index funds and ETFs? | 📈 Index Funds]]';
+            }
+
+            return null;
+        }
+
+
+        // ==========================================
+        // 5. UNIVERSAL SEMANTIC INTELLIGENCE SYNTHESIZER
+        // ==========================================
+        function tryUniversalSynthesizer(rawQuery, ctx) {
+            const q = (rawQuery || '').toLowerCase().trim();
+
+            // Clean topic subject
+            const cleanTopic = rawQuery
+                .replace(/^(can you|how do i|how to|what is|what are|why is|why are|tell me about|explain|give me|tips on|should i|is it good to|compare|difference between|write a poem about|write a story about)\s+/i, '')
+                .replace(/[?!.]+$/, '')
+                .trim();
+            const topicName = cleanTopic ? (cleanTopic.charAt(0).toUpperCase() + cleanTopic.slice(1)) : 'Your Question';
+
+            // 1. Creative requests: Poem, story, rhyme
+            if (/\b(poem|poetry|rhyme|haiku|story|verse)\b/i.test(q)) {
+                return '📜 **Poetic Composition: ' + topicName + '**\n\n' +
+                    'Beneath the quiet turning of the day,\n' +
+                    'A quiet spark begins to find its way.\n' +
+                    'Through shifting winds and seasons newly born,\n' +
+                    'The darkest midnight yields to golden morn.\n\n' +
+                    'With steady hands and clarity of mind,\n' +
+                    'The simplest path is what the patient find.\n' +
+                    'For every step aligned with what is true,\n' +
+                    'Brings peace of heart in everything you do.\n\n' +
+                    '💡 *PocketCoach Reflection:* Creativity and discipline go hand in hand—giving shape to ideas just like budgeting gives shape to dreams!\n\n' +
+                    '[[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]] [[prompt: Analyze my spending habits | 🔍 Habit Audit]]';
+            }
+
+            // 2. "Why" or "How does X happen/work" (Mechanism & Causality)
+            if (/^(why|how does|how do|what makes|explain how)\b/i.test(q)) {
+                return '🔬 **Deep Mechanism Breakdown: ' + topicName + '**\n\n' +
+                    '1. **📌 The Core Scientific & Structural Principle:**\n' +
+                    '   At its fundamental level, ' + cleanTopic + ' is governed by dynamic balance and underlying laws of cause and effect. Nothing happens in isolation—specific catalyst conditions trigger downstream systemic responses.\n\n' +
+                    '2. **⚙️ How It Works Under the Hood:**\n' +
+                    '   • **The Primary Catalyst:** An initial stimulus or energy gradient creates an imbalance in the system.\n' +
+                    '   • **The Transmission Mechanism:** Forces, chemical signals, or data pathways transfer this energy through sequential stages.\n' +
+                    '   • **The Observable Equilibrium:** The system continuously adjusts toward equilibrium, producing the result we observe in the real world.\n\n' +
+                    '3. **💡 The Real-World Analogy:**\n' +
+                    '   Think of this like water finding the path of least resistance through a riverbed. When pressure builds behind a barrier, it naturally flows where constraints allow, creating structured patterns over time.\n\n' +
+                    '4. **🎯 Practical Takeaways:**\n' +
+                    '   • Understand the root drivers rather than just treating visible symptoms.\n' +
+                    '   • Small changes at the point of origin produce outsized downstream results!\n\n' +
+                    '[[prompt: How does gravity work according to Newton and Einstein? | 🌌 Gravity]] [[prompt: How does the internet work? | 🌐 How Internet Works]] [[prompt: What can you do? | ❓ All Capabilities]]';
+            }
+
+            // 3. "How to / Steps to / Guide" (Actionable Implementation)
+            if (/^(how to|steps to|guide to|how can i|how do i|ways to|how should i)\b/i.test(q) || q.includes('step by step') || q.includes('guide')) {
+                return '📋 **Actionable Step-by-Step Blueprint: ' + topicName + '**\n\n' +
+                    'Here is an extensive, proven 4-phase framework to execute this effectively:\n\n' +
+                    '🎯 **Phase 1: Foundation & Pre-Requisites:**\n' +
+                    '• **Define the Exact Metric of Success:** What does "done" look like in concrete, measurable terms?\n' +
+                    '• **Audit Your Resources:** Clarify your baseline time, tools, and budget before initiating action.\n' +
+                    '• **Eliminate Unnecessary Friction:** Remove distractions and prepare your workspace.\n\n' +
+                    '⚡ **Phase 2: Execution & Core Workflow:**\n' +
+                    '• **Step 1 (The Initial Win):** Complete the smallest high-impact action within 24 hours to generate momentum.\n' +
+                    '• **Step 2 (The Core System):** Dedicate a daily uninterrupted 30-to-60 minute focus block using the Pomodoro technique.\n' +
+                    '• **Step 3 (Feedback & Iteration):** Review progress at the end of each week and adjust your method based on real data.\n\n' +
+                    '⚠️ **Phase 3: Critical Pitfalls to Avoid:**\n' +
+                    '• **Perfectionism Paralysis:** Waiting for flawless conditions guarantees procrastination. An 80% plan executed with urgency beats a 100% plan sitting on paper.\n' +
+                    '• **Overcomplicating the Stack:** Stick to basic, reliable fundamentals before adding fancy tools.\n\n' +
+                    '💡 **Phase 4: Habit & Discipline Connection:**\n' +
+                    'Consistency compounds just like money in personal finance. You currently have **' + ctx.currency + ' ' + formatMoney(ctx.remaining) + '** remaining this month and a safe daily limit of **' + ctx.currency + ' ' + formatMoney(ctx.safeDailyAllowance) + '/day**. Daily discipline across all habits creates absolute freedom!\n\n' +
+                    '[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: How to master self-discipline using Atomic Habits | 🧠 Habits Guide]] [[prompt: What can you do? | ❓ All Capabilities]]';
+            }
+
+            // 4. "Compare / Difference between / X vs Y"
+            if (q.includes(' vs ') || q.includes(' versus ') || q.includes('difference between') || q.includes('compare')) {
+                return '⚖️ **Comprehensive Comparison Analysis: ' + topicName + '**\n\n' +
+                    '1. **📌 Executive Summary:**\n' +
+                    '   While both concepts are often conflated, they serve fundamentally different purposes and cater to distinct trade-offs in speed, risk, flexibility, and cost.\n\n' +
+                    '2. **🔍 Key Contrasts & Trade-Offs:**\n' +
+                    '   • **Primary Objective:** One optimizes for immediate simplicity and lower barrier to entry, while the other prioritizes long-term scale and robust resilience.\n' +
+                    '   • **Resource & Effort Requirements:** The first requires lower initial capital and mental overhead; the second demands disciplined upfront architecture.\n' +
+                    '   • **Risk Profile:** Consider potential downside: what happens when volume surges or constraints tighten?\n\n' +
+                    '3. **🎯 Decision Framework (When to Choose Which):**\n' +
+                    '   • **Choose Option A** if you need fast validation, have strict resource constraints, or are just starting out.\n' +
+                    '   • **Choose Option B** if you are building for long-term compounding, durability, and high volume.\n\n' +
+                    '💡 **Coach Verdict:** Match your choice to your current season of life—start simple, build momentum, and upgrade as your resources expand!\n\n' +
+                    '[[prompt: Snowball vs Avalanche: which debt payoff method is best for me? | ❄️ Debt Methods]] [[prompt: Stocks vs Bonds: Core Investment Fundamentals | 📈 Stocks vs Bonds]]';
+            }
+
+            // 5. "Should I / Can I / Is it good to" (Decision Matrix)
+            if (/^(should i|can i|is it good to|would it be wise to|is it worth it)\b/i.test(q)) {
+                return '🤔 **Strategic Decision Matrix: ' + topicName + '**\n\n' +
+                    'When evaluating this decision, run through this objective 4-point assessment framework:\n\n' +
+                    '🌟 **1. The Upside & Primary Benefits:**\n' +
+                    '• What is the best-case positive transformation if this succeeds?\n' +
+                    '• Does this align directly with your highest 1-year and 5-year personal or financial priorities?\n\n' +
+                    '⚠️ **2. The Hidden Costs & Downside Risk:**\n' +
+                    '• **Opportunity Cost:** What are you giving up (time, cash flow, mental bandwidth) that could be deployed elsewhere?\n' +
+                    '• **Worst-Case Scenario:** If this produces zero return, can you comfortably absorb the cost without jeopardizing your financial peace?\n\n' +
+                    '📋 **3. The 48-Hour Decision Checklist:**\n' +
+                    '• [ ] Have I slept on this for at least two nights to eliminate emotional impulse?\n' +
+                    '• [ ] Can I afford this without borrowing or reducing my safe daily allowance (' + ctx.currency + ' ' + formatMoney(ctx.safeDailyAllowance) + '/day)?\n' +
+                    '• [ ] Will my future self in 12 months be proud that I made this move?\n\n' +
+                    '🎯 **Coach Recommendation:** If it strengthens your core foundation, fits within your financial headroom, and brings genuine long-term value, proceed with confidence!\n\n' +
+                    '[[prompt: What is the 48-Hour cooling rule and how does it prevent impulse buying? | ⏳ 48-Hour Rule]] [[prompt: Can I afford 100 for a purchase right now? | 💳 Affordability Check]]';
+            }
+
+            // 6. General / Open-Ended Query Master Synthesizer
+            return '💡 **PocketCoach Masterclass: ' + topicName + '**\n\n' +
+                'Here is a structured, in-depth breakdown covering principles, execution, and long-term value:\n\n' +
+                '1. **🎯 Core Definition & Significance:**\n' +
+                '   Approach ' + cleanTopic + ' with intentional clarity. Understanding the foundational mechanisms allows you to navigate complexities with confidence and precision.\n\n' +
+                '2. **📋 Actionable Pillars to Implement:**\n' +
+                '   • **Clarity First:** Clarify your exact starting point and identify the single most impactful lever.\n' +
+                '   • **Daily Consistency:** Dedicate 15 to 30 minutes of focused effort daily. Consistency compounds exponentially faster than occasional intense bursts.\n' +
+                '   • **Continuous Feedback:** Measure real outcomes weekly and refine your approach based on what works.\n\n' +
+                '3. **⚠️ Common Pitfalls to Avoid:**\n' +
+                '   • Avoid information overload without execution. Knowledge only becomes power when organized into concrete daily habits.\n' +
+                '   • Don\'t let short-term friction derail long-term consistency.\n\n' +
+                '4. **💰 Financial & Habit Connection:**\n' +
+                '   Every intentional choice you make reinforces personal discipline. In PocketFlow, you currently have **' + ctx.currency + ' ' + formatMoney(ctx.remaining) + '** remaining this month and a safe daily limit of **' + ctx.currency + ' ' + formatMoney(ctx.safeDailyAllowance) + '/day**. When you master discipline in everyday habits, you unlock freedom in every area of life!\n\n' +
+                '[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What can you do and what questions can I ask? | 🧭 Capabilities Directory]]';
+        }
+
+
+function generatePocketCoachResponse(rawQuery, ctx) {
             const q = (rawQuery || '').toLowerCase().trim();
             const has = (...terms) => terms.some(t => {
                 const term = t.toLowerCase();
@@ -6049,6 +7245,18 @@ Ask me **any question**—from your daily spending habits and live data audits t
             // Extract numeric amount if present in query
             const numMatch = q.match(/(?:gh[¢\?]?|\$|€|£)?\s*(\d+(?:\.\d{1,2})?)/i);
             const detectedAmount = numMatch ? parseFloat(numMatch[1]) : null;
+
+            // ==========================================
+            // PRIORITY 1: MATHEMATICAL & CALCULATION ENGINE
+            // ==========================================
+            const mathResult = trySolveMath(rawQuery, ctx);
+            if (mathResult) return mathResult;
+
+            // ==========================================
+            // PRIORITY 2: CUSTOM SALARY & INCOME BUDGETING
+            // ==========================================
+            const salaryResult = tryAnswerSalaryBudget(rawQuery, ctx);
+            if (salaryResult) return salaryResult;
 
             // 1. GREETINGS & PERSONALITY
             if (has('hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening', 'who are you', 'what are you', 'how are you', 'pocketcoach')) {
@@ -6081,6 +7289,18 @@ I'm here to help you:
                 return `😊 You are very welcome! Financial consistency is like a muscle—every day you log your spending and make intentional decisions, you get stronger.\n\nKeep up the great discipline! If there is anything else you need help with, I'm right here.\n\n[[prompt: What is my safe daily limit? | 🎯 Daily Target]] [[prompt: What is my biggest expense this month? | 🏆 Top Expense]]`;
             }
 
+
+            // ==========================================
+            // PRIORITY 3: EXTENSIVE IN-DEPTH BLUEPRINTS & MASTER GUIDES
+            // ==========================================
+            const extensiveResult = tryAnswerExtensiveGuide(rawQuery, ctx);
+            if (extensiveResult) return extensiveResult;
+
+            // ==========================================
+            // PRIORITY 4: CORE BASIC KNOWLEDGE & DEFINITIONS
+            // ==========================================
+            const basicResult = tryAnswerBasicKnowledge(rawQuery, ctx);
+            if (basicResult) return basicResult;
             // 1.5 STRICT SPENDING CURBS, RECOVERY & BETTER WAYS TO SPEND
             // A. Strict Emergency Overspend Recovery
             if (has('emergency overspend', 'overspend recovery', 'curb spending', 'curb my spending', 'curb expenses', 'over budget', 'blown budget', 'budget blown', 'exceeded budget', 'recovery plan', 'stop overspending', 'spending diet', 'freeze spending', 'overspent', 'strict recovery', 'strict advice', 'emergency budget', 'curb overspending')) {
@@ -7430,31 +8650,13 @@ When navigating big life decisions and finding direction:
 [[prompt: What is the Life Energy conversion formula for purchases? | 🔋 Life Energy]] [[prompt: Overcoming money anxiety and spending guilt | 💖 Overcome Anxiety]] [[prompt: Analyze my spending habits | 🔍 Full Audit]]`;
             }
 
-            // 71. SMART ADAPTIVE GENERAL QUERY SYNTHESIZER
-            // Answers ANY general, lifestyle, or open-ended question cleanly
-            const cleanTopic = rawQuery.replace(/^(can you|how do i|how to|what is|what are|why is|why are|tell me about|explain|give me|tips on|should i|is it good to)\s+/i, '').replace(/[?!.]+$/, '').trim();
-            const topicCapitalized = cleanTopic ? (cleanTopic.charAt(0).toUpperCase() + cleanTopic.slice(1)) : 'Your Question';
-
-            return `💡 **PocketCoach Insight: ${topicCapitalized}**
-
-Here is a practical, structured framework to guide you:
-
-1. **🎯 Core Principle & Strategy:**
-   Approach this with clear intentionality. Break complex goals down into bite-sized, measurable milestones rather than trying to accomplish everything in one leap.
-
-2. **📋 Actionable Steps to Take:**
-   • **Research & Audit:** Clarify your exact starting point and identify the single most impactful variable.
-   • **Build Daily Consistency:** Dedicate 15 to 30 minutes of uninterrupted focus each day. Consistency compounds faster than occasional heroic bursts.
-   • **Measure & Refine:** Review your results weekly and adjust your approach based on real feedback.
-
-3. **💡 High-Leverage Mindset:**
-   Avoid perfectionism. Getting 80% of the result with disciplined fundamentals beats waiting for ideal circumstances.
-
-4. **💰 Financial & Habit Connection:**
-   Align your daily actions with your broader goals. You currently have **${ctx.currency} ${formatMoney(ctx.remaining)}** remaining this month and a safe daily limit of **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day**. Staying disciplined across habits creates freedom in every area of life!
-
-[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What can you do and what questions can I ask? | 🧭 Capabilities Directory]]`;
+            
+            // ==========================================
+            // PRIORITY 5: UNIVERSAL INTELLIGENCE SYNTHESIZER
+            // ==========================================
+            return tryUniversalSynthesizer(rawQuery, ctx);
         }
+
     </script>
 </body>
 </html>
