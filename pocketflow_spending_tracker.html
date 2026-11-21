@@ -1964,46 +1964,46 @@
                 <!-- Chat bubbles rendered via JS -->
             </div>
 
-            <!-- Topic Tabs & Suggestion Prompts Carousel -->
-            <div class="border-t border-slate-800/80 bg-slate-950/70 shrink-0 text-xs">
-                <!-- Topic Filter Tabs -->
-                <div class="px-3 pt-2 pb-1 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-                    <button type="button" onclick="switchCoachTopic('popular')" id="coachTopicTab-popular" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold whitespace-nowrap transition cursor-pointer shadow-sm">
-                        🔥 Popular
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('basicQ')" id="coachTopicTab-basicQ" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-sky-400 hover:text-sky-300 border border-sky-500/40 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
-                        ❓ Basic Qs
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('extensiveQ')" id="coachTopicTab-extensiveQ" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-purple-400 hover:text-purple-300 border border-purple-500/40 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
-                        📚 Deep Guides
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('strictCurbs')" id="coachTopicTab-strictCurbs" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-rose-400 hover:text-rose-300 border border-rose-500/40 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
-                        🛡️ Strict Curbs
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('budget')" id="coachTopicTab-budget" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
-                        📊 Budgeting
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('liveData')" id="coachTopicTab-liveData" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
-                        💡 Live Data
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('debt')" id="coachTopicTab-debt" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
-                        💳 Debt Payoff
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('cutCosts')" id="coachTopicTab-cutCosts" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
-                        🛒 Cut Costs
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('habits')" id="coachTopicTab-habits" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
-                        🛑 Habits
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('investing')" id="coachTopicTab-investing" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
-                        📈 Wealth & Invest
-                    </button>
-                    <button type="button" onclick="switchCoachTopic('goals')" id="coachTopicTab-goals" class="coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer">
-                        🎯 Big Goals
+            <!-- Collapsible Suggestion Prompts Drawer -->
+            <div id="coachSuggestionsDrawer" class="border-t border-slate-800/80 bg-slate-950/70 shrink-0 text-xs transition-all duration-300">
+                <!-- Top Row: Category switcher and Hide toggle button -->
+                <div class="px-3 pt-2 pb-1 flex items-center justify-between gap-2 border-b border-slate-900/60">
+                    <!-- Compact Category Scroller -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                        <button type="button" onclick="switchCoachTopic('chat')" id="coachTopicTab-chat" class="coach-topic-btn px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                            💬 Chat
+                        </button>
+                        <button type="button" onclick="switchCoachTopic('popular')" id="coachTopicTab-popular" class="coach-topic-btn px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold whitespace-nowrap transition cursor-pointer shadow-sm">
+                            🔥 Popular
+                        </button>
+                        <button type="button" onclick="switchCoachTopic('budget')" id="coachTopicTab-budget" class="coach-topic-btn px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                            📊 Budgeting
+                        </button>
+                        <button type="button" onclick="switchCoachTopic('strictCurbs')" id="coachTopicTab-strictCurbs" class="coach-topic-btn px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                            🛡️ Curbs
+                        </button>
+                        <button type="button" onclick="switchCoachTopic('cutCosts')" id="coachTopicTab-cutCosts" class="coach-topic-btn px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                            🛒 Cut Costs
+                        </button>
+                        <button type="button" onclick="switchCoachTopic('investing')" id="coachTopicTab-investing" class="coach-topic-btn px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                            📈 Wealth
+                        </button>
+                        <button type="button" onclick="switchCoachTopic('basicQ')" id="coachTopicTab-basicQ" class="coach-topic-btn px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                            ❓ Basics
+                        </button>
+                        <button type="button" onclick="switchCoachTopic('extensiveQ')" id="coachTopicTab-extensiveQ" class="coach-topic-btn px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer">
+                            📚 Guides
+                        </button>
+                    </div>
+
+                    <!-- Clean Hide / Minimize Button -->
+                    <button type="button" onclick="toggleCoachSuggestions(false)" class="text-[10px] text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 px-2 py-0.5 rounded-full transition cursor-pointer shrink-0 flex items-center gap-1 border border-slate-800" title="Hide suggestions">
+                        <i id="coachSuggestionsChevron" class="fa-solid fa-chevron-down text-[8px]"></i>
+                        <span id="coachSuggestionsToggleText">Hide</span>
                     </button>
                 </div>
 
-                <!-- Dynamic Topic Chips Container -->
+                <!-- Single Clean Row of Interactive Suggestion Chips -->
                 <div class="px-3 pb-2 pt-1 overflow-x-auto no-scrollbar">
                     <div id="coachTopicChipsList" class="flex items-center gap-1.5 w-max">
                         <!-- Populated dynamically via renderCoachTopicChips() -->
@@ -2012,12 +2012,16 @@
             </div>
 
             <!-- Chat Input Form -->
-            <form id="coachChatForm" onsubmit="handleCoachSubmit(event)" class="p-3 sm:p-4 bg-slate-900 border-t border-slate-800 shrink-0 safe-bottom-pad">
+            <form id="coachChatForm" onsubmit="handleCoachSubmit(event)" class="p-2.5 sm:p-3 bg-slate-900 border-t border-slate-800 shrink-0 safe-bottom-pad">
                 <div class="flex items-center gap-2">
-                    <input type="text" id="coachUserInput" placeholder="Ask any question: basic facts, math, guides, coding, budget, advice..." required autocomplete="off"
-                        class="flex-1 bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl py-2.5 sm:py-3 px-4 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition">
-                    <button type="submit" id="coachSendBtn" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold flex items-center justify-center shadow-lg shadow-emerald-500/20 active:scale-95 transition shrink-0" aria-label="Send Message">
-                        <i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i>
+                    <!-- Toggle Suggestions Re-open Button -->
+                    <button type="button" onclick="toggleCoachSuggestions()" id="coachPromptsToggleBtn" class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-slate-800/90 hover:bg-slate-700 text-slate-400 hover:text-amber-400 flex items-center justify-center transition shrink-0 cursor-pointer border border-slate-700/60" title="Toggle prompt suggestions" aria-label="Toggle Suggestions">
+                        <i class="fa-solid fa-lightbulb text-xs"></i>
+                    </button>
+                    <input type="text" id="coachUserInput" placeholder="Chat with me, say hello, or ask anything..." required autocomplete="off"
+                        class="flex-1 bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl py-2 sm:py-2.5 px-3.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition">
+                    <button type="submit" id="coachSendBtn" class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold flex items-center justify-center shadow-lg shadow-emerald-500/20 active:scale-95 transition shrink-0 cursor-pointer" aria-label="Send Message">
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
                     </button>
                 </div>
             </form>
@@ -5832,15 +5836,59 @@ $$;`;
         // POCKETCOACH TOPICS & PROMPT SUGGESTIONS
         // ==========================================
         const COACH_TOPIC_DATA = {
+            chat: [
+                { label: '👋 How are you doing?', query: 'How are you doing today?', icon: 'fa-hand-wave', color: 'text-emerald-400' },
+                { label: '💬 What is your name?', query: 'What is your name?', icon: 'fa-signature', color: 'text-sky-400' },
+                { label: '😄 Tell me a joke', query: 'Tell me a funny joke to make me laugh!', icon: 'fa-face-laugh-beam', color: 'text-amber-400' },
+                { label: '🧠 Fun fact', query: 'Tell me a mind-blowing fun fact!', icon: 'fa-lightbulb', color: 'text-yellow-400' },
+                { label: '🤝 Can we be friends?', query: 'Can we be friends?', icon: 'fa-handshake', color: 'text-pink-400' },
+                { label: '🎨 Your hobbies', query: 'What are your hobbies and favorite things?', icon: 'fa-palette', color: 'text-purple-400' },
+                { label: '🕒 Live date & time', query: 'What time and date is it right now?', icon: 'fa-clock', color: 'text-teal-400' }
+            ],
             popular: [
-                { label: '50/30/20 Budget', query: 'How should I structure my budget using the 50/30/20 rule?', icon: 'fa-chart-pie', color: 'text-emerald-400' },
-                { label: 'Habit Audit', query: 'Analyze my spending habits and tell me how I am doing.', icon: 'fa-magnifying-glass-chart', color: 'text-sky-400' },
-                { label: 'Daily Limit', query: 'What is my safe daily spending limit for the rest of this month?', icon: 'fa-calendar-day', color: 'text-amber-400' },
-                { label: 'Top Expense', query: 'What is my biggest single expense this month?', icon: 'fa-trophy', color: 'text-yellow-400' },
-                { label: 'Can I Afford 100?', query: 'Can I afford 100 for a purchase right now?', icon: 'fa-calculator', color: 'text-teal-400' },
-                { label: 'Stop Impulse Buys', query: 'How can I stop impulse spending and emotional buying?', icon: 'fa-shield-halved', color: 'text-rose-400' },
+                { label: '👋 How are you?', query: 'How are you doing today?', icon: 'fa-hand-wave', color: 'text-emerald-400' },
+                { label: '💬 Your Name', query: 'What is your name?', icon: 'fa-signature', color: 'text-sky-400' },
+                { label: '🥧 50/30/20 Budget', query: 'How should I structure my budget using the 50/30/20 rule?', icon: 'fa-chart-pie', color: 'text-emerald-400' },
+                { label: '🎯 Daily Limit', query: 'What is my safe daily spending limit for the rest of this month?', icon: 'fa-calendar-day', color: 'text-amber-400' },
+                { label: '🔍 Habit Audit', query: 'Analyze my spending habits and tell me how I am doing.', icon: 'fa-magnifying-glass-chart', color: 'text-sky-400' },
+                { label: '🏆 Top Expense', query: 'What is my biggest single expense this month?', icon: 'fa-trophy', color: 'text-yellow-400' },
+                { label: '💡 Cut Food Costs', query: 'Give me practical ways to cut down on food and dining expenses.', icon: 'fa-utensils', color: 'text-emerald-400' },
+                { label: '😄 Tell A Joke', query: 'Tell me a joke!', icon: 'fa-face-laugh-beam', color: 'text-amber-400' },
+                { label: '🛡️ Emergency Fund', query: 'How do I build an emergency fund step by step?', icon: 'fa-piggy-bank', color: 'text-teal-400' }
+            ],
+            budget: [
+                { label: '50/30/20 Rule', query: 'How should I structure my budget using the 50/30/20 rule?', icon: 'fa-chart-pie', color: 'text-emerald-400' },
+                { label: 'Zero-Based Budget', query: 'What is zero-based budgeting and how do I do it?', icon: 'fa-scale-balanced', color: 'text-sky-400' },
+                { label: 'Envelope Method', query: 'How does the cash envelope budgeting system work?', icon: 'fa-envelope-open-text', color: 'text-indigo-400' },
+                { label: '70/20/10 Method', query: 'How does the 70/20/10 budgeting rule work?', icon: 'fa-percent', color: 'text-amber-400' },
+                { label: 'Pay Yourself First', query: 'Explain the Pay Yourself First reverse budgeting method.', icon: 'fa-arrow-up-right-dots', color: 'text-teal-400' },
+                { label: 'Japanese Kakeibo', query: 'How does the Japanese Kakeibo mindful budgeting method work?', icon: 'fa-book-bookmark', color: 'text-rose-400' },
+                { label: 'Half-Payment Method', query: 'How does the half-payment method for recurring bills work?', icon: 'fa-calendar-check', color: 'text-emerald-400' }
+            ],
+            strictCurbs: [
+                { label: '🚨 Overspend Recovery', query: 'I overspent my budget. Give me a strict emergency recovery plan, curb my expenses, and show me better ways to spend.', icon: 'fa-shield-halved', color: 'text-rose-400' },
+                { label: '🛑 Fix Daily Breach', query: 'I exceeded my safe daily spending limit today. Give me strict instructions to recover this deficit over the next 3 days.', icon: 'fa-triangle-exclamation', color: 'text-amber-400' },
+                { label: '⚡ Slow Fast Burn Rate', query: 'My spending burn rate is too fast. Give me strict instructions to put the brakes on my spending.', icon: 'fa-bolt', color: 'text-red-400' },
+                { label: '💡 Better Ways to Spend', query: 'What are better ways to go about my everyday spending and cheaper alternatives for food, transport, and bills?', icon: 'fa-lightbulb', color: 'text-yellow-400' },
+                { label: '⏳ 48-Hour Pause Rule', query: 'What is the 48-Hour cooling rule and how does it prevent impulse buying?', icon: 'fa-hourglass-half', color: 'text-teal-400' },
+                { label: '🚫 7-Day No-Spend Challenge', query: 'Give me a strict 7-day no-spend challenge to get my finances back on track.', icon: 'fa-ban', color: 'text-purple-400' }
+            ],
+            cutCosts: [
                 { label: 'Cut Food Costs', query: 'Give me practical ways to cut down on food and dining expenses.', icon: 'fa-utensils', color: 'text-emerald-400' },
-                { label: 'Emergency Fund', query: 'How do I build an emergency fund step by step?', icon: 'fa-piggy-bank', color: 'text-teal-400' }
+                { label: 'Lower Electric Bill', query: 'How can I reduce my electricity and utility bills?', icon: 'fa-lightbulb', color: 'text-yellow-400' },
+                { label: 'Trim Data Bundles', query: 'How do I save money on mobile data and airtime plans?', icon: 'fa-wifi', color: 'text-sky-400' },
+                { label: 'Purge Subscriptions', query: 'How do I audit and cancel zombie subscriptions?', icon: 'fa-repeat', color: 'text-rose-400' },
+                { label: 'Transport Hacks', query: 'How can I reduce daily commute and rideshare spending?', icon: 'fa-car-side', color: 'text-teal-400' },
+                { label: 'Cost-Per-Wear Hack', query: 'What is the cost-per-wear formula for shopping clothes?', icon: 'fa-shirt', color: 'text-indigo-400' },
+                { label: 'Frugal Social Life', query: 'How can I have a fun social life without spending a lot of money?', icon: 'fa-champagne-glasses', color: 'text-amber-400' }
+            ],
+            investing: [
+                { label: 'Beginner Investing', query: 'How do I start investing as a beginner with index funds and ETFs?', icon: 'fa-arrow-trend-up', color: 'text-emerald-400' },
+                { label: 'Beat Inflation', query: 'How does inflation eat away my cash savings and how do I beat it?', icon: 'fa-fire-flame-curved', color: 'text-rose-400' },
+                { label: 'Dollar-Cost Averaging', query: 'What is Dollar-Cost Averaging (DCA) and why is it smart?', icon: 'fa-chart-simple', color: 'text-sky-400' },
+                { label: 'Rule of 72', query: 'How does compound interest work with the Rule of 72?', icon: 'fa-wand-magic-sparkles', color: 'text-amber-400' },
+                { label: 'Retirement & Pensions', query: 'What should I know about retirement, pensions, and SSNIT planning?', icon: 'fa-umbrella-beach', color: 'text-teal-400' },
+                { label: 'Emergency vs Invest', query: 'Should I invest before building a full emergency fund?', icon: 'fa-scale-balanced', color: 'text-indigo-400' }
             ],
             basicQ: [
                 { label: '🌿 Photosynthesis', query: 'What is photosynthesis and how does it work?', icon: 'fa-leaf', color: 'text-emerald-400' },
@@ -5861,73 +5909,6 @@ $$;`;
                 { label: '😴 Sleep Masterclass', query: 'Give me a comprehensive guide to optimizing sleep quality, circadian rhythms, and deep rest.', icon: 'fa-bed', color: 'text-indigo-400' },
                 { label: '🧠 Atomic Habits Guide', query: 'How do I master self-discipline and build unbreakable daily habits using the Atomic Habits framework?', icon: 'fa-brain', color: 'text-amber-400' },
                 { label: '💼 Salary Negotiation', query: 'How do I prepare for and negotiate a salary increase or promotion step by step?', icon: 'fa-handshake', color: 'text-emerald-400' }
-            ],
-            strictCurbs: [
-                { label: '🚨 Overspend Recovery', query: 'I overspent my budget. Give me a strict emergency recovery plan, curb my expenses, and show me better ways to spend.', icon: 'fa-shield-halved', color: 'text-rose-400' },
-                { label: '🛑 Fix Daily Breach', query: 'I exceeded my safe daily spending limit today. Give me strict instructions to recover this deficit over the next 3 days.', icon: 'fa-triangle-exclamation', color: 'text-amber-400' },
-                { label: '⚡ Slow Fast Burn Rate', query: 'My spending burn rate is too fast. Give me strict instructions to put the brakes on my spending.', icon: 'fa-bolt', color: 'text-red-400' },
-                { label: '💡 Better Ways to Spend', query: 'What are better ways to go about my everyday spending and cheaper alternatives for food, transport, and bills?', icon: 'fa-lightbulb', color: 'text-yellow-400' },
-                { label: '⏳ 48-Hour Pause Rule', query: 'What is the 48-Hour cooling rule and how does it prevent impulse buying?', icon: 'fa-hourglass-half', color: 'text-teal-400' },
-                { label: '🚫 7-Day No-Spend Challenge', query: 'Give me a strict 7-day no-spend challenge to get my finances back on track.', icon: 'fa-ban', color: 'text-purple-400' }
-            ],
-            budget: [
-                { label: '50/30/20 Rule', query: 'How should I structure my budget using the 50/30/20 rule?', icon: 'fa-chart-pie', color: 'text-emerald-400' },
-                { label: 'Zero-Based Budget', query: 'What is zero-based budgeting and how do I do it?', icon: 'fa-scale-balanced', color: 'text-sky-400' },
-                { label: 'Envelope Method', query: 'How does the cash envelope budgeting system work?', icon: 'fa-envelope-open-text', color: 'text-indigo-400' },
-                { label: '70/20/10 Method', query: 'How does the 70/20/10 budgeting rule work?', icon: 'fa-percent', color: 'text-amber-400' },
-                { label: 'Pay Yourself First', query: 'Explain the Pay Yourself First reverse budgeting method.', icon: 'fa-arrow-up-right-dots', color: 'text-teal-400' },
-                { label: 'Japanese Kakeibo', query: 'How does the Japanese Kakeibo mindful budgeting method work?', icon: 'fa-book-bookmark', color: 'text-rose-400' },
-                { label: 'Half-Payment Method', query: 'How does the half-payment method for recurring bills work?', icon: 'fa-calendar-check', color: 'text-emerald-400' }
-            ],
-            liveData: [
-                { label: 'Biggest Expense', query: 'What is my biggest single expense this month?', icon: 'fa-trophy', color: 'text-yellow-400' },
-                { label: 'Food Spending', query: 'How much did I spend on food and dining this month?', icon: 'fa-utensils', color: 'text-emerald-400' },
-                { label: 'Transport Costs', query: 'How much did I spend on transport and Uber?', icon: 'fa-car', color: 'text-teal-400' },
-                { label: 'Bills Spending', query: 'How much did I spend on bills and mobile data?', icon: 'fa-bolt', color: 'text-sky-400' },
-                { label: 'Spent Today', query: 'How much did I spend today and how much headroom is left?', icon: 'fa-clock', color: 'text-amber-400' },
-                { label: 'Month Pacing', query: 'Will my money last until month-end at my current pace?', icon: 'fa-chart-line', color: 'text-purple-400' },
-                { label: 'Recent Purchases', query: 'Show me my recent expenses and purchases.', icon: 'fa-receipt', color: 'text-slate-300' }
-            ],
-            debt: [
-                { label: 'Snowball vs Avalanche', query: 'Snowball vs Avalanche: which debt payoff method is best for me?', icon: 'fa-snowplow', color: 'text-sky-400' },
-                { label: 'Credit Card Debt', query: 'How do I pay off high-interest credit card debt quickly?', icon: 'fa-credit-card', color: 'text-rose-400' },
-                { label: 'BNPL Traps', query: 'Is Buy Now Pay Later (BNPL) dangerous for my budget?', icon: 'fa-triangle-exclamation', color: 'text-amber-400' },
-                { label: 'Debt vs Saving', query: 'Should I pay off debt or build an emergency fund first?', icon: 'fa-scale-unbalanced', color: 'text-teal-400' },
-                { label: 'Microloans Warning', query: 'How can I avoid predatory payday loans and microloans?', icon: 'fa-ban', color: 'text-red-400' },
-                { label: 'Student Loans', query: 'How should I prioritize student loan and personal debt repayments?', icon: 'fa-graduation-cap', color: 'text-indigo-400' }
-            ],
-            cutCosts: [
-                { label: 'Cut Food Costs', query: 'Give me practical ways to cut down on food and dining expenses.', icon: 'fa-utensils', color: 'text-emerald-400' },
-                { label: 'Lower Electric Bill', query: 'How can I reduce my electricity and utility bills?', icon: 'fa-lightbulb', color: 'text-yellow-400' },
-                { label: 'Trim Data Bundles', query: 'How do I save money on mobile data and airtime plans?', icon: 'fa-wifi', color: 'text-sky-400' },
-                { label: 'Purge Subscriptions', query: 'How do I audit and cancel zombie subscriptions?', icon: 'fa-repeat', color: 'text-rose-400' },
-                { label: 'Transport Hacks', query: 'How can I reduce daily commute and rideshare spending?', icon: 'fa-car-side', color: 'text-teal-400' },
-                { label: 'Cost-Per-Wear Hack', query: 'What is the cost-per-wear formula for shopping clothes?', icon: 'fa-shirt', color: 'text-indigo-400' },
-                { label: 'Frugal Social Life', query: 'How can I have a fun social life without spending a lot of money?', icon: 'fa-champagne-glasses', color: 'text-amber-400' }
-            ],
-            habits: [
-                { label: 'Stop Impulse Buys', query: 'How can I stop impulse spending and emotional buying?', icon: 'fa-shield-halved', color: 'text-rose-400' },
-                { label: '48-Hour Cooling Rule', query: 'What is the 48-Hour cooling rule and how does it work?', icon: 'fa-hourglass-half', color: 'text-amber-400' },
-                { label: 'Stop Lifestyle Creep', query: 'How do I prevent lifestyle creep when my income increases?', icon: 'fa-arrow-trend-up', color: 'text-emerald-400' },
-                { label: 'Family Money Boundaries', query: 'How do I set boundaries with family members asking for money?', icon: 'fa-users', color: 'text-sky-400' },
-                { label: 'Overcome Money Guilt', query: 'How do I stop feeling guilty when spending money on myself?', icon: 'fa-heart', color: 'text-pink-400' },
-                { label: 'Life Energy Formula', query: 'What is the Life Energy conversion formula for purchases?', icon: 'fa-battery-three-quarters', color: 'text-teal-400' }
-            ],
-            investing: [
-                { label: 'Beginner Investing', query: 'How do I start investing as a beginner with index funds and ETFs?', icon: 'fa-arrow-trend-up', color: 'text-emerald-400' },
-                { label: 'Beat Inflation', query: 'How does inflation eat away my cash savings and how do I beat it?', icon: 'fa-fire-flame-curved', color: 'text-rose-400' },
-                { label: 'Dollar-Cost Averaging', query: 'What is Dollar-Cost Averaging (DCA) and why is it smart?', icon: 'fa-chart-simple', color: 'text-sky-400' },
-                { label: 'Rule of 72', query: 'How does compound interest work with the Rule of 72?', icon: 'fa-wand-magic-sparkles', color: 'text-amber-400' },
-                { label: 'Retirement & Pensions', query: 'What should I know about retirement, pensions, and SSNIT planning?', icon: 'fa-umbrella-beach', color: 'text-teal-400' },
-                { label: 'Emergency vs Invest', query: 'Should I invest before building a full emergency fund?', icon: 'fa-scale-balanced', color: 'text-indigo-400' }
-            ],
-            goals: [
-                { label: 'Car 20/4/10 Rule', query: 'What is the 20/4/10 rule for buying a car?', icon: 'fa-car', color: 'text-teal-400' },
-                { label: '30% Rent Rule', query: 'How much should I spend on house rent or apartment living?', icon: 'fa-house', color: 'text-sky-400' },
-                { label: 'Emergency Fund', query: 'How do I build an emergency fund step by step?', icon: 'fa-piggy-bank', color: 'text-emerald-400' },
-                { label: 'Sinking Funds', query: 'What are sinking funds and how do I set them up?', icon: 'fa-wallet', color: 'text-amber-400' },
-                { label: 'Budget Wedding', query: 'How do I budget for a wedding without going into debt?', icon: 'fa-ring', color: 'text-pink-400' },
-                { label: 'Savings Calculator', query: 'How long will it take to save 5000 at my current rate?', icon: 'fa-calculator', color: 'text-indigo-400' }
             ]
         };
 
@@ -5936,11 +5917,11 @@ $$;`;
         function switchCoachTopic(topicKey) {
             currentCoachTopic = topicKey;
             document.querySelectorAll('.coach-topic-btn').forEach(btn => {
-                btn.className = 'coach-topic-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/60 text-[10px] font-medium whitespace-nowrap transition cursor-pointer';
+                btn.className = 'coach-topic-btn px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px] font-semibold whitespace-nowrap transition cursor-pointer border border-transparent';
             });
             const activeBtn = document.getElementById(`coachTopicTab-${topicKey}`);
             if (activeBtn) {
-                activeBtn.className = 'coach-topic-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold whitespace-nowrap transition cursor-pointer shadow-sm';
+                activeBtn.className = 'coach-topic-btn px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold whitespace-nowrap transition cursor-pointer shadow-sm';
             }
             renderCoachTopicChips(topicKey);
         }
@@ -5954,7 +5935,7 @@ $$;`;
                 const safeQ = safeEncodeURIComponent(item.query);
                 return `
                     <button type="button" onclick="sendQuickPrompt(decodeURIComponent('${safeQ}'))" 
-                        class="px-2.5 py-1.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/70 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95">
+                        class="px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/60 text-[11px] font-medium whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95">
                         <i class="fa-solid ${item.icon} ${item.color} text-[10px]"></i>
                         <span>${escapeHtml(item.label)}</span>
                     </button>
@@ -5964,13 +5945,56 @@ $$;`;
             // Always append the Surprise Me button
             html += `
                 <button type="button" onclick="sendSurprisePrompt()" 
-                    class="px-2.5 py-1.5 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 hover:from-purple-500/30 hover:to-indigo-500/30 text-purple-300 hover:text-white border border-purple-500/40 text-[11px] font-semibold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95">
+                    class="px-2.5 py-1 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 hover:from-purple-500/30 hover:to-indigo-500/30 text-purple-300 hover:text-white border border-purple-500/40 text-[11px] font-semibold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95">
                     <i class="fa-solid fa-dice text-purple-400 text-[10px]"></i>
                     <span>Surprise Me</span>
                 </button>
             `;
 
             container.innerHTML = html;
+        }
+
+        function toggleCoachSuggestions(explicitState) {
+            const drawer = document.getElementById('coachSuggestionsDrawer');
+            const toggleBtn = document.getElementById('coachPromptsToggleBtn');
+            const toggleChevron = document.getElementById('coachSuggestionsChevron');
+            const toggleText = document.getElementById('coachSuggestionsToggleText');
+            if (!drawer) return;
+
+            let shouldBeOpen;
+            if (typeof explicitState === 'boolean') {
+                shouldBeOpen = explicitState;
+            } else {
+                shouldBeOpen = drawer.classList.contains('hidden');
+            }
+
+            if (shouldBeOpen) {
+                drawer.classList.remove('hidden');
+                if (toggleBtn) {
+                    toggleBtn.classList.add('text-amber-400', 'bg-amber-400/10', 'border-amber-400/30');
+                    toggleBtn.classList.remove('text-slate-400');
+                    toggleBtn.title = 'Hide prompt suggestions';
+                }
+                if (toggleChevron) toggleChevron.className = 'fa-solid fa-chevron-down text-[8px]';
+                if (toggleText) toggleText.textContent = 'Hide';
+                renderCoachTopicChips(currentCoachTopic);
+                try { localStorage.setItem('pocketflow_coach_prompts_collapsed', 'false'); } catch (e) {}
+            } else {
+                drawer.classList.add('hidden');
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('text-amber-400', 'bg-amber-400/10', 'border-amber-400/30');
+                    toggleBtn.classList.add('text-slate-400');
+                    toggleBtn.title = 'Show prompt suggestions';
+                }
+                if (toggleChevron) toggleChevron.className = 'fa-solid fa-chevron-up text-[8px]';
+                if (toggleText) toggleText.textContent = 'Show';
+                try { localStorage.setItem('pocketflow_coach_prompts_collapsed', 'true'); } catch (e) {}
+            }
+        }
+
+        function initCoachSuggestionsState() {
+            const isCollapsed = localStorage.getItem('pocketflow_coach_prompts_collapsed') === 'true';
+            toggleCoachSuggestions(!isCollapsed);
         }
 
         function sendSurprisePrompt() {
@@ -6017,11 +6041,14 @@ $$;`;
             if (!ribbon) return;
             const ctx = getSpendingContext();
             ribbon.innerHTML = `
-                <div class="flex items-center gap-3 sm:gap-4 shrink-0 font-medium">
-                    <span>Budget: <strong class="text-white">${escapeHtml(ctx.currency)} ${formatMoney(ctx.budget)}</strong></span>
-                    <span>Spent: <strong class="${ctx.pctUsed >= 90 ? 'text-rose-400' : 'text-amber-400'}">${escapeHtml(ctx.currency)} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}%)</strong></span>
-                    <span>Remaining: <strong class="${ctx.remaining >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${escapeHtml(ctx.currency)} ${formatMoney(ctx.remaining)}</strong></span>
-                    <span>Safe Daily: <strong class="text-sky-400">${escapeHtml(ctx.currency)} ${formatMoney(ctx.safeDailyAllowance)}/day</strong></span>
+                <div class="flex items-center gap-2.5 sm:gap-3.5 shrink-0 font-medium text-[10.5px]">
+                    <span>Budget <strong class="text-white">${escapeHtml(ctx.currency)} ${formatMoney(ctx.budget)}</strong></span>
+                    <span class="text-slate-600">•</span>
+                    <span>Spent <strong class="${ctx.pctUsed >= 90 ? 'text-rose-400' : 'text-amber-400'}">${escapeHtml(ctx.currency)} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}%)</strong></span>
+                    <span class="text-slate-600">•</span>
+                    <span>Remaining <strong class="${ctx.remaining >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${escapeHtml(ctx.currency)} ${formatMoney(ctx.remaining)}</strong></span>
+                    <span class="text-slate-600">•</span>
+                    <span>Safe Daily <strong class="text-sky-400">${escapeHtml(ctx.currency)} ${formatMoney(ctx.safeDailyAllowance)}/day</strong></span>
                 </div>
             `;
         }
@@ -6220,8 +6247,15 @@ $$;`;
                 historyForApi.push({ role: 'user', parts: [{ text: query }] });
             }
 
-            const systemPrompt = `You are PocketCoach AI, an extraordinarily capable polymath AI financial advisor and intelligent problem solver built into the PocketFlow spending tracker app.
-You possess comprehensive world knowledge and can answer ANY question the user asks, from basic questions (quick arithmetic, definitions, trivia, science, history, geography, everyday tips) to extensive, deep, and complex questions (comprehensive financial plans, business roadmaps, technical explanations, coding, workouts, recipes, philosophy, health, and lifestyle).
+            const systemPrompt = `You are PocketCoach AI, an extraordinarily capable, warm, and empathetic everyday AI companion and intelligent personal financial advisor built into PocketFlow.
+You possess comprehensive world knowledge and can chat naturally about anything, from everyday human conversations to extensive technical guides and deep financial analysis.
+
+CONVERSATIONAL & HUMAN INTERACTION GUIDELINES:
+- Communicate naturally, warmly, and authentically like a friendly, caring human companion in everyday life.
+- When the user engages in normal human social interactions ("how are you?", "what's your name?", "how are you doing?", "what's up?", "good morning", "nice to meet you", "thank you", "bye", etc.), answer warmly, directly, and naturally as a real friend would! Introduce yourself as PocketCoach, answer how you are doing with genuine positivity, and ask how the user is doing.
+- NEVER force an unsolicited lecture about budgets, debt, or financial frameworks into a simple everyday greeting. Only discuss finances when the user asks about them or when it naturally connects to their spending questions.
+- When the user shares how they feel (tired, stressed, excited, happy, bored, sad), respond with authentic human empathy, warmth, and supportive words.
+- When the user DOES ask about their money, budget, purchases, or habits, reference their live PocketFlow context below with clear numbers and actionable advice.
 
 USER'S LIVE POCKETFLOW FINANCIAL CONTEXT:
 - Currency: ${ctx.currency}
@@ -6234,13 +6268,12 @@ USER'S LIVE POCKETFLOW FINANCIAL CONTEXT:
 - Top Spending Category: ${ctx.topCategory.name} (${ctx.currency} ${formatMoney(ctx.topCategory.amount)}, ${ctx.topCategory.pct}% of total spending)
 - Recent Transactions: ${ctx.recentExpensesSummary}
 
-RESPONSE INSTRUCTIONS:
-1. When the user asks about their finances, spending, budget, affordability ("Can I afford X?"), or habits, reference their exact live data above with concrete numbers.
-2. When the user asks ANY question outside of finances (science, coding, recipes, history, health, fitness, writing, math, philosophy, travel, general knowledge), answer thoroughly, accurately, and helpful!
-3. For basic questions: provide concise, direct, crystal-clear answers.
-4. For extensive questions: provide structured, comprehensive, step-by-step master guides with headers, bullet points, and practical takeaways.
-5. Format your output with clean GitHub-flavored markdown: bold key concepts, use bullet lists, numbered steps, and code blocks.
-6. At the very end of your response, you can optionally include 1-2 interactive follow-up prompt pills using the format: [[prompt: specific question | Short Label]] so the user can easily tap to explore further.`;
+RESPONSE FORMATTING:
+1. For everyday casual chats: keep replies warm, natural, and concise (1-3 friendly sentences).
+2. For basic questions: provide concise, direct, crystal-clear answers.
+3. For extensive questions: provide structured, comprehensive master guides with clear headers and bullet points.
+4. Format with clean GitHub markdown.
+5. At the end, you may optionally include 1-2 interactive follow-up prompt pills: [[prompt: specific question | Short Label]].`;
 
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
                 method: 'POST',
@@ -6271,7 +6304,7 @@ RESPONSE INSTRUCTIONS:
         function initCoachChat(forceReset = false) {
             updateCoachContextRibbon();
             updateCoachEngineBadge();
-            renderCoachTopicChips(currentCoachTopic);
+            initCoachSuggestionsState();
             const container = document.getElementById('coachMessagesContainer');
             if (!container) return;
 
@@ -6287,20 +6320,21 @@ RESPONSE INSTRUCTIONS:
             if (!coachChatHistory || coachChatHistory.length === 0) {
                 const ctx = getSpendingContext();
                 const hasGemini = Boolean(getGeminiApiKey());
-                const welcomeText = `👋 Hello! I'm **PocketCoach AI**, your personal financial habit advisor and all-around intelligence partner.
+                const savedUserName = localStorage.getItem('pocketflow_user_name') || '';
+                const nameGreeting = savedUserName ? ` **${escapeHtml(savedUserName)}**` : '';
+                const welcomeText = `👋 Hello${nameGreeting}! I'm **PocketCoach**, your friendly AI companion and spending advisor.
 
-I can answer **any question you ask**—from **basic questions** (quick math, facts, science, definitions, tips) to **extensive questions** (complete budget plans, business blueprints, coding roadmaps, scientific mechanisms, and fitness guides)!
+Feel free to chat with me just like a friend—say hello, ask *"how are you?"*, tell me about your day, or ask any question about budgeting, everyday tips, science, or life!
 
-${hasGemini ? '✨ **Google Gemini AI is connected and active!** Ready for unrestricted, deep AI reasoning.' : '⚡ **Smart Native Engine Active** (100% offline). Connect a free Google Gemini API key in [AI Settings] anytime for cloud intelligence!'}
+${hasGemini ? '✨ **Gemini Cloud AI Active** — Deep conversational reasoning enabled.' : '⚡ **Smart Native Engine Active** — Fast, private, and works 100% offline.'}
 
-📊 **Your Live PocketFlow Context:**
+📊 **Live Financial Snapshot:**
 • **Monthly Budget:** ${ctx.currency} ${formatMoney(ctx.budget)}
-• **Spent So Far:** ${ctx.currency} ${formatMoney(ctx.totalSpent)} (${ctx.pctUsed}% used)
-• **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)}
-• **Safe Daily Allowance:** ${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day for ${ctx.daysRemaining} days left
+• **Remaining Balance:** ${ctx.currency} ${formatMoney(ctx.remaining)} (${ctx.pctUsed}% spent)
+• **Safe Daily Allowance:** **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day** (${ctx.daysRemaining} days left)
 
-**Try tapping any question to test:**
-[[prompt: What is 15% of 3500? | 🧮 15% of 3500]] [[prompt: What is photosynthesis and how does it work? | 🌿 Basic: Photosynthesis]] [[prompt: Give me a comprehensive, step-by-step master guide on how to start a successful business from scratch. | 🚀 Extensive: Start a Business]] [[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]`;
+How are you doing today? What's on your mind?
+[[prompt: How are you doing today? | 👋 How Are You?]] [[prompt: What is your name? | 💬 Your Name]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Rule]] [[prompt: Tell me a joke | 😄 Tell Me A Joke]]`;
 
                 coachChatHistory = [{
                     role: 'assistant',
@@ -7231,7 +7265,236 @@ ${hasGemini ? '✨ **Google Gemini AI is connected and active!** Ready for unres
         }
 
 
-function generatePocketCoachResponse(rawQuery, ctx) {
+        // ==========================================
+        // 0. HUMAN & CASUAL EVERYDAY CONVERSATION ENGINE
+        // ==========================================
+        function tryAnswerHumanConversation(rawQuery, ctx) {
+            const q = (rawQuery || '').toLowerCase().trim();
+            if (!q) return null;
+
+            // 1. NAME & IDENTITY
+            // "what is your name", "what's your name", "whats your name", "your name", "who are you", "what should I call you", "do you have a name"
+            if (
+                /^(what\s+is\s+your\s+name|what's\s+your\s+name|whats\s+your\s+name|your\s+name|who\s+are\s+you|do\s+you\s+have\s+a\s+name|what\s+can\s+i\s+call\s+you|what\s+should\s+i\s+call\s+you|tell\s+me\s+your\s+name)\b/i.test(q) ||
+                (q.includes('your name') && !q.includes('change') && !q.includes('category')) ||
+                q === 'name?' || q === 'who are you?' || q === 'who are you' || q === 'your name?'
+            ) {
+                const savedUserName = localStorage.getItem('pocketflow_user_name') || '';
+                return `My name is **PocketCoach** (or just **Coach**)! 😊\n\nI'm your friendly personal companion and smart spending advisor in PocketFlow. You can chat with me naturally about your everyday life, ask me questions on any topic, or get guidance on your budget and daily habits.\n\n${savedUserName ? `It's always great talking with you, **${escapeHtml(savedUserName)}**! ` : `What is your name? I'd love to get to know you! `}How are you doing today?\n\n[[prompt: How are you doing today? | 👋 How Are You?]] [[prompt: What can you do and what questions can I ask? | ❓ What Can You Do?]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]]`;
+            }
+
+            // 2. USER INTRODUCING THEIR NAME: "my name is [Name]", "i am [Name]", "call me [Name]"
+            const nameIntroMatch = q.match(/^(?:my\s+name\s+is|i\s+am|i'm|im|call\s+me)\s+([a-zA-Z]{2,20})\.?$/i);
+            if (nameIntroMatch) {
+                const potentialName = nameIntroMatch[1].trim();
+                const nonNames = ['tired', 'good', 'fine', 'great', 'okay', 'ok', 'sad', 'happy', 'back', 'here', 'hungry', 'broke', 'bored', 'ready', 'sorry', 'lost', 'done', 'home', 'busy', 'sleepy'];
+                if (!nonNames.includes(potentialName.toLowerCase())) {
+                    const formattedName = potentialName.charAt(0).toUpperCase() + potentialName.slice(1).toLowerCase();
+                    localStorage.setItem('pocketflow_user_name', formattedName);
+                    return `It's so wonderful to meet you, **${escapeHtml(formattedName)}**! 🎉😊\n\nI've saved your name, so I'll remember it whenever we talk. How has your day been going so far, ${escapeHtml(formattedName)}?\n\n[[prompt: Doing great, thanks for asking! | 😊 Doing Great]] [[prompt: It's been a busy day | 🏃 Busy Day]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]]`;
+                }
+            }
+
+            // "what is my name?", "do you know my name?", "remember my name"
+            if (/^(what\s+is\s+my\s+name|what's\s+my\s+name|whats\s+my\s+name|do\s+you\s+know\s+my\s+name|who\s+am\s+i)\b/i.test(q)) {
+                const savedUserName = localStorage.getItem('pocketflow_user_name');
+                if (savedUserName) {
+                    return `Your name is **${escapeHtml(savedUserName)}**! 😊 Always a pleasure to chat with you, ${escapeHtml(savedUserName)}. What's on your mind today?\n\n[[prompt: How are you doing today? | 👋 How Are You?]] [[prompt: Analyze my spending habits | 🔍 Habit Audit]]`;
+                } else {
+                    return `You haven't told me your name yet! 😊\n\nJust tell me *"My name is [your name]"* or *"Call me [your name]"* and I'll remember it for all our conversations!\n\n[[prompt: My name is Kwame | 💬 Name Example]] [[prompt: How are you doing today? | 👋 How Are You?]]`;
+                }
+            }
+
+            // 3. "HOW ARE YOU?" / "HOW ARE YOU DOING?" / "HOW'S YOUR DAY?" / "HOW DO YOU FEEL?"
+            if (
+                /^(how\s+are\s+you|how\s+r\s+u|how\s+are\s+ya|how\s+are\s+you\s+doing|how's\s+it\s+going|hows\s+it\s+going|how\s+is\s+it\s+going|how\s+have\s+you\s+been|how\s+are\s+things|how\s+is\s+your\s+day|how's\s+your\s+day|hows\s+your\s+day|how\s+was\s+your\s+day|how\s+do\s+you\s+feel|how\s+are\s+you\s+today|how\s+are\s+u\s+doing|what's\s+up|whats\s+up|what\s+up|sup|how\s+do\s+you\s+do)\b/i.test(q)
+            ) {
+                const savedUserName = localStorage.getItem('pocketflow_user_name');
+                const namePart = savedUserName ? `, ${escapeHtml(savedUserName)}` : '';
+                const responses = [
+                    `I'm doing really well, thank you for asking${namePart}! 😊\n\nI'm feeling energized, in a great mood, and excited to chat with you. How are you doing today? How has your day been treating you?`,
+                    `I'm doing wonderful, thanks for checking in${namePart}! ✨\n\nEverything is running smoothly on my end, and I'm right here ready to help or just hang out. How has your day been going?`,
+                    `I'm doing great, thanks for asking${namePart}! 🌟\n\nAlways happy to hear from you. How are you feeling today? Anything interesting happen today?`
+                ];
+                const picked = responses[Math.floor(Math.random() * responses.length)];
+                return `${picked}\n\n[[prompt: I'm doing good, thanks for asking! | 😊 Doing Good]] [[prompt: I'm having a bit of a tired day | 😴 A Bit Tired]] [[prompt: Tell me a fun joke | 😄 Tell A Joke]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]]`;
+            }
+
+            // 4. USER EXPRESSING THEIR MOOD / HOW THEY ARE DOING:
+            // a) Positive mood ("i'm good", "doing well", "i'm fine", "great", "can't complain")
+            if (
+                /^(i'm\s+good|im\s+good|i\s+am\s+good|doing\s+well|i'm\s+doing\s+well|im\s+doing\s+well|i'm\s+fine|im\s+fine|i\s+am\s+fine|pretty\s+good|doing\s+great|i'm\s+great|im\s+great|i\s+am\s+great|all\s+good|feeling\s+good|can't\s+complain|cants\s+complain|not\s+bad|feeling\s+great)\b/i.test(q)
+            ) {
+                const savedUserName = localStorage.getItem('pocketflow_user_name');
+                const namePart = savedUserName ? `, ${escapeHtml(savedUserName)}` : '';
+                return `That's wonderful to hear${namePart}! 😊🎉\n\nIt's always a blessing to have a smooth, positive day. Did anything special happen, or are you just enjoying a good day?\n\nIf there's anything on your mind—everyday questions, ideas, or keeping your spending goals on track—I'm right here with you!\n\n[[prompt: What can you do and what questions can I ask? | 💡 Ideas To Ask]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]] [[prompt: Tell me a fun fact | 🧠 Fun Fact]]`;
+            }
+
+            // b) Low energy / Stressed / Bad day ("i'm tired", "rough day", "stressed", "bad day", "exhausted", "feeling sad")
+            if (
+                /^(i'm\s+tired|im\s+tired|i\s+am\s+tired|so\s+tired|exhausted|had\s+a\s+bad\s+day|bad\s+day|rough\s+day|stressed|feeling\s+down|feeling\s+sad|feeling\s+overwhelmed|had\s+a\s+long\s+day|hard\s+day|terrible\s+day|not\s+good|not\s+doing\s+well|feeling\s+low)\b/i.test(q)
+            ) {
+                return `I'm really sorry you're feeling that way. 💙\n\nTake a deep breath and give yourself some grace—we all have those heavy, exhausting days where everything feels like a lot. You don't have to carry the whole world today.\n\nMake sure to drink some water, get some rest, and do something kind for yourself tonight. If you want to talk or just need a light distraction, I'm right here for you. Take it easy! 🛋️✨\n\n[[prompt: Tell me a joke to cheer me up | 😄 Cheer Me Up]] [[prompt: Timeless wisdom and motivation advice | 🧭 Calm Wisdom]]`;
+            }
+
+            // c) Happy / Celebration ("i'm happy", "got good news", "celebrating", "i won", "passed my exam")
+            if (
+                /^(i'm\s+happy|im\s+happy|i\s+am\s+happy|celebrating|got\s+good\s+news|feeling\s+amazing|feeling\s+blessed|passed\s+my\s+exam|got\s+promoted|got\s+a\s+raise)\b/i.test(q)
+            ) {
+                return `That is incredible news! 🎉🥳✨\n\nI am so happy for you! High-energy days and great wins are worth celebrating. Take a moment to really soak in that feeling—you've earned it! What's the best part about it?\n\n[[prompt: Tell me a joke | 😄 Share A Laugh]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]]`;
+            }
+
+            // d) Bored ("i'm bored", "so bored")
+            if (/^(i'm\s+bored|im\s+bored|i\s+am\s+bored|so\s+bored|bored)\b/i.test(q)) {
+                return `Let's beat that boredom right now! 😄\n\nHere are a few fun things we can do together:\n1. 🎭 **Tell you a joke** to give you a quick laugh\n2. 🧠 **Share a mind-blowing fun fact** from science or history\n3. 💡 **Brainstorm a cool side project or habit**\n4. 📊 **Run a quick audit of your spending habits** to find hidden leaks\n\nWhat sounds most fun to you?\n\n[[prompt: Tell me a joke | 😄 Tell Me A Joke]] [[prompt: Tell me a fun fact | 🧠 Mind-Blowing Fact]] [[prompt: Give me a cool life tip | 💡 Cool Life Tip]]`;
+            }
+
+            // 5. CASUAL EVERYDAY GREETINGS ("hello", "hi", "hey", "good morning", "good afternoon", "good evening", "yo")
+            if (
+                /^(hello|hi|hey|heyy|heyyy|hey\s+there|howdy|yo|hi\s+there|good\s+morning|good\s+afternoon|good\s+evening)\b/i.test(q)
+            ) {
+                const savedUserName = localStorage.getItem('pocketflow_user_name');
+                const nameGreeting = savedUserName ? ` **${escapeHtml(savedUserName)}**` : '';
+                const nowHour = new Date().getHours();
+                let greetingWord = 'Hey there';
+                if (nowHour < 12) greetingWord = 'Good morning';
+                else if (nowHour < 17) greetingWord = 'Good afternoon';
+                else greetingWord = 'Good evening';
+
+                return `👋 ${greetingWord}${nameGreeting}! Great to see you. How are you doing today?\n\nI'm right here whenever you want to chat, ask everyday questions, or check on your spending and budget!\n\n[[prompt: How are you doing today? | 👋 How Are You?]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]] [[prompt: What can you do and what questions can I ask? | ❓ Capabilities]]`;
+            }
+
+            // 6. "WHAT ARE YOU DOING?" / "WHAT ARE YOU UP TO?"
+            if (
+                /^(what\s+are\s+you\s+doing|what\s+you\s+doing|what\s+are\s+you\s+up\s+to|what\s+r\s+u\s+doing|what\s+are\s+u\s+doing)\b/i.test(q)
+            ) {
+                return `Not much at all! Just hanging out right here inside PocketFlow, keeping the math sharp, and looking forward to chatting with you! 😊\n\nHow about you? What are you up to today? Working, relaxing, or spending time on a project?\n\n[[prompt: Just relaxing and taking it easy | ☕ Relaxing]] [[prompt: Working on some tasks | 💻 Working]] [[prompt: What is my safe daily spending limit? | 🎯 Daily Limit]]`;
+            }
+
+            // 7. "CAN WE BE FRIENDS?" / "DO YOU WANT TO BE FRIENDS?" / "ARE WE FRIENDS?"
+            if (
+                /^(can\s+we\s+be\s+friends|will\s+you\s+be\s+my\s+friend|do\s+you\s+want\s+to\s+be\s+friends|are\s+we\s+friends|are\s+you\s+my\s+friend)\b/i.test(q)
+            ) {
+                return `I would love that! 🤝❤️ Consider us official friends from here on out.\n\nI'm your 24/7 digital friend—I'll never judge, I'll always listen, and I'll always help you make the smartest moves for your life and your wallet. How is your day going, friend?\n\n[[prompt: Doing good, thank you friend! | 😊 Thanks Friend!]] [[prompt: What are your hobbies? | 🎨 Your Hobbies]]`;
+            }
+
+            // 8. "ARE YOU HUMAN?" / "ARE YOU A REAL PERSON?" / "ARE YOU A BOT?"
+            if (
+                /^(are\s+you\s+human|are\s+you\s+a\s+human|are\s+you\s+real|are\s+you\s+a\s+real\s+person|are\s+you\s+a\s+bot|are\s+you\s+an\s+ai|are\s+you\s+a\s+robot)\b/i.test(q)
+            ) {
+                return `I'm an AI companion, but I do my best to communicate with the warmth, empathy, and natural conversational flow of a real human friend! 😊\n\nI don't get tired, I don't hold grudges, and I'm always right here when you need to chat, calculate something, or stay accountable to your goals. You can talk to me like a real friend anytime!\n\n[[prompt: What's your favorite color? | 🎨 Favorite Color]] [[prompt: Who made you? | 🛠️ Who Made You?]]`;
+            }
+
+            // 9. "WHO MADE YOU?" / "WHO CREATED YOU?"
+            if (
+                /^(who\s+made\s+you|who\s+created\s+you|who\s+built\s+you|who\s+designed\s+you|where\s+did\s+you\s+come\s+from)\b/i.test(q)
+            ) {
+                return `I was built specifically for **PocketFlow**! 💡\n\nI was crafted to be an approachable, intelligent companion that combines real everyday human conversation with sharp financial problem-solving—helping people feel confident, calm, and in control of their money and daily life.\n\n[[prompt: Tell me about yourself | 💬 About You]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]]`;
+            }
+
+            // 10. "TELL ME ABOUT YOURSELF"
+            if (
+                /^(tell\s+me\s+about\s+yourself|who\s+are\s+you\s+really|introduce\s+yourself)\b/i.test(q)
+            ) {
+                return `I'd love to! I'm **PocketCoach**, your personal companion inside PocketFlow.\n\nThink of me as a blend between an encouraging friend, a knowledgeable tutor, and a financial advisor. You can chat with me about everyday life, ask for jokes, get scientific or general knowledge answers, or ask me to crunch your budget numbers and spending habits.\n\nI'm always here 24/7, ready to support you. What would you like to know or talk about?\n\n[[prompt: How are you doing today? | 👋 How Are You?]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]] [[prompt: Tell me a joke | 😄 Joke]]`;
+            }
+
+            // 11. "WHAT DO YOU LIKE?" / "FAVORITE COLOR / FOOD / HOBBIES"
+            if (
+                /(?:favorite\s+(?:color|food|dish|movie|song|music|hobby|things)|what\s+do\s+you\s+like|what\s+are\s+your\s+hobbies)\b/i.test(q)
+            ) {
+                return `I'm glad you asked! 😄\n\n• **Favorite Color:** Emerald green (just like PocketFlow's soothing theme! 🌿)\n• **Favorite Food:** If I could eat real food, warm homemade Jollof rice sounds unbeatable! 🍛\n• **Favorite Activity:** Helping people smash their goals, crunching numbers, and having great chats like this one!\n\nWhat about you? What is your favorite food or favorite thing to do on weekends?\n\n[[prompt: I love good food and music | 🎵 Food & Music]] [[prompt: Tell me a fun fact | 🧠 Fun Fact]]`;
+            }
+
+            // 12. "NICE TO MEET YOU" / "GLAD TO MEET YOU"
+            if (
+                /(?:nice\s+to\s+meet\s+you|pleased\s+to\s+meet\s+you|glad\s+to\s+meet\s+you|good\s+to\s+meet\s+you)\b/i.test(q)
+            ) {
+                const savedUserName = localStorage.getItem('pocketflow_user_name');
+                const namePart = savedUserName ? ` ${escapeHtml(savedUserName)}` : '';
+                return `Nice to meet you too${namePart}! 😊✨ It's truly a pleasure to connect with you. How has your day been treating you?\n\n[[prompt: It's been a great day! | 🌟 Great Day]] [[prompt: What is my safe daily limit? | 🎯 Daily Limit]]`;
+            }
+
+            // 13. "THANK YOU" / "THANKS" / "APPRECIATE IT"
+            if (
+                /^(thank\s+you|thanks|thanks\s+a\s+lot|thank\s+u|appreciate\s+it|thx|many\s+thanks|thankyou)\b/i.test(q)
+            ) {
+                return `You are so very welcome! 😊 Always happy to help. Let me know if you need anything else, or if you just want to hang out and chat!\n\n[[prompt: What is my safe daily limit? | 🎯 Daily Limit]] [[prompt: How are you doing today? | 👋 Chat]]`;
+            }
+
+            // 14. "YOU'RE WELCOME" / "NO PROBLEM"
+            if (
+                /^(you're\s+welcome|youre\s+welcome|no\s+problem|anytime|of\s+course|dont\s+mention\s+it|don't\s+mention\s+it)\b/i.test(q)
+            ) {
+                return `Appreciate you! You're awesome. Have a fantastic day ahead! ✨😊`;
+            }
+
+            // 15. GOODBYES & GOOD NIGHT
+            if (
+                /^(goodbye|bye|bye\s+bye|see\s+you\s+later|catch\s+you\s+later|talk\s+to\s+you\s+soon|talk\s+later|cya)\b/i.test(q)
+            ) {
+                return `Goodbye! 👋 Have a wonderful time, stay safe, and take care. I'll be right here whenever you want to check in or chat again!\n\n[[prompt: Hello again! | 👋 Check In]]`;
+            }
+            if (
+                /^(good\s+night|goodnight|sleep\s+well|going\s+to\s+sleep|going\s+to\s+bed|sweet\s+dreams)\b/i.test(q)
+            ) {
+                return `Good night! 🌙😴 Rest well, get some deep and peaceful sleep, and recharge for a great day tomorrow. Sweet dreams!`;
+            }
+
+            // 16. LIVE DATE & TIME
+            if (
+                /^(what\s+time\s+is\s+it|current\s+time|what's\s+the\s+time|what\s+is\s+the\s+time|what\s+day\s+is\s+today|what\s+is\s+today's\s+date|what\s+date\s+is\s+today)\b/i.test(q)
+            ) {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                const dateStr = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                return `🕒 Right now it's **${timeStr}** on **${dateStr}**.\n\nHope your day is treating you well! Is there anything I can help you with?\n\n[[prompt: What is my safe daily limit? | 🎯 Daily Limit]] [[prompt: How are you doing today? | 👋 Chat]]`;
+            }
+
+            // 17. FUN FACT
+            if (
+                /(?:fun\s+fact|tell\s+me\s+a\s+fact|interesting\s+fact|tell\s+me\s+something\s+interesting)\b/i.test(q)
+            ) {
+                const facts = [
+                    `🧠 **Fun Fact:** Honey never spoils! Archaeologists have excavated 3,000-year-old pots of honey from ancient Egyptian tombs that are still perfectly edible due to honey's low moisture and natural acidity.`,
+                    `🐙 **Fun Fact:** Octopuses have **three hearts** and their blood is **blue**! Two hearts pump blood to the gills, while the third circulates it to the rest of the body.`,
+                    `🌌 **Fun Fact:** There are more trees on Earth (about 3 trillion) than there are stars in the Milky Way galaxy (estimated at 100 to 400 billion)!`,
+                    `⚡ **Fun Fact:** A single bolt of lightning contains enough energy to toast roughly 100,000 slices of bread!`
+                ];
+                const pick = facts[Math.floor(Math.random() * facts.length)];
+                return `${pick}\n\nPretty cool, right? Want another one, or a funny joke?\n\n[[prompt: Tell me another fun fact | 🧠 Another Fact]] [[prompt: Tell me a joke | 😄 Joke]]`;
+            }
+
+            // 18. CAPABILITIES & WHAT QUESTIONS CAN I ASK
+            if (
+                /^(what\s+can\s+you\s+do|what\s+questions\s+can\s+i\s+ask|capabilities|what\s+do\s+you\s+know|help\s+me|guide\s+me|features)\b/i.test(q) ||
+                q.includes('what can you do') || q.includes('what questions can i ask')
+            ) {
+                return `🌟 **What I Can Do For You**\n\nI'm designed to be both a warm everyday companion and an intelligent financial and problem-solving partner:\n\n` +
+                    `💬 **1. Everyday Human Conversation:**\n` +
+                    `• Say hello, check in (*"How are you?"*), tell me your name (*"My name is..."*), or share how you feel (*"I'm tired"*, *"I had a great day!"*)\n` +
+                    `• Ask for everyday small talk, clean jokes (*"Tell me a joke"*), fun facts, or the live time and date!\n\n` +
+                    `📊 **2. Live PocketFlow Spending & Budget Guidance:**\n` +
+                    `• Check daily spending limits: *"What is my safe daily limit?"*\n` +
+                    `• Audit spending habits: *"Analyze my spending habits"* or *"What is my biggest expense?"*\n` +
+                    `• Instant affordability checks: *"Can I afford 150 for shopping?"*\n` +
+                    `• Custom salary allocations: *"Budget for 3500 monthly income"*\n\n` +
+                    `🛡️ **3. Strict Curbs & Overspend Recovery:**\n` +
+                    `• *"I overspent my budget, give me an emergency recovery plan"*\n` +
+                    `• *"What is the 48-hour cooling rule?"* or *"Give me a 7-day no-spend challenge"*\n\n` +
+                    `📚 **4. Extensive Guides & Masterclasses:**\n` +
+                    `• Starting a business, coding roadmaps, resume building, sleep optimization, fitness roadmaps, and habit building\n\n` +
+                    `🧮 **5. Quick Math & Calculations:**\n` +
+                    `• Percentage checks (*"15% of 3500"*), compound interest, splitting bills (*"Split 450 between 4 people"*), unit conversions, and arithmetic\n\n` +
+                    `What would you like to explore today?\n\n` +
+                    `[[prompt: How are you doing today? | 👋 How Are You?]] [[prompt: What is my safe daily limit? | 🎯 Daily Target]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Rule]] [[prompt: Tell me a joke | 😄 Joke]]`;
+            }
+
+            return null;
+        }
+
+
+        function generatePocketCoachResponse(rawQuery, ctx) {
             const q = (rawQuery || '').toLowerCase().trim();
             const has = (...terms) => terms.some(t => {
                 const term = t.toLowerCase();
@@ -7242,37 +7505,21 @@ function generatePocketCoachResponse(rawQuery, ctx) {
                 return regex.test(q);
             });
 
+            // PRIORITY 1: EVERYDAY HUMAN CONVERSATION & SOCIAL INTERACTION
+            const humanResult = tryAnswerHumanConversation(rawQuery, ctx);
+            if (humanResult) return humanResult;
+
             // Extract numeric amount if present in query
             const numMatch = q.match(/(?:gh[¢\?]?|\$|€|£)?\s*(\d+(?:\.\d{1,2})?)/i);
             const detectedAmount = numMatch ? parseFloat(numMatch[1]) : null;
 
-            // ==========================================
-            // PRIORITY 1: MATHEMATICAL & CALCULATION ENGINE
-            // ==========================================
+            // PRIORITY 2: MATHEMATICAL & CALCULATION ENGINE
             const mathResult = trySolveMath(rawQuery, ctx);
             if (mathResult) return mathResult;
 
-            // ==========================================
-            // PRIORITY 2: CUSTOM SALARY & INCOME BUDGETING
-            // ==========================================
+            // PRIORITY 3: CUSTOM SALARY & INCOME BUDGETING
             const salaryResult = tryAnswerSalaryBudget(rawQuery, ctx);
             if (salaryResult) return salaryResult;
-
-            // 1. GREETINGS & PERSONALITY
-            if (has('hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening', 'who are you', 'what are you', 'how are you', 'pocketcoach')) {
-                return `👋 Hello there! I'm **PocketCoach**, your personal financial habit and budget advisor built into PocketFlow.
-
-I'm here to help you:
-• Track your pacing and master your **${ctx.currency} ${formatMoney(ctx.safeDailyAllowance)}/day** safe limit
-• Structure your income with proven frameworks like **50/30/20** and **Zero-Based Budgeting**
-• Evaluate purchases instantly (*"Can I afford [amount]?"*)
-• Eliminate high-interest debt with **Snowball** or **Avalanche**
-• Cut leaks on food, bills, data bundles, and subscriptions
-• Build wealth with emergency funds and index fund investing!
-
-**What's on your mind today?**
-[[prompt: Analyze my spending habits and tell me how I am doing. | 🔍 Habit Audit]] [[prompt: What is my safe daily spending limit for the rest of this month? | 🎯 Daily Limit]] [[prompt: How should I structure my budget using the 50/30/20 rule? | 📊 50/30/20 Blueprint]] [[prompt: What can you do and what questions can I ask? | ❓ All Capabilities]]`;
-            }
 
             if (has('quote', 'motivate', 'motivation', 'inspire', 'inspiration', 'affirmation')) {
                 const quotes = [
